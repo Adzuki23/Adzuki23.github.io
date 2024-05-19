@@ -16,22 +16,26 @@
   <meta name="author" content="Hongyu Li">
   <meta name="keywords" content="DeepLearning,CV">
   
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+    <meta name="description" content="准备好训练数据集以PARSeq（lmdb数据格式）为例，在项目文件中如下：   报错解决 CUDA和CUDNN的配置问题  解决办法：   下载正确CUDA版本的CUDA Toolkit 下载正确CUDA版本的cuDNN，将dll动态链接库文件复制到CUDA Toolkit中       ​	  成功训练">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://adzuki23.github.io/2024/05/18/readme/index.html">
+<meta property="og:title" content="PaddlePaddle训练CPPD文字识别模型">
+<meta property="og:url" content="https://adzuki23.github.io/2024/05/19/PaddlePaddle_CPPD/index.html">
 <meta property="og:site_name" content="Hongyu Li">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="准备好训练数据集以PARSeq（lmdb数据格式）为例，在项目文件中如下：   报错解决 CUDA和CUDNN的配置问题  解决办法：   下载正确CUDA版本的CUDA Toolkit 下载正确CUDA版本的cuDNN，将dll动态链接库文件复制到CUDA Toolkit中       ​	  成功训练">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-05-18T03:37:10.311Z">
-<meta property="article:modified_time" content="2024-05-18T07:30:17.130Z">
+<meta property="og:image" content="https://github.com/PaddlePaddle/PaddleOCR/raw/main/doc/PaddleOCR_log.png">
+<meta property="article:published_time" content="2024-05-19T12:54:48.000Z">
+<meta property="article:modified_time" content="2024-05-19T13:24:42.919Z">
 <meta property="article:author" content="Hongyu Li">
-<meta property="article:tag" content="DeepLearning,CV">
+<meta property="article:tag" content="CPPD">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://github.com/PaddlePaddle/PaddleOCR/raw/main/doc/PaddleOCR_log.png">
   
   
+    <meta name="referrer" content="no-referrer-when-downgrade">
   
-  <title>Hello World - Hongyu Li</title>
+  
+  <title>PaddlePaddle训练CPPD文字识别模型 - Hongyu Li</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -122,7 +126,7 @@
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>Hongyu Li&#39;s Blog</strong>
+      <strong>Hongyu Li</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -143,6 +147,18 @@
               <a class="nav-link" href="/" target="_self">
                 <i class="iconfont icon-home-fill"></i>
                 <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>个人</span>
               </a>
             </li>
           
@@ -183,18 +199,6 @@
             </li>
           
         
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/" target="_self">
-                <i class="iconfont icon-user-fill"></i>
-                <span>关于</span>
-              </a>
-            </li>
-          
-        
         
           <li class="nav-item" id="search-btn">
             <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
@@ -224,7 +228,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hello World"></span>
+            <span id="subtitle" data-typed-text="PaddlePaddle训练CPPD文字识别模型"></span>
           
         </div>
 
@@ -235,8 +239,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-05-18 11:37" pubdate>
-          2024年5月18日 中午
+        <time datetime="2024-05-19 20:54" pubdate>
+          2024年5月19日 晚上
         </time>
       </span>
     
@@ -247,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          18 字
+          72 字
         
       </span>
     
@@ -264,6 +268,14 @@
     
 
     
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
     
   </div>
 
@@ -295,24 +307,33 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Hello World</h1>
+            <h1 id="seo-header">PaddlePaddle训练CPPD文字识别模型</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+                <ul>
+<li><h4 id="准备好训练数据集"><a href="#准备好训练数据集" class="headerlink" title="准备好训练数据集"></a>准备好训练数据集</h4><p>以PARSeq（lmdb数据格式）为例，在项目文件中如下：</p>
+<p><img src="/2024/05/19/PaddlePaddle_CPPD/image-20240519204701863.png" srcset="/img/loading.gif" lazyload alt="image-20240519204701863"></p>
+</li>
+<li><h4 id="报错解决"><a href="#报错解决" class="headerlink" title="报错解决"></a>报错解决</h4><ol>
+<li><p>CUDA和CUDNN的配置问题</p>
+<p><img src="/2024/05/19/PaddlePaddle_CPPD/image-20240519174249876.png" srcset="/img/loading.gif" lazyload alt="image-20240519174249876"></p>
+<p><img src="/2024/05/19/PaddlePaddle_CPPD/image-20240519202939423.png" srcset="/img/loading.gif" lazyload alt="image-20240519202939423">解决办法：</p>
+<blockquote>
+<ol>
+<li>下载正确CUDA版本的CUDA Toolkit</li>
+<li>下载正确CUDA版本的cuDNN，将dll动态链接库文件复制到CUDA Toolkit中</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
+<p>​	</p>
+<ul>
+<li><h4 id="成功训练"><a href="#成功训练" class="headerlink" title="成功训练"></a>成功训练</h4><img src="/2024/05/19/PaddlePaddle_CPPD/image-20240519204959939.png" srcset="/img/loading.gif" lazyload alt="image-20240519204959939"></li>
+</ul>
 
                 
               </div>
@@ -321,6 +342,41 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Deep-Learning/" class="category-chain-item">Deep Learning</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Deep-Learning/Optical-Character-Recognition/" class="category-chain-item">Optical Character Recognition</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/CPPD/" class="print-no-link">#CPPD</a>
+      
+    </div>
   
 </div>
 
@@ -330,8 +386,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hello World</div>
-      <div>https://adzuki23.github.io/2024/05/18/readme/</div>
+      <div>PaddlePaddle训练CPPD文字识别模型</div>
+      <div>https://adzuki23.github.io/2024/05/19/PaddlePaddle_CPPD/</div>
     </div>
     <div class="license-meta">
       
@@ -343,7 +399,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年5月18日</div>
+          <div>2024年5月19日</div>
         </div>
       
       
@@ -375,12 +431,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2024/05/20/Yolo/" title="YOLO系列">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">YOLO系列</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/05/15/Docker/" title="Docker">
-                        <span class="hidden-mobile">Docker</span>
+                      <a href="/2024/05/15/RCNN/" title="R-CNN系列">
+                        <span class="hidden-mobile">R-CNN系列</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -632,6 +694,8 @@
   <script>Fluid.plugins.imageCaption();</script>
 
   <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
 
