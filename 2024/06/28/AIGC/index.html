@@ -1,0 +1,897 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hongyu Li">
+  <meta name="keywords" content="DeepLearning,CV">
+  
+    <meta name="description" content="对生成式深度学习模型Stable Diffusion进行学习。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AIGC-StableDiffusion">
+<meta property="og:url" content="https://adzuki23.github.io/2024/06/28/AIGC/index.html">
+<meta property="og:site_name" content="Hongyu Li">
+<meta property="og:description" content="对生成式深度学习模型Stable Diffusion进行学习。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://adzuki23.github.io/img/cover/StableDiffusion.png">
+<meta property="article:published_time" content="2024-06-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-06-30T04:40:07.396Z">
+<meta property="article:author" content="Hongyu Li">
+<meta property="article:tag" content="Stable Diffusion">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/StableDiffusion.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>AIGC-StableDiffusion - Hongyu Li</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"adzuki23.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":50,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hongyu Li</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>个人</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="AIGC-StableDiffusion"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-06-28 00:00" pubdate>
+          2024年6月28日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">AIGC-StableDiffusion</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="AIGC"><a href="#AIGC" class="headerlink" title="AIGC"></a>AIGC</h2><h3 id="Stable-Diffusion"><a href="#Stable-Diffusion" class="headerlink" title="Stable Diffusion"></a>Stable Diffusion</h3><p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="http://shiyanjun.cn/archives/2212.html">http://shiyanjun.cn/archives/2212.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://jalammar.github.io/illustrated-stable-diffusion/">https://jalammar.github.io/illustrated-stable-diffusion/</a></p>
+<p><img src="/2024/06/28/AIGC/image-20240630102333319.png" srcset="/img/loading.gif" lazyload alt="Latent Diffusion Model Abstract"></p>
+<blockquote>
+<p><strong>Stable Diffusion</strong>是一个基于Latent Diffusion Model（LDM）的文转图AI模型，其使用了<strong>CLIP ViT-L&#x2F;14的文本编码器</strong>，能够通过<strong>文本提示</strong>调整<strong>图像模型</strong>。它在运行时将成像过程分离成“<strong>扩散 （diffusion）</strong>”的过程，从有噪声的情况开始，逐渐改善图像，直到完全没有噪声，逐步接近所提供的文本描述。</p>
+</blockquote>
+<h3 id="1-模型结构"><a href="#1-模型结构" class="headerlink" title="1. 模型结构"></a>1. 模型结构</h3><p><strong>结构图：</strong></p>
+<p><img src="/2024/06/28/AIGC/stable-diffusion-unet-steps.png" srcset="/img/loading.gif" lazyload alt="Stable Diffusion文生图模型结构"></p>
+<p><strong>模块：</strong></p>
+<blockquote>
+<p><strong>CLIP Text Encoder</strong> : 提取输入的text的embedding , <font color="red">通过 cross attention 方式</font>送入扩散模型的 UNet 中作为 condition，注入语义信息;</p>
+<p><strong>Image Information Creator</strong></p>
+<ul>
+<li><p><strong>Image Encoder</strong> : 基于 VAE Eecoder 将图像压缩到 latent 空间，用向量表示；</p>
+</li>
+<li><p><strong>UNet+Scheduler</strong> : 扩散模型的主体，用来实现文本引导下的 latent 去噪生成；</p>
+</li>
+</ul>
+<p><strong>Image Decode</strong> : 根据得到的 Latent Image，基于 VAE Decoder 生成最终的图像。。</p>
+</blockquote>
+<p><strong>过程：</strong></p>
+<blockquote>
+<p><strong>首先</strong>，输入 Prompt 提示词 “paradise, cosmic, beach”，经过 <strong>CLIP Text Encoder</strong> 组件的处理，将输入的 Prompt 提示词转换成 77×768 的 Token Embeddings，<code>该 Embeddings 输入到 Image Information Creator 组件</code>；</p>
+<p><font color="green">这里如果有别的输入信息，比如Semantic Map（语义图）、Text（文本）、Representations（表示）、Images（图像）等，经过不同组件的处理，然后通过 cross attention 方式送入扩散模型的 UNet 中作为 condition。</font></p>
+<p><strong>然后</strong>，Random image information tensor 是由一个 Latent Seed（Gaussian noise ~ N(0, 1)） 随机生成的 64×64 大小的图片表示，它表示一个完全的噪声图片，<code>作为 Image Information Creator 组件的另一个初始输入</code>；</p>
+<p><strong>接着</strong>，通过 Image Information Creator 组件的处理（该过程称为 Diffusion），<code>生成一个包含图片信息的 64×64 的 Latent Image</code>，该输出包含了前面输入 Prompt 提示词所具有的语义信息的图片的信息；</p>
+<p><strong>最后</strong>，上一步生成的 Latent Image 经过 Image Decoder 组件处理后<code>生成最终的和输入 Prompt 提示词相关的 512×512 大小的图片输出</code>。</p>
+</blockquote>
+<h3 id="2-具体实现"><a href="#2-具体实现" class="headerlink" title="2. 具体实现"></a>2. 具体实现</h3><h4 id="2-0-到底什么是扩散-Diffusion-？"><a href="#2-0-到底什么是扩散-Diffusion-？" class="headerlink" title="2.0 到底什么是扩散(Diffusion)？"></a>2.0 <strong>到底什么是扩散(Diffusion)？</strong></h4><p>扩散是发生在“<strong>Image Information Creator</strong>”组件内部的过程。有了表示输入文本的标记嵌入「<strong>Token embeddings</strong>」和随机起始图像信息数组「<strong>Random image information tensor</strong>」，该过程会生成图像解码器用来绘制最终图像的信息数组。</p>
+<h4 id="2-1-CLIP-Text-Encoder"><a href="#2-1-CLIP-Text-Encoder" class="headerlink" title="2.1 CLIP Text Encoder"></a>2.1 CLIP Text Encoder</h4><p>Stable Diffusion所使用的是OpenAI的CLIP的预训练模型，CLIP需要的数据为图像及其描述，数据集中大约包含4亿张图像及其描述。CLIP「Contrastive Language-Image Pretraining」整体模型如下所示：</p>
+<p><img src="/2024/06/28/AIGC/image-20240628165159974.png" srcset="/img/loading.gif" lazyload alt="CLIP模型"></p>
+<ul>
+<li><p>(1). <strong>对比预训练</strong> 「Contrastive pre-training」</p>
+<blockquote>
+<p>CLIP 是图像编码器和文本编码器的组合，使用两个编码器对数据分别进行编码。然后使用余弦距离比较结果嵌入，刚开始训练时，即使文本描述与图像是相匹配的，它们之间的相似性肯定也是很低的。随着模型的不断更新，在整个数据集中重复该过程，编码器对图像和文本编码得到的嵌入会逐渐相似。</p>
+</blockquote>
+</li>
+<li><p>(2). <strong>从标签文本创建数据集分类器</strong> 「Create dataset classifier from label text」</p>
+<blockquote>
+<p><strong>作用</strong>：</p>
+<ol>
+<li><p><strong>构建分类器</strong>：在传统的图像分类任务中，通常需要为每个类别训练一个专门的分类器。<font color="red">CLIP 通过文本编码器将标签转换为描述性文本，并进一步转换为特征向量，从而构建一个零样本分类器。这些特征向量可以看作是每个类别的“代表”，可以直接用于分类任务。</font></p>
+</li>
+<li><p><strong>零样本学习</strong>：通过这种方式，CLIP 可以在没有看到任何特定类别的训练样本的情况下，依靠标签文本的描述来进行分类。这种能力被称为“零样本学习”，即模型可以识别从未见过的类别。</p>
+</li>
+</ol>
+<p><strong>为什么需要这一步</strong>：</p>
+<ol>
+<li><p><strong>减少数据依赖</strong>：在实际应用中，获取每个类别的大量标注数据是非常困难的。通过从标签文本创建分类器，CLIP 能够在没有特定训练数据的情况下，利用现有的文本描述来实现分类。</p>
+</li>
+<li><p><strong>提高模型泛化能力</strong>：传统分类器只能处理训练时见过的类别，而 CLIP 的这种方法使其能够处理新类别，提高模型的泛化能力和适用范围。</p>
+</li>
+</ol>
+</blockquote>
+</li>
+<li><p>(3). <strong>用于零样本预测</strong> 「Use for zero-shot prediction」</p>
+<blockquote>
+<p><strong>作用：</strong></p>
+<ol>
+<li><p><strong>实际应用</strong>：在实际应用中，将待分类的图像输入图像编码器，得到图像的特征向量，然后将这个特征向量与之前生成的类别特征向量进行匹配，找到最接近的类别。这一过程就是零样本预测的核心。</p>
+</li>
+<li><p><strong>扩展性</strong>：这一过程使得 CLIP 可以处理任意数量和类型的类别，只需提供相应的文本描述即可，无需重新训练模型。</p>
+</li>
+</ol>
+<p><strong>为什么需要这一步</strong>：</p>
+<ol>
+<li><p><strong>实现分类任务</strong>：这一步是将 CLIP 应用于实际分类任务的关键，通过匹配图像和文本特征向量，实现图像分类。</p>
+</li>
+<li><p><strong>灵活性和扩展性</strong>：这种方法使得模型可以处理新出现的类别和变化多端的任务，只需要相应的文本描述即可，无需重新训练。这大大提高了模型的灵活性和扩展性。</p>
+</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<h4 id="2-2-Image-Information-Creator"><a href="#2-2-Image-Information-Creator" class="headerlink" title="2.2 Image Information Creator"></a>2.2 <strong>Image Information Creator</strong></h4><hr>
+<h5 id="2-2-1-Image-Encoder「VQ-VAE中的编码器部分」"><a href="#2-2-1-Image-Encoder「VQ-VAE中的编码器部分」" class="headerlink" title="2.2.1 Image Encoder「VQ-VAE中的编码器部分」"></a>2.2.1 Image Encoder「<strong>VQ-VAE</strong>中的编码器部分」</h5><p>在Stable Diffusion模型中，Image Encoder（图像编码器）是一个关键组件，用于将图像转换为潜在空间（latent space）中的表示，实现信息的有效压缩和重构。这些表示之后用于生成高质量的图像。</p>
+<ul>
+<li><p>架构</p>
+<blockquote>
+<ol>
+<li><strong>卷积层</strong>：一系列的卷积层，用于逐步提取图像的局部特征。</li>
+<li><strong>池化层</strong>：减少特征图的空间维度，从而降低计算复杂度。</li>
+<li><strong>编码层</strong>：将提取到的特征转换为潜在向量表示。</li>
+</ol>
+</blockquote>
+</li>
+<li><p>工作流程</p>
+<blockquote>
+<ol>
+<li><strong>输入图像</strong>：输入图像首先经过预处理步骤，例如归一化和大小调整。</li>
+<li><strong>卷积层处理</strong>：经过多个卷积层和池化层，提取图像的特征并逐步降低空间维度。</li>
+<li><strong>潜在表示生成</strong>：通过编码层，将提取的特征转换为潜在空间中的向量表示。</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<p>这些潜在向量表示是扩散模型操作的核心，它们在扩散过程中逐步反向扩散（denoising），最终生成高质量的图像。Image Encoder在这个过程中扮演了至关重要的角色，确保输入图像能够被有效地压缩和表示，从而使得扩散过程能够生成准确且高质量的图像。</p>
+<h5 id="2-2-2-UNet-Scheduler"><a href="#2-2-2-UNet-Scheduler" class="headerlink" title="2.2.2 UNet+Scheduler"></a>2.2.2 UNet+Scheduler</h5><p>当输入的图像、 文本提示词等信息经过不同组件分别被转换成 Image Embeddings、Token Embeddings… 之后，后续的操作就开始进入 Latent Space 中，通过向量来表示并进行各种处理操作，得到了包含 “原始图像 + 提示词” 信息的图像向量数据信息（Latent Image）。</p>
+<p>下图中前向过程（使用自动编码器的编码器）<strong>是我们生成数据以训练噪声预测器的方式</strong>。训练完成后，我们可以通过运行反向过程（使用自动编码器的解码器）来生成图像。</p>
+<p><img src="/2024/06/28/AIGC/image-20240630111107956.png" srcset="/img/loading.gif" lazyload alt="图1"></p>
+<p><img src="/2024/06/28/AIGC/image-20240629232700236.png" srcset="/img/loading.gif" lazyload alt="图2"></p>
+<p> Image Embeddings、Token Embeddings 等是如何在 UNet 网络中整合在一起的：</p>
+<p><img src="/2024/06/28/AIGC/image-20240630110811534.png" srcset="/img/loading.gif" lazyload alt="Image Embeddings、Token Embeddings 如何在UNet网络中整合在一起"></p>
+<h4 id="2-3-Image-Decoder「VQ-VAE中的解码器部分」"><a href="#2-3-Image-Decoder「VQ-VAE中的解码器部分」" class="headerlink" title="2.3 Image Decoder「VQ-VAE中的解码器部分」"></a>2.3 Image Decoder「<strong>VQ-VAE</strong>中的解码器部分」</h4><p>最后要把这个Latent Image，基于 VAE Decoder 从 Latent Space 再映射到 Pixel Space，得到我们最终需要生成的视觉图像。</p>
+<hr>
+<h3 id="3-补充知识"><a href="#3-补充知识" class="headerlink" title="3. 补充知识"></a>3. 补充知识</h3><h4 id="3-1-VQ-VAE（Vector-Quantized-Variational-Autoencoder）⚠️"><a href="#3-1-VQ-VAE（Vector-Quantized-Variational-Autoencoder）⚠️" class="headerlink" title="3.1 VQ-VAE（Vector Quantized Variational Autoencoder）⚠️"></a>3.1 VQ-VAE（Vector Quantized Variational Autoencoder）⚠️</h4><p>关于 VAE（Variational Autoencoder），它是一个神经网络，由 Encoder 和 Decoder 两部分组成，如下图所示：</p>
+<p><img src="/2024/06/28/AIGC/image-20240630105651318.png" srcset="/img/loading.gif" lazyload alt=" VAE「Variational Autoencoder」"></p>
+<p>其中，Encoder 能够将一个图像压缩到低维空间表示，在 Stable Diffusion 模型中，将原始输入图像通过 Encode 转换成 Latent Space 中的向量表示 Latent Image；</p>
+<p>Decoder 能够将一个压缩表示的图像向量数据转换成高维空间表示，在 Stable Diffusion 模型中将 Latent Space 中图像的向量表示 Latent Image 通过 Decode 转换成 Pixel Space 中的视觉图像。</p>
+<h4 id="3-2-什么叫做转换为潜在空间中的向量表示，它和提取的图像特征不是一回事吗？"><a href="#3-2-什么叫做转换为潜在空间中的向量表示，它和提取的图像特征不是一回事吗？" class="headerlink" title="3.2 什么叫做转换为潜在空间中的向量表示，它和提取的图像特征不是一回事吗？"></a>3.2 什么叫做转换为潜在空间中的向量表示，它和提取的图像特征不是一回事吗？</h4><p>是的，将图像转换为潜在空间中的向量表示和提取图像特征是密切相关的过程，但在细节和目的上有所不同。让我详细解释一下这两个概念及其关系。</p>
+<ul>
+<li><p>图像特征提取</p>
+<blockquote>
+<p>图像特征提取是指从输入图像中提取出能够代表图像内容的重要信息。这通常是通过一系列的卷积操作和其他神经网络层来实现的。特征提取的主要目标是捕捉图像的局部和全局信息，包括颜色、纹理、形状等。</p>
+</blockquote>
+</li>
+<li><p><strong>潜在空间中的向量表示</strong></p>
+<blockquote>
+<p>潜在空间中的向量表示是<font color="red"><strong>通过对图像特征进一步处理</strong></font>得到的。这些表示通常是低维的紧凑向量，包含了图像的高层次抽象信息。潜在空间中的向量表示的主要目的是将图像数据压缩到一个更易处理和操作的形式，同时保留图像的关键信息。</p>
+</blockquote>
+</li>
+<li><p>关系与区别</p>
+<blockquote>
+<ol>
+<li><p><strong>特征提取 vs. 潜在表示</strong>：</p>
+<ul>
+<li><strong>特征提取</strong>：这是一个较广义的概念，指的是从图像中提取重要信息的过程。提取的特征可以是局部的（如边缘、角点）或全局的（如整体形状）。</li>
+<li><strong>潜在表示</strong>：这是特征提取的进一步抽象。它将提取到的特征压缩和编码到一个低维空间，使其成为更抽象的、高层次的表示。</li>
+</ul>
+</li>
+<li><p><strong>维度与表示形式</strong>：</p>
+<ul>
+<li><strong>特征提取</strong>：通常得到的是高维特征图（feature map），其空间维度较大，包含了丰富的局部信息。</li>
+<li><strong>潜在表示</strong>：通过进一步的编码，将高维特征图转换为低维向量。这些向量保留了图像的核心信息，但空间维度较低，便于后续处理和生成任务。</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+</li>
+<li><p>例子</p>
+<blockquote>
+<p>假设我们有一张猫的图像：</p>
+<ol>
+<li><strong>特征提取</strong>：卷积神经网络提取出猫的边缘、纹理、耳朵形状等特征，形成一个高维的特征图。</li>
+<li><strong>潜在表示</strong>：特征图通过编码器压缩为一个低维向量。这个向量可能表示为[0.8, -1.2, 0.3, …]，其中的每个值都对应着图像的一些高层次特征，例如猫的种类、颜色、姿态等。</li>
+</ol>
+</blockquote>
+</li>
+<li><p>总结</p>
+<blockquote>
+<p>将图像转换为潜在空间中的向量表示是特征提取的进一步抽象和压缩过程。这一过程的主要目的是将高维的、冗长的特征图压缩为低维的紧凑表示，同时保留图像的核心信息，便于后续的生成和操作。</p>
+</blockquote>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Deep-Learning/" class="category-chain-item">Deep Learning</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Deep-Learning/AIGC/" class="category-chain-item">AIGC</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Stable-Diffusion/" class="print-no-link">#Stable Diffusion</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>AIGC-StableDiffusion</div>
+      <div>https://adzuki23.github.io/2024/06/28/AIGC/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Hongyu Li</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年6月28日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/06/28/interview/" title="Interview Direction Series">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Interview Direction Series</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/06/28/LeetCode/" title="LeetCode">
+                        <span class="hidden-mobile">LeetCode</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -18,14 +18,14 @@
   
     <meta name="description" content="学习目标检测中的R-CNN系列，更深层次的了解原理，对网络模块、损失函数等就像深入理解。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="R-CNN系列">
+<meta property="og:title" content="R-CNN Series">
 <meta property="og:url" content="https://adzuki23.github.io/2024/05/15/RCNN/index.html">
 <meta property="og:site_name" content="Hongyu Li">
 <meta property="og:description" content="学习目标检测中的R-CNN系列，更深层次的了解原理，对网络模块、损失函数等就像深入理解。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/RCNN.png">
 <meta property="article:published_time" content="2024-05-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-06-11T02:23:12.934Z">
+<meta property="article:modified_time" content="2024-06-30T04:38:21.491Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="RCNN">
 <meta name="twitter:card" content="summary_large_image">
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>R-CNN系列 - Hongyu Li</title>
+  <title>R-CNN Series - Hongyu Li</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -228,7 +228,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="R-CNN系列"></span>
+            <span id="subtitle" data-typed-text="R-CNN Series"></span>
           
         </div>
 
@@ -307,7 +307,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">R-CNN系列</h1>
+            <h1 id="seo-header">R-CNN Series</h1>
             
             
               <div class="markdown-body">
@@ -412,6 +412,7 @@
 </ul>
 <h3 id="Fast-R-CNN"><a href="#Fast-R-CNN" class="headerlink" title="Fast R-CNN"></a>Fast R-CNN</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs objectivec">Fast R-<span class="hljs-built_in">CNN</span> 是作者Ross Girshick继 R-<span class="hljs-built_in">CNN</span> 后的又一力作，论文名就叫做 Fast R-<span class="hljs-built_in">CNN</span>，<span class="hljs-number">2015</span>年发表。<br>同样使用VGG16作为网络的backbone，与 R-<span class="hljs-built_in">CNN</span> 相比训练时间快了 <span class="hljs-number">9</span> 倍，测试推理时间快了 <span class="hljs-number">213</span> 倍，准确率从 <span class="hljs-number">62</span>% 提升至了 <span class="hljs-number">66</span>%（在 Pascal VOC 数据集上）<br></code></pre></td></tr></table></figure>
 
+<p>参考文章：</p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/165324194">Fast R-CNN</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yymn/articles/13629478.html">ROI Pooling</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/670a3e42107d">RoI Pooling及其改进</a></p>
@@ -493,13 +494,14 @@
 <li><p>在上一步的结果上使用滑动窗口，每滑动到一个位置生成一个一维的向量， 在向量的基础上通过两个全连接层去输出目标概率（背景&#x2F;非背景）和边界框回归参数。</p>
 <blockquote>
 <p>256-d是指使用ZF model作为backbone，最终每个点都用一个256维的向量表示，即<code>N=256</code>。</p>
-<p>2k 中的 k 指的是 k 个 anchor boxes，<strong>2是指为背景的概率和为前景的概率</strong>。</p>
-<p>4k 中的 k 指的是 k 个 anchor boxes，<strong>4是指每个 anchor 有 4 个<font color="red">边界框回归参数</font>。</strong></p>
 </blockquote>
-<p>1*1卷积+Cls layer + Reg layer：</p>
+</li>
+<li><p>1*1卷积+Cls layer + Reg layer：</p>
 <blockquote>
 <p>在<strong>分类任务「Cls layer」</strong>中，经过1*1卷积后，输出图像大小为：<strong>H*W*18</strong>，正好对应9个anchor boxes的2分类结果。为何要在softmax前后都接一个reshape layer？其实只是为了便于softmax分类，具体原因这就要从caffe的实现形式说起。</p>
-<p>在<strong>回归任务「Reg layer」</strong>，经过1*1卷积后，输出图像大小为：<strong>H*W*36</strong>，正好对应9个anchor boxes的边界框</p>
+<p>在<strong>回归任务「Reg layer」</strong>，经过1*1卷积后，输出图像大小为：<strong>H*W*36</strong>，正好对应9个anchor boxes的边界框。</p>
+<p>2k 中的 k 指的是 k 个 anchor boxes，<strong>2是指为背景的概率和为前景的概率</strong>。</p>
+<p>4k 中的 k 指的是 k 个 anchor boxes，<strong>4是指每个 anchor 有 4 个<font color="red">边界框回归参数</font>。</strong></p>
 </blockquote>
 <p><img src="/2024/05/15/RCNN/u=1361402012,3659437005&fm=253&fmt=auto&app=138&f=JPEG-20240520150557582.jpeg" srcset="/img/loading.gif" lazyload alt="RPN"></p>
 </li>
@@ -597,7 +599,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>R-CNN系列</div>
+      <div>R-CNN Series</div>
       <div>https://adzuki23.github.io/2024/05/15/RCNN/</div>
     </div>
     <div class="license-meta">
@@ -642,9 +644,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/05/15/Docker/" title="Docker入门">
+                      <a href="/2024/05/15/Docker/" title="Docker">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Docker入门</span>
+                        <span class="hidden-mobile">Docker</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
