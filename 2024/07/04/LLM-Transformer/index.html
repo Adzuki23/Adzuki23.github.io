@@ -1,0 +1,805 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hongyu Li">
+  <meta name="keywords" content="DeepLearning,CV">
+  
+    <meta name="description" content="LLM-Transformer学习记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLM-Transformer">
+<meta property="og:url" content="https://adzuki23.github.io/2024/07/04/LLM-Transformer/index.html">
+<meta property="og:site_name" content="Hongyu Li">
+<meta property="og:description" content="LLM-Transformer学习记录。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://adzuki23.github.io/img/cover/LLM.webp">
+<meta property="article:published_time" content="2024-07-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-05T02:33:35.562Z">
+<meta property="article:author" content="Hongyu Li">
+<meta property="article:tag" content="Transformer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/LLM.webp">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>LLM-Transformer - Hongyu Li</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"adzuki23.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":50,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hongyu Li</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>个人</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="LLM-Transformer"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-07-04 00:00" pubdate>
+          2024年7月4日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">LLM-Transformer</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>Transformer 模型是由谷歌在2017 年提出并首先应用于机器翻译的神经网络模型结构。Transformer 结构完全通过注意力机制完成对源语言序列和目标语言序列全局依赖的建模。</p>
+<p><strong>参考文章：</strong></p>
+<p>本文只是对参考文章做一些记录总结，内容全部来源于以下文章，写的非常详细：</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454482273%E3%80%81">https://zhuanlan.zhihu.com/p/454482273、</a></p>
+<p><strong>结构图：</strong></p>
+<p><img src="/2024/07/04/LLM-Transformer/1740792-20200714150528222-1369583497.png" srcset="/img/loading.gif" lazyload alt="Transformer结构"></p>
+<h3 id="1-位置编码"><a href="#1-位置编码" class="headerlink" title="1. 位置编码"></a>1. 位置编码</h3><hr>
+<p>在Transformer的encoder和decoder的输入层中，使用了Positional Encoding，使得最终的输入满足：</p>
+<p>$input &#x3D; Input\ Embedding + Positional\ Encoding$</p>
+<h4 id="1-1-为什么需要位置编码："><a href="#1-1-为什么需要位置编码：" class="headerlink" title="1.1 为什么需要位置编码："></a>1.1 为什么需要位置编码：</h4><p>在self-attention模型中，输入是一整排的tokens，对于人来说，我们很容易观察到tokens的位置信息，但是因为self-attention的运算是无向的，无法分辩tokens位置信息，因此我们要想办法，把tokens的位置信息，喂给模型。</p>
+<h4 id="1-2-如何构造位置编码"><a href="#1-2-如何构造位置编码" class="headerlink" title="1.2 如何构造位置编码"></a>1.2 如何构造位置编码</h4><p>一些方法，比如 用整型值标记位置 &#x2F; 用[0,1]范围标记位置 &#x2F; 用二进制向量标记 &#x2F; 用周期函数sin表示….等，都有其不足之处和局限性。</p>
+<p>但我们有一些希望实现的目标：</p>
+<blockquote>
+<ul>
+<li>位置的表示应该是有界的；</li>
+<li>模型可以处理在训练时没见过的句子长度；</li>
+<li>序列长度不同时，tokens的相对位置应该保持一致；</li>
+<li>希望位置编码在连续空间内而不是离散的；</li>
+<li>不同的位置向量是可以通过线性转换得到的。</li>
+</ul>
+</blockquote>
+<h5 id="1-2-1用周期函数-Sin-表示Position-Encoding"><a href="#1-2-1用周期函数-Sin-表示Position-Encoding" class="headerlink" title="1.2.1用周期函数 Sin 表示Position Encoding:"></a>1.2.1<strong>用周期函数 Sin 表示Position Encoding:</strong></h5><p>我们把位置向量当中的每一个元素都用一个sin函数来表示，则第t个token的位置向量可以表示为：<br>$$<br>PE_t &#x3D; [\sin(\frac{1}{2^0}t), \sin(\frac{1}{2^1}t),\cdots,\sin(\frac{1}{2^{i-1}}t),\cdots,\sin(\frac{1}{2^{d_{model}-1}}t)]<br>$$<br>结合下图，来理解一下这样设计的含义。图中每一行表示一个$PE_t$ ，每一列表示$PE_t$ 中的第<code>i</code>个元素。</p>
+<blockquote>
+<p>每一列表示$PE_t$中的第<code>i</code>个元素。旋钮用于调整精度，越往右边的旋钮，需要调整的精度越大，因此指针移动的步伐越小。每一排的旋钮都在上一排的基础上进行调整（函数中 t 的作用）。通过频率$\frac{1}{2^{i-1}}$来控制sin函数的波长，频率不断减小，则波长不断变大，此时sin函数对t的变动越不敏感，以此来达到越向右的旋钮，指针移动步伐越小的目的。 这也类似于二进制编码，每一位上都是0和1的交互，越往低位走（越往左边走），交互的频率越慢。</p>
+</blockquote>
+<p><img src="/2024/07/04/LLM-Transformer/v2-eb3d818037adb892dafcf26a6ef433cc_1440w.webp" srcset="/img/loading.gif" lazyload alt="用周期函数Sin表示位置编码"></p>
+<p>由于sin是周期函数，因此从纵向来看，如果函数的频率偏大，引起波长偏短，则不同t下的位置向量可能出现重合的情况。比如在下图中(d_model &#x3D; 3），图中的点表示每个token的位置向量，颜色越深，token的位置越往后，在频率偏大的情况下，位置响亮点连成了一个闭环，靠前位置（黄色）和靠后位置（棕黑色）竟然靠得非常近：</p>
+<p><img src="/2024/07/04/LLM-Transformer/v2-a76698f2225c5ed7bc49b2259548cf2a_1440w.webp" srcset="/img/loading.gif" lazyload alt="d_model = 3下的sin函数"></p>
+<p>为了避免这种情况，我们尽量将函数的波长拉长。一种简单的解决办法是同一把所有的频率都设成一个非常小的值。因此在transformer的论文中，采用了$\frac{1}{10000^{i&#x2F;{d_{model}-1}}}$这个频率（这里 i 其实不是表示第 i 个位置，但是大致意思差不多，下面会细说） </p>
+<p>总结一下，到这里我们把位置向量表示为，其中$w_i$等于$\frac{1}{10000^{i&#x2F;{d_{model}-1}}}$<br>$$<br>PE_t &#x3D; [\sin(w_0t), \sin(w_1t),\cdots,\sin(w_{i-1}t),\cdots,\sin(w_{d_{model}-1}t)]<br>$$</p>
+<h5 id="1-2-2-用sin和cos交替来表示位置"><a href="#1-2-2-用sin和cos交替来表示位置" class="headerlink" title="1.2.2 用sin和cos交替来表示位置"></a>1.2.2 用sin和cos交替来表示位置</h5><p>目前为止，我们的位置向量实现了如下功能： </p>
+<blockquote>
+<ul>
+<li>每个token的向量唯一（每个sin函数的频率足够小）；</li>
+<li>位置向量的值是有界的，且位于连续空间中。模型在处理位置向量时更容易泛化，即更好处理长度和训练数据分布不一致的序列（sin函数本身的性质）。</li>
+</ul>
+</blockquote>
+<p>那现在我们对位置向量再提出一个要求：<strong>不同的位置向量是可以通过线性转换得到的</strong>。这样，我们不仅能表示一个token的绝对位置，还可以表示一个token的相对位置，即我们想要：<br>$$<br>PE_{t+\triangle{t}}&#x3D;T_{\triangle{t}}*PE_t<br>$$<br>这里，$T$ 表示一个线性变换矩阵。观察这个目标式子，联想到在向量空间中一种常用的线形变换—旋转。在这里，我们将t想象为一个角度，那么$\triangle{t}$就是其旋转的角度，则上面的式子可以进一步写成：</p>
+<p><img src="/2024/07/04/LLM-Transformer/image-20240704221004298.png" srcset="/img/loading.gif" lazyload alt="向量空间-旋转"></p>
+<p>有了这个构想，我们就可以把原来元素全都是sin函数的 做一个替换，我们让位置两两一组，分别用sin和cos的函数对来表示它们，则现在我们有：<br>$$<br>PE_t &#x3D; \sin(w_0t),\cos(w_0t),\sin(w_1t),\cos(w_1t)\cdots,\sin(w_{i-1}t),\cos(w_{i-1}t),\cdots,\sin(w_{d_{model}-1}t)\cos(w_{d_{model}-1}t)<br>$$<br>在这样的表示下，我们可以很容易用一个线性变换，把$PE_t$转变为$PE_{t+\Delta t}$ ，具体公式<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454482273">参考文章</a>。</p>
+<h4 id="1-3-Transformer中位置编码方法：Sinusoidal-functions"><a href="#1-3-Transformer中位置编码方法：Sinusoidal-functions" class="headerlink" title="1.3 Transformer中位置编码方法：Sinusoidal functions"></a>1.3 Transformer中位置编码方法：Sinusoidal functions</h4><p>定义： </p>
+<ul>
+<li><code>t</code> 是这个token在序列中的实际位置（例如第一个token为1，第二个token为2…） </li>
+<li>$PE_t\in\mathbb{R^d}$是这个token的位置向量， $PE_t^{(i)}$表示这个位置向量里的第<code>i</code>个元素 </li>
+<li>$d_{model}$是这个token的维度（在论文中，是512)</li>
+</ul>
+<p>$PE_t^{(i)}$则可以如下表示，这里$w_k&#x3D;\frac{1}{10000^{2k&#x2F;{d_{model}-1}}}$，$k&#x3D;0,1,2,3,\dots,\frac{d_{model}}{2}-1$<br>$$<br>PE_t^{(i)} &#x3D; \begin{cases}<br>\sin(w_kt) &amp; \text{if } i &#x3D; 2k \<br>\cos(w_kt) &amp; \text{if } i &#x3D; 2k+1<br>\end{cases}<br>$$<br>这个意思和式子(5)中的意思是一模一样的，把512维的向量两两一组，每组都是一个sin和一个cos，这两个函数共享同一个频率$w_i$ ，一共有256组，由于我们从0开始编号，所以最后一组编号是255。sin&#x2F;cos函数的波长（由$w_i$决定）则从$2\pi$增长到 $2\pi*10000$</p>
+<h4 id="1-4-Transformer位置编码可视化"><a href="#1-4-Transformer位置编码可视化" class="headerlink" title="1.4 Transformer位置编码可视化"></a>1.4 Transformer位置编码可视化</h4><p>下图是一串序列长度为50，位置编码维度为128的位置编码可视化结果：</p>
+<blockquote>
+<p>可以发现，由于sin&#x2F;cos函数的性质，位置向量的每一个值都位于[-1, 1]之间。同时，纵向来看，图的右半边几乎都是蓝色的，这是因为越往后的位置，频率越小，波长越长，所以不同的t对最终的结果影响不大。而越往左边走，颜色交替的频率越频繁。</p>
+</blockquote>
+<p><img src="/2024/07/04/LLM-Transformer/v2-b6c64586260ebed24339052adec7bca8_1440w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="1-5-Transformer位置编码的重要性质"><a href="#1-5-Transformer位置编码的重要性质" class="headerlink" title="1.5 Transformer位置编码的重要性质"></a>1.5 Transformer位置编码的重要性质</h4><ol>
+<li>两个位置编码的点积(dot product)仅取决于偏移量$\Delta t$ ，也即两个位置编码的点积可以反应出两个位置编码间的距离。</li>
+<li>位置向量的点积可以用于表示<strong>距离</strong>(distance-aware)，但是它却不能用来表示位置的<strong>方向性</strong>(lack-of-directionality)。</li>
+<li>在Transformer的论文中，比较了用positional encoding和learnable position embedding(让模型自己学位置参数）两种方法，得到的结论是两种方法对模型最终的衡量指标差别不大。不过在后面的BERT中，已经改成用learnable position embedding的方法了，也许是因为positional encoding在进attention层后一些优异性质消失的原因（猜想）。Positional encoding有一些想象+实验+论证的意味，而编码的方式也不只这一种，比如把sin和cos换个位置，依然可以用来编码。</li>
+</ol>
+<h3 id="2-Self-Attention（自注意力机制）"><a href="#2-Self-Attention（自注意力机制）" class="headerlink" title="2.Self-Attention（自注意力机制）"></a>2.Self-Attention（自注意力机制）</h3><hr>
+<h4 id="2-1-Attention构造"><a href="#2-1-Attention构造" class="headerlink" title="2.1 Attention构造"></a>2.1 Attention构造</h4>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Deep-Learning/" class="category-chain-item">Deep Learning</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Deep-Learning/LLM/" class="category-chain-item">LLM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Transformer/" class="print-no-link">#Transformer</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LLM-Transformer</div>
+      <div>https://adzuki23.github.io/2024/07/04/LLM-Transformer/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Hongyu Li</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年7月4日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2024年7月5日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/07/07/Algorithm/" title="Algorithm-Sort">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Algorithm-Sort</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/07/03/LLM-BERT/" title="LLM-BERT">
+                        <span class="hidden-mobile">LLM-BERT</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

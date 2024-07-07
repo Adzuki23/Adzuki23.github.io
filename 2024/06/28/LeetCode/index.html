@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/leetcode.jpg">
 <meta property="article:published_time" content="2024-06-27T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-01T08:37:50.773Z">
+<meta property="article:modified_time" content="2024-07-07T05:47:53.350Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="LeetCode">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          3k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          16 分钟
+          26 分钟
         
       </span>
     
@@ -313,7 +313,7 @@
               <div class="markdown-body">
                 
                 <h3 id="LeetCode-热题100"><a href="#LeetCode-热题100" class="headerlink" title="LeetCode 热题100"></a>LeetCode 热题100</h3><hr>
-<h4 id="1-题目一：两数之和"><a href="#1-题目一：两数之和" class="headerlink" title="1. 题目一：两数之和"></a>1. 题目一：两数之和</h4><p># Hash表	# 数组</p>
+<h4 id="1-1-两数之和"><a href="#1-1-两数之和" class="headerlink" title="1. 1:两数之和"></a>1. 1:两数之和</h4><p># Hash表	# 数组</p>
 <blockquote>
 <p>给定一个整数数组 <code>nums</code> 和一个整数目标值 <code>target</code>，请你在该数组中找出 <strong>和为目标值</strong> <code>target</code> 的那 <strong>两个</strong> 整数，并返回它们的数组下标。</p>
 </blockquote>
@@ -332,7 +332,7 @@
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">seasons = [<span class="hljs-string">&#x27;Spring&#x27;</span>, <span class="hljs-string">&#x27;Summer&#x27;</span>, <span class="hljs-string">&#x27;Fall&#x27;</span>, <span class="hljs-string">&#x27;Winter&#x27;</span>]<br><br><span class="hljs-built_in">list</span>(<span class="hljs-built_in">enumerate</span>(seasons))<br>[(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;Spring&#x27;</span>), (<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;Summer&#x27;</span>), (<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;Fall&#x27;</span>), (<span class="hljs-number">3</span>, <span class="hljs-string">&#x27;Winter&#x27;</span>)]<br><span class="hljs-built_in">list</span>(<span class="hljs-built_in">enumerate</span>(seasons, start=<span class="hljs-number">1</span>))       <span class="hljs-comment"># 下标从 1 开始</span><br>[(<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;Spring&#x27;</span>), (<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;Summer&#x27;</span>), (<span class="hljs-number">3</span>, <span class="hljs-string">&#x27;Fall&#x27;</span>), (<span class="hljs-number">4</span>, <span class="hljs-string">&#x27;Winter&#x27;</span>)]<br></code></pre></td></tr></table></figure></li>
 </ol>
-<h4 id="2-题目二：字母异位词分组"><a href="#2-题目二：字母异位词分组" class="headerlink" title="2. 题目二：字母异位词分组"></a>2. 题目二：字母异位词分组</h4><p># Hash表	# 数组	# 字符串</p>
+<h4 id="2-149-字母异位词分组"><a href="#2-149-字母异位词分组" class="headerlink" title="2. 149:字母异位词分组"></a>2. 149:字母异位词分组</h4><p># Hash表	# 数组	# 字符串</p>
 <blockquote>
 <p>给你一个字符串数组，请你将 <strong>字母异位词</strong> 组合在一起。可以按任意顺序返回结果列表。</p>
 <p><strong>字母异位词</strong> 是由重新排列源单词的所有字母得到的一个新单词。</p>
@@ -354,7 +354,7 @@
 <li><p>Map、HashTable、Dict等的区别和联系</p>
 </li>
 </ol>
-<h4 id="3-题目三：最长连续序列"><a href="#3-题目三：最长连续序列" class="headerlink" title="3. 题目三：最长连续序列"></a>3. 题目三：最长连续序列</h4><p># Hash表	# 数组</p>
+<h4 id="3-128-最长连续序列"><a href="#3-128-最长连续序列" class="headerlink" title="3. 128:最长连续序列"></a>3. 128:最长连续序列</h4><p># Hash表	# 数组</p>
 <blockquote>
 <p>给定一个未排序的整数数组 <code>nums</code> ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。</p>
 <p>请你设计并实现时间复杂度为 <code>O(n)</code> 的算法解决此问题。</p>
@@ -378,12 +378,15 @@
 </code></pre>
 </li>
 </ol>
-<h4 id="4-题目四：移动零"><a href="#4-题目四：移动零" class="headerlink" title="4. 题目四：移动零"></a>4. 题目四：移动零</h4><p># 数组	# 双指针</p>
+<h4 id="4-283-移动零"><a href="#4-283-移动零" class="headerlink" title="4. 283:移动零"></a>4. 283:移动零</h4><p># 数组	# 双指针</p>
 <blockquote>
 <p>给定一个数组 <code>nums</code>，编写一个函数将所有 <code>0</code> 移动到数组的末尾，同时保持非零元素的相对顺序。</p>
 </blockquote>
 <p><strong>解决：</strong></p>
-<p>空间复杂度$O(1)$	时间复杂度$O(N)$</p>
+<ul>
+<li>双指针	时间复杂度$O(N)$	空间复杂度$O(1)$</li>
+</ul>
+<p>	</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">moveZeroes</span>(<span class="hljs-params">self, nums</span>):<br>        left = right = <span class="hljs-number">0</span><br>        num_len = <span class="hljs-built_in">len</span>(nums) <br>				<span class="hljs-comment"># right指针遍历整个列表</span><br>        <span class="hljs-keyword">while</span> right &lt; num_len:<br>          	<span class="hljs-comment"># right指针的目标就是寻找非零值与left指针交换，当找到则两个指针同时右移</span><br>            <span class="hljs-keyword">if</span> nums[right] != <span class="hljs-number">0</span>:<br>                nums[left], nums[right] = nums[right], nums[left]<br>                left += <span class="hljs-number">1</span><br>            right += <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>总结：</strong></p>
@@ -399,14 +402,16 @@
 </ul>
 </li>
 </ol>
-<h4 id="5-题目五：盛最多水的容器"><a href="#5-题目五：盛最多水的容器" class="headerlink" title="5. 题目五：盛最多水的容器"></a>5. 题目五：盛最多水的容器</h4><p># 贪心	# 双指针	# 数组 </p>
+<h4 id="5-11-盛最多水的容器"><a href="#5-11-盛最多水的容器" class="headerlink" title="5. 11:盛最多水的容器"></a>5. 11:盛最多水的容器</h4><p># 贪心	# 双指针	# 数组 </p>
 <blockquote>
 <p>给定一个长度为 <code>n</code> 的整数数组 <code>height</code> 。有 <code>n</code> 条垂线，第 <code>i</code> 条线的两个端点是 <code>(i, 0)</code> 和 <code>(i, height[i])</code> 。</p>
 <p>找出其中的两条线，使得它们与 <code>x</code> 轴共同构成的容器可以容纳最多的水。返回容器可以储存的最大水量。</p>
 <p><strong>说明：</strong>你不能倾斜容器。</p>
 </blockquote>
 <p><strong>解决：</strong>	</p>
-<p>空间复杂度$O(1)$	时间复杂度$O(N)$</p>
+<ul>
+<li>双指针	时间复杂度$O(N)$	空间复杂度$O(1)$</li>
+</ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">maxArea</span>(<span class="hljs-params">self, height</span>):<br>        lens = <span class="hljs-built_in">len</span>(height)<br>        left = <span class="hljs-number">0</span><br>        right = lens-<span class="hljs-number">1</span><br><br>        maxArea = <span class="hljs-number">0</span><br>        curArea = <span class="hljs-number">0</span><br>        <br>        <span class="hljs-keyword">while</span> left != right:<br>            <span class="hljs-keyword">if</span> height[left] &lt;= height[right]:<br>                curArea = height[left] * (right-left)<br>                left += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">else</span>:<br>                curArea = height[right] * (right-left)<br>                right -=<span class="hljs-number">1</span><br>            <br>            maxArea = <span class="hljs-built_in">max</span>(maxArea,curArea)<br>        <span class="hljs-keyword">return</span> maxArea<br></code></pre></td></tr></table></figure>
 
 <p><strong>总结：</strong></p>
@@ -414,6 +419,41 @@
 <li>这道题也可以用暴力解法，双层循环遍历两次列表，判断每一组值，但是时间复杂度为$O(N^2)$。</li>
 <li>一开始两个指针一个指向开头一个指向结尾，此时容器的底是最大的，接下来随着指针向内移动，会造成容器的底变小，这种情况下我们想要让指针移动后的容器面积增大，就要使移动后的容器的高尽量大，所以我们选择指针所指的高较小的那个指针进行移动，这样我们就保留了容器较高的那条边，放弃了较小的那条边，以获得有更高的边的机会。</li>
 </ol>
+<h4 id="6-15-三数之和"><a href="#6-15-三数之和" class="headerlink" title="6. 15:三数之和"></a>6. 15:三数之和</h4><p># 排序	# 双指针	# 数组</p>
+<blockquote>
+<p>给你一个整数数组 <code>nums</code> ，判断是否存在三元组 <code>[nums[i], nums[j], nums[k]]</code> 满足 <code>i != j</code>、<code>i != k</code> 且 <code>j != k</code> ，同时还满足 <code>nums[i] + nums[j] + nums[k] == 0</code> 。请你返回所有和为 <code>0</code> 且不重复的三元组。</p>
+<p><strong>注意：</strong>答案中不可以包含重复的三元组。</p>
+</blockquote>
+<p><strong>解决：</strong></p>
+<ul>
+<li><p>双指针	时间复杂度$O(N^2)$	空间复杂度$O(1)$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">threeSum</span>(<span class="hljs-params">self, nums</span>):<br>        nums_sort = <span class="hljs-built_in">sorted</span>(nums)<br>        res = []<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(nums_sort)):<br>            <span class="hljs-keyword">if</span> nums_sort[i] &gt; <span class="hljs-number">0</span>:<br>                <span class="hljs-keyword">break</span><br>            <span class="hljs-comment"># 去重</span><br>            <span class="hljs-keyword">if</span> i &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> nums_sort[i] == nums_sort[i-<span class="hljs-number">1</span>]:<br>                <span class="hljs-keyword">continue</span><br>            <span class="hljs-comment"># 双指针</span><br>            l = i+<span class="hljs-number">1</span><br>            r = <span class="hljs-built_in">len</span>(nums_sort)-<span class="hljs-number">1</span><br>            <span class="hljs-keyword">while</span> l &lt; r:<br>                s = nums_sort[l] + nums_sort[r] + nums_sort[i]<br>                <span class="hljs-keyword">if</span> s == <span class="hljs-number">0</span>:<br>                    res.append([nums_sort[i],nums_sort[l],nums_sort[r]])<br>                    r -= <span class="hljs-number">1</span><br>                    <span class="hljs-comment"># 去重</span><br>                    <span class="hljs-keyword">while</span> l&lt;r <span class="hljs-keyword">and</span> nums_sort[r]== nums_sort[r+<span class="hljs-number">1</span>]:r -= <span class="hljs-number">1</span><br>                    l += <span class="hljs-number">1</span><br>                    <span class="hljs-comment"># 去重</span><br>                    <span class="hljs-keyword">while</span> l&lt;r <span class="hljs-keyword">and</span> nums_sort[l]== nums_sort[l-<span class="hljs-number">1</span>]:l += <span class="hljs-number">1</span><br>                <span class="hljs-keyword">elif</span> s &gt; <span class="hljs-number">0</span>:<br>                    r -= <span class="hljs-number">1</span><br>                    <span class="hljs-comment"># 去重</span><br>                    <span class="hljs-keyword">while</span> l&lt;r <span class="hljs-keyword">and</span> nums_sort[r]== nums_sort[r+<span class="hljs-number">1</span>]:r -= <span class="hljs-number">1</span> <br>                <span class="hljs-keyword">elif</span> s &lt; <span class="hljs-number">0</span>:<br>                    l += <span class="hljs-number">1</span><br>                    <span class="hljs-comment"># 去重</span><br>                    <span class="hljs-keyword">while</span> l&lt;r <span class="hljs-keyword">and</span> nums_sort[l]== nums_sort[l-<span class="hljs-number">1</span>]:l += <span class="hljs-number">1</span><br>        <span class="hljs-keyword">return</span> res<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>总结：</strong></p>
+<ol>
+<li>双指针解法中 <code>l = i+1</code> 而不是 <code>l = 0</code> 的原因是，如果每次从0开始会造成重复解，<code>for</code>循环遍历每个数，与每个数有关的解都已经被列出，遍历到其他数时，不应该再包含之前已经处理好的值。</li>
+<li>为什么不能用set方法先直接去掉重复的数字？因为像<code>[-1,-1,2]</code>这样的例子就不可行。</li>
+</ol>
+<h4 id="7-42-接雨水"><a href="#7-42-接雨水" class="headerlink" title="7. 42:接雨水"></a>7. <font color="red">42:接雨水</font></h4><p># 栈	# 数组	# 双指针	# 动态规划	#单调栈</p>
+<blockquote>
+<p>给定 <code>n</code> 个非负整数表示每个宽度为 <code>1</code> 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。</p>
+</blockquote>
+<p><img src="/2024/06/28/LeetCode/image-20240706170317206.png" srcset="/img/loading.gif" lazyload alt="接雨水示例1"></p>
+<p><strong>解决：</strong></p>
+<ul>
+<li><p>动态规划「按列」	时间复杂度$O(N)$	空间复杂度$O(N)$</p>
+<p>对于下标<code> i</code>，下雨后水能到达的最大高度等于下标<code>i</code>两边的最大高度的最小值，下标 <code>i </code>处能接的雨水量等于下标 <code>i </code>处的水能到达的最大高度减去<code> height[i]</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">朴素的做法是对于数组 height 中的每个元素，分别向左和向右扫描并记录左边和右边的最大高度，然后计算每个下标位置能接的雨水量。该做法需要对每个下标位置使用 O(n) 的时间向两边扫描并得到最大高度，因此总时间复杂度是 O(n^2)。</span><br><span class="hljs-string">使用动态规划的方法，可以在 O(n) 的时间内预处理得到每个位置两边的最大高度:</span><br><span class="hljs-string">leftMax[i] = max(leftMax[i-1], height[i])</span><br><span class="hljs-string">rightMax[i] = max(rightMax[i+1], height[i])</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">trap</span>(<span class="hljs-params">self, height</span>):<br>        n = <span class="hljs-built_in">len</span>(height)<br>        ans = <span class="hljs-number">0</span><br>        leftMax = [height[<span class="hljs-number">0</span>]] + [<span class="hljs-number">0</span>] * (n-<span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, n):<br>            leftMax[i] = <span class="hljs-built_in">max</span>(leftMax[i-<span class="hljs-number">1</span>], height[i])<br><br>        rightMax = [<span class="hljs-number">0</span>] * (n-<span class="hljs-number">1</span>) + [height[n-<span class="hljs-number">1</span>]]<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n-<span class="hljs-number">2</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>):<br>            rightMax[i] = <span class="hljs-built_in">max</span>(rightMax[i+<span class="hljs-number">1</span>], height[i])<br>        <br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            ans += <span class="hljs-built_in">min</span>(leftMax[i], rightMax[i]) - height[i]<br>        <br>        <span class="hljs-keyword">return</span> ans<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>单调栈「按行」	时间复杂度$O(N)$	空间复杂度$O(N)$</p>
+<p>维护一个单调栈，单调栈存储的是下标，满足从栈底到栈顶的下标对应的数组 height 中的元素递减。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">1. 从左到右遍历数组，遍历到下标 i 时，如果栈内至少有两个元素，记栈顶元素为 top，top 的下面一个元素是 left，则一定有 height[left]≥height[top]。如果height[i]&gt;height[top]，则得到一个可以接雨水的区域，该区域的宽度是i−left−1，高度是min(height[left],height[i])−height[top]，根据宽度和高度即可计算得到该区域能接的雨水量。</span><br><span class="hljs-string">2. 为了得到 left，需要将 top 出栈。在对 top 计算能接的雨水量之后，left 变成新的 top，重复上述操作，直到栈变为空，或者栈顶下标对应的 height 中的元素大于或等于 height[i]。</span><br><span class="hljs-string">3. 在对下标 i 处计算能接的雨水量之后，将 i 入栈，继续遍历后面的下标，计算能接的雨水量。遍历结束之后即可得到能接的雨水总量。</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">trap</span>(<span class="hljs-params">self, height</span>):<br>        ans = <span class="hljs-number">0</span><br>        stack = <span class="hljs-built_in">list</span>()<br>        n = <span class="hljs-built_in">len</span>(height)<br><br>        <span class="hljs-keyword">for</span> i, h <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span> (height):<br>            <span class="hljs-keyword">while</span> stack <span class="hljs-keyword">and</span> h &gt; height[stack[-<span class="hljs-number">1</span>]]:<br>                top = stack.pop()<br>                <span class="hljs-comment"># 左边界构不成存储雨水的条件，直接退出</span><br>                <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> stack:<br>                    <span class="hljs-keyword">break</span><br>                <span class="hljs-comment"># 构成存储雨水的条件</span><br>                left = stack[-<span class="hljs-number">1</span>]<br>                curWidth = i - left - <span class="hljs-number">1</span><br>                curHeight = <span class="hljs-built_in">min</span>(height[left], height[i]) - height[top]<br>                ans += curWidth * curHeight<br>            stack.append(i)<br>        <span class="hljs-keyword">return</span> ans<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>双指针「按列」</strong>	时间复杂度$O(N)$	空间复杂度$O(1)$</p>
+<p>解决动态规划的空间复杂度问题</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">trap</span>(<span class="hljs-params">self, height</span>):<br>        ans = <span class="hljs-number">0</span><br>        n = <span class="hljs-built_in">len</span>(height)<br>        l = <span class="hljs-number">0</span><br>        r = n-<span class="hljs-number">1</span><br>        lmax = rmax = <span class="hljs-number">0</span><br>        <span class="hljs-keyword">while</span> l &lt; r:<br>            lmax = <span class="hljs-built_in">max</span>(lmax, height[l])<br>            rmax = <span class="hljs-built_in">max</span>(rmax, height[r])<br>            <span class="hljs-keyword">if</span> height[l]&lt;height[r]:<br>                ans += lmax - height[l]<br>                l += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">else</span>:<br>                ans += rmax - height[r]<br>                r -= <span class="hljs-number">1</span><br>        <span class="hljs-keyword">return</span> ans<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>总结：</strong></p>
 
                 
               </div>
@@ -432,8 +472,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/LeetCode/" class="category-chain-item">LeetCode</a>
+  <a href="/categories/Algorithm/" class="category-chain-item">Algorithm</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/Algorithm/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+
   
 
       </span>
@@ -478,7 +525,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月1日</div>
+          <div>2024年7月7日</div>
         </div>
       
       
@@ -509,9 +556,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/06/28/AIGC/" title="AIGC-StableDiffusion">
+                      <a href="/2024/06/28/interview/" title="Interview Direction Series">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">AIGC-StableDiffusion</span>
+                        <span class="hidden-mobile">Interview Direction Series</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -519,8 +566,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/06/13/DeepLearningBasicKnowledge/" title="BasicKnowledge">
-                        <span class="hidden-mobile">BasicKnowledge</span>
+                      <a href="/2024/06/28/AIGC-StableDiffusion/" title="AIGC-StableDiffusion">
+                        <span class="hidden-mobile">AIGC-StableDiffusion</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

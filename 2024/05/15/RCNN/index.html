@@ -23,13 +23,13 @@
 <meta property="og:site_name" content="Hongyu Li">
 <meta property="og:description" content="学习目标检测中的R-CNN系列，更深层次的了解原理，对网络模块、损失函数等就像深入理解。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://adzuki23.github.io/img/cover/RCNN.png">
+<meta property="og:image" content="https://adzuki23.github.io/img/cover/faster-rcnn.png">
 <meta property="article:published_time" content="2024-05-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-06-30T04:38:21.491Z">
+<meta property="article:modified_time" content="2024-07-03T14:51:33.899Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="RCNN">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/RCNN.png">
+<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/faster-rcnn.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -495,8 +495,7 @@
 <blockquote>
 <p>256-d是指使用ZF model作为backbone，最终每个点都用一个256维的向量表示，即<code>N=256</code>。</p>
 </blockquote>
-</li>
-<li><p>1*1卷积+Cls layer + Reg layer：</p>
+<p>1*1卷积+Cls layer + Reg layer：</p>
 <blockquote>
 <p>在<strong>分类任务「Cls layer」</strong>中，经过1*1卷积后，输出图像大小为：<strong>H*W*18</strong>，正好对应9个anchor boxes的2分类结果。为何要在softmax前后都接一个reshape layer？其实只是为了便于softmax分类，具体原因这就要从caffe的实现形式说起。</p>
 <p>在<strong>回归任务「Reg layer」</strong>，经过1*1卷积后，输出图像大小为：<strong>H*W*36</strong>，正好对应9个anchor boxes的边界框。</p>
@@ -618,7 +617,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年6月30日</div>
+          <div>2024年7月3日</div>
         </div>
       
       

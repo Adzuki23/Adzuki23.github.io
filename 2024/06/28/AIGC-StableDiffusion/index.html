@@ -19,17 +19,17 @@
     <meta name="description" content="对生成式深度学习模型Stable Diffusion进行学习。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AIGC-StableDiffusion">
-<meta property="og:url" content="https://adzuki23.github.io/2024/06/28/AIGC/index.html">
+<meta property="og:url" content="https://adzuki23.github.io/2024/06/28/AIGC-StableDiffusion/index.html">
 <meta property="og:site_name" content="Hongyu Li">
 <meta property="og:description" content="对生成式深度学习模型Stable Diffusion进行学习。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://adzuki23.github.io/img/cover/StableDiffusion.png">
+<meta property="og:image" content="https://adzuki23.github.io/img/cover/AIGC.jpeg">
 <meta property="article:published_time" content="2024-06-27T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-01T13:50:33.217Z">
+<meta property="article:modified_time" content="2024-07-04T10:04:14.484Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Stable Diffusion">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/StableDiffusion.png">
+<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/AIGC.jpeg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.7k 字
+          4.3k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          31 分钟
+          36 分钟
         
       </span>
     
@@ -312,31 +312,30 @@
             
               <div class="markdown-body">
                 
-                <h2 id="AIGC"><a href="#AIGC" class="headerlink" title="AIGC"></a>AIGC</h2><h3 id="Stable-Diffusion"><a href="#Stable-Diffusion" class="headerlink" title="Stable Diffusion"></a>Stable Diffusion</h3><p><strong>参考文章：</strong></p>
+                <h2 id="AIGC–Stable-Diffusion"><a href="#AIGC–Stable-Diffusion" class="headerlink" title="AIGC–Stable Diffusion"></a>AIGC–Stable Diffusion</h2><p><strong>Stable Diffusion</strong>是一个基于Latent Diffusion Model（LDM）的文转图AI模型，其使用了<strong>CLIP ViT-L&#x2F;14的文本编码器</strong>，能够通过文本提示调整图像。它在运行时将成像过程分离成“<strong>扩散 （diffusion）</strong>”的过程，从有噪声的情况开始，逐渐改善图像，直到完全没有噪声，逐步接近所提供的文本描述。</p>
+<p><strong>参考文章：</strong></p>
 <blockquote>
 <ol>
-<li>在文章写完去扣源码时候才找到这两篇文章，写的非常牛逼，非常细节！！文章中许多图、想法来源于它：</li>
+<li><p>在文章写完去扣源码时候才找到这两篇文章，写的非常牛逼，非常细节！！文章中许多图、想法来源于它：</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/613337342%E3%80%81https://zhuanlan.zhihu.com/p/615310965">https://zhuanlan.zhihu.com/p/613337342、https://zhuanlan.zhihu.com/p/615310965</a></p>
+</li>
+<li><p>这三篇文章介绍DM模型还有其他内容等非常深入浅出，难以理解的数学公式介绍的非常详细，非常牛逼！！</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/637815071%E3%80%81https://zhuanlan.zhihu.com/p/650394311%E3%80%81https://zhuanlan.zhihu.com/p/655568910">https://zhuanlan.zhihu.com/p/637815071、https://zhuanlan.zhihu.com/p/650394311、https://zhuanlan.zhihu.com/p/655568910</a></p>
+</li>
+<li><p>其他文章：</p>
+<p><a target="_blank" rel="noopener" href="http://shiyanjun.cn/archives/2212.html%E3%80%81https://jalammar.github.io/illustrated-stable-diffusion/">http://shiyanjun.cn/archives/2212.html、https://jalammar.github.io/illustrated-stable-diffusion/</a></p>
+</li>
 </ol>
-<p>  <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/613337342%E3%80%81https://zhuanlan.zhihu.com/p/615310965">https://zhuanlan.zhihu.com/p/613337342、https://zhuanlan.zhihu.com/p/615310965</a></p>
-<ol start="2">
-<li>这几个文章介绍DDPM模型还有其他内容非常深入浅出，难以理解的数学公式介绍的非常详细，非常牛逼！！</li>
-</ol>
-<p>  <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/637815071">https://zhuanlan.zhihu.com/p/637815071</a></p>
-<ol start="3">
-<li>其他文章：</li>
-</ol>
-<p>  <a target="_blank" rel="noopener" href="http://shiyanjun.cn/archives/2212.html">http://shiyanjun.cn/archives/2212.html</a></p>
-<p>  <a target="_blank" rel="noopener" href="https://jalammar.github.io/illustrated-stable-diffusion/">https://jalammar.github.io/illustrated-stable-diffusion/</a></p>
 </blockquote>
-<p><img src="/2024/06/28/AIGC/image-20240630102333319.png" srcset="/img/loading.gif" lazyload alt="Latent Diffusion Model Abstract"></p>
+<p><strong>Latent Diffusion Model文章摘要：</strong></p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240630102333319.png" srcset="/img/loading.gif" lazyload alt="Latent Diffusion Model Abstract"></p>
+<h3 id="1-模型结构"><a href="#1-模型结构" class="headerlink" title="1. 模型结构"></a>1. 模型结构</h3><hr>
+<p><strong>结构图：</strong></p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/s.png" srcset="/img/loading.gif" lazyload alt="Stable Diffusion文生图模型简单框架"></p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240630195921339.png" srcset="/img/loading.gif" lazyload alt="Stable Diffusion文生图模型框架"></p>
+<p><strong>模块</strong>：</p>
 <blockquote>
-<p><strong>Stable Diffusion</strong>是一个基于Latent Diffusion Model（LDM）的文转图AI模型，其使用了<strong>CLIP ViT-L&#x2F;14的文本编码器</strong>，能够通过<strong>文本提示</strong>调整<strong>图像模型</strong>。它在运行时将成像过程分离成“<strong>扩散 （diffusion）</strong>”的过程，从有噪声的情况开始，逐渐改善图像，直到完全没有噪声，逐步接近所提供的文本描述。</p>
-</blockquote>
-<h3 id="1-模型结构"><a href="#1-模型结构" class="headerlink" title="1. 模型结构"></a>1. 模型结构</h3><p><strong>结构图：</strong></p>
-<p><img src="/2024/06/28/AIGC/image-20240630195921339.png" srcset="/img/loading.gif" lazyload alt="Stable Diffusion文生图模型结构"></p>
-<p><strong>模块：</strong>「模块描述根据网上流传广泛那张简单的StableDiffusion结构图，并不是上图这张具体的」</p>
-<blockquote>
-<p><strong>CLIP Text Encoder</strong> : 提取输入的text的embedding , <font color="red">通过 cross attention 方式</font>送入扩散模型的 UNet 中作为 condition，注入语义信息;</p>
+<p><strong>CLIP Text Encoder</strong> : 提取输入的text的embedding , <font color="red">通过 cross attention 方式</font>送入扩散模型的 UNet 中作为 condition，注入语义信息，在训练时以context作为condition，使用cross attention机制来更好的学习文本与图像的匹配关系；</p>
 <p><strong>Image Information Creator</strong></p>
 <ul>
 <li><p><strong>Image Encoder</strong> : 基于 VAE Eecoder 将图像压缩到 latent 空间，用向量表示；</p>
@@ -358,7 +357,7 @@
 <h4 id="2-0-到底什么是扩散-Diffusion-？"><a href="#2-0-到底什么是扩散-Diffusion-？" class="headerlink" title="2.0 到底什么是扩散(Diffusion)？"></a>2.0 <strong>到底什么是扩散(Diffusion)？</strong></h4><p>扩散是发生在“<strong>Image Information Creator</strong>”组件内部的过程。有了表示输入文本的标记嵌入「<strong>Token embeddings</strong>」和随机起始图像信息数组「<strong>Random image information tensor</strong>」，该过程会生成图像解码器用来绘制最终图像的信息数组。</p>
 <h4 id="2-1-CLIP-Text-Encoder"><a href="#2-1-CLIP-Text-Encoder" class="headerlink" title="2.1 CLIP Text Encoder"></a>2.1 CLIP Text Encoder</h4><p>Stable Diffusion所使用的是OpenAI的CLIP的预训练模型，CLIP 「Contrastive Language-Image Pretraining」是一个多模态模型，能够同时理解和生成图像和文本。它可以将图像和文本进行对比学习，从而在各种多模态任务中表现出色。</p>
 <p>CLIP需要的数据为图像及其描述，数据集中大约包含4亿张图像及其描述。CLIP整体模型如下所示：</p>
-<p><img src="/2024/06/28/AIGC/image-20240628165159974.png" srcset="/img/loading.gif" lazyload alt="CLIP模型"></p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240628165159974.png" srcset="/img/loading.gif" lazyload alt="CLIP模型"></p>
 <ul>
 <li><p>(1). <strong>对比预训练</strong> 「Contrastive pre-training」</p>
 <blockquote>
@@ -425,12 +424,14 @@
 </ul>
 <p>这些潜在向量表示是扩散模型操作的核心，它们在扩散过程中逐步反向扩散（denoising），最终生成高质量的图像。Image Encoder在这个过程中扮演了至关重要的角色，确保输入图像能够被有效地压缩和表示，从而使得扩散过程能够生成准确且高质量的图像。</p>
 <h5 id="2-2-2-UNet-Scheduler"><a href="#2-2-2-UNet-Scheduler" class="headerlink" title="2.2.2 UNet+Scheduler"></a>2.2.2 UNet+Scheduler</h5><p>当输入的图像、 文本提示词等信息经过不同组件分别被转换成 Image Embeddings、Token Embeddings… 之后，后续的操作就开始进入 Latent Space 中，通过向量来表示并进行各种处理操作，得到了包含 “原始图像 + 提示词” 信息的图像向量数据信息（Latent Image）。</p>
-<p>下图中前向过程（使用自动编码器的编码器）<strong>是我们生成数据以训练噪声预测器的方式</strong>。训练完成后，我们可以通过运行反向过程（使用自动编码器的解码器）来生成图像。</p>
-<p><img src="/2024/06/28/AIGC/image-20240629232700236.png" srcset="/img/loading.gif" lazyload alt="图2"></p>
+<p>下图中前向过程（$\varepsilon$为VAE的编码器）<strong>是我们生成数据以训练噪声预测器的方式</strong>。训练完成后，我们可以通过运行反向过程（$\mathbf{D}$为VAE的解码器）来生成图像。</p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240629232700236.png" srcset="/img/loading.gif" lazyload alt="图2"></p>
 <p> Image Embeddings、Token Embeddings 等是如何在 UNet 网络中整合在一起的：</p>
-<p><img src="/2024/06/28/AIGC/image-20240630110811534.png" srcset="/img/loading.gif" lazyload alt="Image Embeddings、Token Embeddings 如何在UNet网络中整合在一起"></p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240630110811534.png" srcset="/img/loading.gif" lazyload alt="Image Embeddings、Token Embeddings 如何在UNet网络中整合在一起"></p>
 <p>UNet网络具体结构如下：</p>
-<p><img src="/2024/06/28/AIGC/v2-1a60fadfd1b8cb1b41bad5f7deddf526_1440w.webp" srcset="/img/loading.gif" lazyload alt="UNet网络"></p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/v2-1a60fadfd1b8cb1b41bad5f7deddf526_1440w.webp" srcset="/img/loading.gif" lazyload alt="UNet网络"></p>
+<p>ResBlock+SpatialTransformer具体结构示意图：</p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/v2-11ab7515941c3b343b28488d89b59ed0_r.jpg" srcset="/img/loading.gif" lazyload alt="ResBlock+SpatialTransformer"></p>
 <p><strong>相关组件解释：</strong></p>
 <ol>
 <li><p><code>time step embedding</code>是由<u>时间步信息</u>编码成的一个高维向量，以便与其他特征进行结合和处理。以下是详细解释：</p>
@@ -452,10 +453,35 @@
 </ol>
 <h4 id="2-3-Image-Decoder「VQ-VAE中的解码器部分」"><a href="#2-3-Image-Decoder「VQ-VAE中的解码器部分」" class="headerlink" title="2.3 Image Decoder「VQ-VAE中的解码器部分」"></a>2.3 Image Decoder「<strong>VQ-VAE</strong>中的解码器部分」</h4><p>最后要把这个Latent Image，基于 VAE Decoder 从 Latent Space 再映射到 Pixel Space，得到我们最终需要生成的视觉图像。</p>
 <h3 id="3-DDPM、DDIM、PLMS"><a href="#3-DDPM、DDIM、PLMS" class="headerlink" title="3. DDPM、DDIM、PLMS"></a>3. DDPM、DDIM、PLMS</h3><hr>
-<h4 id="3-1-DDPM-denoising-diffusion-probabilistic-models"><a href="#3-1-DDPM-denoising-diffusion-probabilistic-models" class="headerlink" title="3.1 DDPM (denoising diffusion probabilistic models)"></a>3.1 DDPM (denoising diffusion probabilistic models)</h4><p>在上面所说的几个博客中已经介绍的非常详细了，而且其中的数学公式在大牛的博客中介绍的也非常详细了，但是推导过程依然看不太懂，常看常新叭。</p>
+<h4 id="3-1-DDPM-denoising-diffusion-probabilistic-models"><a href="#3-1-DDPM-denoising-diffusion-probabilistic-models" class="headerlink" title="3.1 DDPM (denoising diffusion probabilistic models)"></a>3.1 DDPM (denoising diffusion probabilistic models)</h4><p>在上面所说的几个博客中已经介绍的非常详细了，而且其中的数学公式在大牛的博客中介绍的也非常详细了，但是推导过程依然有些懵懂，常看常新叭。主要解释了以下几个问题：</p>
+<ol>
+<li><p>最大似然估计</p>
+<p>最大似然估计（Maximum Likelihood Estimation, MLE）是一种统计方法，用于估计模型参数，使得在给定观察数据的情况下，模型生成这些数据的概率最大。简单来说，<strong>MLE 通过最大化似然函数来找到最符合已知数据的模型参数</strong>。</p>
+<p><strong>基本思想:</strong></p>
+<p>假设我们有一个数据集 ${x_1, x_2, …, x_m}$，这些数据点是从某个概率分布 $P_{\text{data}}(x)$中抽取出来的。我们想要用一个参数化的模型 $P_\theta(x)$来近似这个分布，其中 ( $\theta$ ) 是模型的参数。</p>
+<blockquote>
+<p>最大似然估计的目标函数是对数似然函数的和，即：$\sum_{i&#x3D;1}^{m} \log P_\theta(x_i) $</p>
+</blockquote>
+<p><strong>在DDPM中公式推导步骤:</strong></p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240704113802655.png" srcset="/img/loading.gif" lazyload alt="最小化KL散度"></p>
+<p>第一步：$[ \arg\max_\theta \int P_{\text{data}}(x) \log P_\theta(x) , dx ]$，这个积分表示在整个数据分布上的<strong>对数似然函数「$\log P_{\theta}(x)$」的期望</strong>。</p>
+<p>第二步：$[\arg\max_\theta E_{x \sim P_{\text{data}}}[\log P_\theta(x)]]$，利用期望的定义，我们可以<strong>把积分表示成期望的形式</strong>。</p>
+<blockquote>
+<p>这里， $( E_{x \sim P_{\text{data}}} )$ 表示根据数据分布 $( P_{\text{data}}(x) )$ 的期望。</p>
+</blockquote>
+<p>第三步：$[ \arg\max_\theta \sum_{i&#x3D;1}^{m} \log P_\theta(x_i) ]$，在实际操作中，我们没有 $P_{\text{data}} $ 的精确形式，而是只有一个有限的数据样本 ${x_1, x_2, …, x_m}$。因此，我们<strong>使用样本均值来近似期望</strong>，这一步的近似就是在数据样本上的对数似然的求和。通过最大化这个和，我们就可以找到最符合数据的模型参数 $( \theta )$。</p>
+</li>
+<li><p>ELBO「Evidence Lower Bound」</p>
+<p>$argmax_{\theta}\prod_{i&#x3D;1}^{m}P_\theta(x_i)$ 的本质就是要使得连乘中的每一项最大，也等同于使得$\log P_{\theta}(x)$最大。所以我们进一步来拆解 。</p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240704122722262.png" srcset="/img/loading.gif" lazyload alt="ELBO"></p>
+</li>
+<li><p>重参数「Reparamterization」技术</p>
+<p>解决“从一个带参数的分布中进行采样”转变到“从一个确定的分布中进行采样”，以解决梯度无法传递的问题。</p>
+</li>
+</ol>
 <h3 id="4-补充知识"><a href="#4-补充知识" class="headerlink" title="4. 补充知识"></a>4. 补充知识</h3><hr>
 <h4 id="4-1-VQ-VAE（Vector-Quantized-Variational-Autoencoder）"><a href="#4-1-VQ-VAE（Vector-Quantized-Variational-Autoencoder）" class="headerlink" title="4.1 VQ-VAE（Vector Quantized Variational Autoencoder）"></a>4.1 VQ-VAE（Vector Quantized Variational Autoencoder）</h4><p>关于 VQ-VAE「Vector Quantized Variational Autoencoder，VQ-VAE」，是一种将离散表示学习引入自编码器框架的模型。它结合了传统变分自编码器（VAE）和向量量化技术，使模型能够在离散的潜在空间中进行编码和解码。这张图描述了向量量化变分自编码器的工作原理:</p>
-<p><img src="/2024/06/28/AIGC/image-20240701164621499.png" srcset="/img/loading.gif" lazyload alt="VQ-VAE"></p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240701164621499.png" srcset="/img/loading.gif" lazyload alt="VQ-VAE"></p>
 <p><strong>左侧部分：</strong></p>
 <blockquote>
 <ul>
@@ -496,7 +522,7 @@
 </blockquote>
 </li>
 </ul>
-<h4 id="4-3时间步骤（timestep）和条件信息（context-embedding）"><a href="#4-3时间步骤（timestep）和条件信息（context-embedding）" class="headerlink" title="4.3时间步骤（timestep）和条件信息（context embedding）"></a>4.3时间步骤（timestep）和条件信息（context embedding）</h4><p>在 Stable Diffusion 模型中，时间步骤（timestep）和条件信息（如文本嵌入）被注入到不同的网络组件中，这是为了最大化它们在生成过程中的作用和效率。</p>
+<h4 id="4-3-时间步骤（timestep）和条件信息（context-embedding）"><a href="#4-3-时间步骤（timestep）和条件信息（context-embedding）" class="headerlink" title="4.3 时间步骤（timestep）和条件信息（context embedding）"></a>4.3 时间步骤（timestep）和条件信息（context embedding）</h4><p>在 Stable Diffusion 模型中，时间步骤（timestep）和条件信息（如文本嵌入）被注入到不同的网络组件中，这是为了最大化它们在生成过程中的作用和效率。</p>
 <ul>
 <li>时间步骤加入到 ResBlock:</li>
 </ul>
@@ -562,7 +588,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>AIGC-StableDiffusion</div>
-      <div>https://adzuki23.github.io/2024/06/28/AIGC/</div>
+      <div>https://adzuki23.github.io/2024/06/28/AIGC-StableDiffusion/</div>
     </div>
     <div class="license-meta">
       
@@ -580,7 +606,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月1日</div>
+          <div>2024年7月4日</div>
         </div>
       
       
@@ -611,9 +637,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/06/28/interview/" title="Interview Direction Series">
+                      <a href="/2024/06/28/LeetCode/" title="LeetCode">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Interview Direction Series</span>
+                        <span class="hidden-mobile">LeetCode</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -621,8 +647,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/06/28/LeetCode/" title="LeetCode">
-                        <span class="hidden-mobile">LeetCode</span>
+                      <a href="/2024/06/13/DeepLearningBasicKnowledge/" title="BasicKnowledge">
+                        <span class="hidden-mobile">BasicKnowledge</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
