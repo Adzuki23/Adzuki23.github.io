@@ -16,26 +16,26 @@
   <meta name="author" content="Hongyu Li">
   <meta name="keywords" content="DeepLearning,CV">
   
-    <meta name="description" content="总结排序、查找、链表、二叉树、栈、队列等算法原理及复杂度计算。">
+    <meta name="description" content="强化学习。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Algorithm-Sort">
-<meta property="og:url" content="https://adzuki23.github.io/2024/07/07/Algorithm/index.html">
+<meta property="og:title" content="Reinforcement Learning">
+<meta property="og:url" content="https://adzuki23.github.io/2024/07/18/ReinforcementLearning/index.html">
 <meta property="og:site_name" content="Hongyu Li">
-<meta property="og:description" content="总结排序、查找、链表、二叉树、栈、队列等算法原理及复杂度计算。">
+<meta property="og:description" content="强化学习。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://adzuki23.github.io/img/cover/algorithm.jpg">
-<meta property="article:published_time" content="2024-07-06T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-08T02:39:18.309Z">
+<meta property="og:image" content="https://adzuki23.github.io/img/cover/deeplearning.png">
+<meta property="article:published_time" content="2024-07-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-08T15:36:18.705Z">
 <meta property="article:author" content="Hongyu Li">
-<meta property="article:tag" content="Algorithm">
+<meta property="article:tag" content="Reinforcement Learning">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/algorithm.jpg">
+<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/deeplearning.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Algorithm-Sort - Hongyu Li</title>
+  <title>Reinforcement Learning - Hongyu Li</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -228,7 +228,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Algorithm-Sort"></span>
+            <span id="subtitle" data-typed-text="Reinforcement Learning"></span>
           
         </div>
 
@@ -239,8 +239,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-07-07 00:00" pubdate>
-          2024年7月7日 凌晨
+        <time datetime="2024-07-18 00:00" pubdate>
+          2024年7月18日 凌晨
         </time>
       </span>
     
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          1.7k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          10 分钟
+          15 分钟
         
       </span>
     
@@ -307,67 +307,93 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Algorithm-Sort</h1>
+            <h1 id="seo-header">Reinforcement Learning</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="Algorithm-Sort"><a href="#Algorithm-Sort" class="headerlink" title="Algorithm-Sort"></a>Algorithm-Sort</h2><h3 id="排序算法总结"><a href="#排序算法总结" class="headerlink" title="排序算法总结"></a>排序算法总结</h3><p><img src="/2024/07/07/Algorithm/v2-519970e854c90f9b901947963316dd64_1440w-20240707192544329.png" srcset="/img/loading.gif" lazyload alt="排序算法基础总结"></p>
-<p><img src="/2024/07/07/Algorithm/0.png" srcset="/img/loading.gif" lazyload alt="复杂度和稳定性"></p>
-<hr>
-<h4 id="1-冒泡排序"><a href="#1-冒泡排序" class="headerlink" title="1.冒泡排序"></a>1.冒泡排序</h4><p>时间复杂度$O(N^2)$	空间复杂度$O(1)$</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 数组后面的数为排好序的数，一直交换直到把当前最大的数交换到最后</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">bubble_sort</span>(<span class="hljs-params">nums</span>):<br>    n = <span class="hljs-built_in">len</span>(nums)<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>      <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>:n-<span class="hljs-number">1</span>-i):<br>        <span class="hljs-keyword">if</span> nums[j] &gt; nums[j+<span class="hljs-number">1</span>]:<br>          <span class="hljs-comment"># 交换</span><br>          nums[j],num[j+<span class="hljs-number">1</span>] = nums[j+<span class="hljs-number">1</span>],nums[j]<br>    <span class="hljs-keyword">return</span> nums<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="2-选择排序"><a href="#2-选择排序" class="headerlink" title="2.选择排序"></a>2.选择排序</h4><h4 id="3-插入排序"><a href="#3-插入排序" class="headerlink" title="3.插入排序"></a>3.插入排序</h4><p>时间复杂度$O(N^2)$	空间复杂度$O(1)$</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 数组前面的数为排好序的，每次在前面不断交换直到找到当前数的位置</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">insertion_sort</span>(<span class="hljs-params">nums</span>):<br>    n = <span class="hljs-built_in">len</span>(nums)<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, n):<br>        j = i<br>        <span class="hljs-keyword">while</span> j &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> nums[j - <span class="hljs-number">1</span>] &gt; nums[j]:<br>            nums[j], nums[j - <span class="hljs-number">1</span>] = nums[j - <span class="hljs-number">1</span>], nums[j]<br>            j -= <span class="hljs-number">1</span><br>    <span class="hljs-keyword">return</span> nums<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="4-希尔排序"><a href="#4-希尔排序" class="headerlink" title="4.希尔排序"></a>4.希尔排序</h4><h4 id="5-归并排序"><a href="#5-归并排序" class="headerlink" title="5.归并排序"></a>5.归并排序</h4><h4 id="6-快速排序"><a href="#6-快速排序" class="headerlink" title="6.快速排序"></a>6.快速排序</h4><blockquote>
-<p>下面的实现使用额外的数组来存储分区结果，因此空间复杂度除了递归调用栈的空间外，还包括分区数组的空间:</p>
-<p>空间复杂度为 O(n)（额外数组）+ O(log n)（递归调用栈）&#x3D; O(n)。</p>
-<p>时间复杂度为 O(log n) （分区操作树的高度）*  O(n)（每层的分区操作）&#x3D;  O(nlog n)</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">quick_sort</span>(<span class="hljs-params">nums</span>):<br>    <span class="hljs-comment"># 实现快排</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(nums) &lt;= <span class="hljs-number">1</span>:<br>        <span class="hljs-keyword">return</span> nums<br>    <span class="hljs-comment"># 选取基准数</span><br>    pivot = nums[<span class="hljs-built_in">len</span>(nums)//<span class="hljs-number">2</span>]<br>    <span class="hljs-comment"># 实现分区</span><br>    left = [x <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> nums <span class="hljs-keyword">if</span> x &lt; pivot]<br>    middle = [x <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> nums <span class="hljs-keyword">if</span> x == pivot]<br>    right = [x <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> nums <span class="hljs-keyword">if</span> x &gt; pivot]<br>    <span class="hljs-comment"># 将左右半区递归进行排序</span><br>    <span class="hljs-keyword">return</span> quick_sort(left) + middle + quick_sort(right)<br></code></pre></td></tr></table></figure>
-
+                <h2 id="Reinforcement-Learning"><a href="#Reinforcement-Learning" class="headerlink" title="Reinforcement Learning"></a>Reinforcement Learning</h2><h3 id="1-什么是强化学习"><a href="#1-什么是强化学习" class="headerlink" title="1.什么是强化学习"></a>1.什么是强化学习</h3><p>强化学习（Reinforcement Learning）是一种机器学习方法，旨在通过与环境的交互来学习最优策略，从而最大化累积奖励。它通常包括以下几个核心概念，强化学习任务通常用马尔可夫决策过程（Markov Decision Process，简称MDP）来描述，是一种描述机器与环境交互的框架。</p>
+<ol>
+<li><p><strong>代理（Agent）</strong>：进行决策的主体，例如一个机器人、游戏玩家或自动驾驶汽车。</p>
+</li>
+<li><p><strong>环境（Environment）</strong>：代理与之交互的外部世界，例如一个迷宫、游戏世界或道路交通系统。</p>
+</li>
+<li><p><strong>状态（State, s）</strong>：环境在某一时刻的具体情况，是对当前情景的描述。</p>
+</li>
+<li><p><strong>动作（Action, a）</strong>：代理在某一状态下可以采取的行为。</p>
+</li>
+<li><p><strong>奖励（Reward, r）</strong>：代理在采取某一动作后从环境中获得的反馈信号，用来指导代理学习。</p>
+</li>
+<li><p><strong>策略（Policy, π）</strong>：代理选择动作的规则或方法，通常表示为从状态到动作的映射。</p>
+</li>
+<li><p><strong>价值函数（Value Function）</strong>：评估某一状态或状态-动作对的好坏，通常包括状态价值函数 (V(s)) 和状态-动作价值函数 (Q(s, a))。</p>
+</li>
+</ol>
+<p><img src="/2024/07/18/ReinforcementLearning/v2-de28587d31566e2973a2383918255197_b.jpg" srcset="/img/loading.gif" lazyload alt="强化学习的马尔可夫决策过程"></p>
+<p>强化学习在游戏、机器人控制、资源管理等领域有广泛应用。例如，AlphaGo使用强化学习战胜了世界顶级围棋选手，OpenAI的Dota 2 AI在复杂的团队游戏中表现出色。强化学习在开放世界游戏中的NPC自主导航、任务完成和路径规划等方面有广泛应用。以下是详细介绍：</p>
+<ul>
+<li>自主导航</li>
+</ul>
 <blockquote>
-<p>使用原地分区的快速排序实现，避免了使用额外的数组，从而优化了空间复杂度：</p>
-<p>空间复杂度为 O(log n)（递归调用栈）。</p>
-<p>时间复杂度为 O(log n) （分区操作树的高度）*  O(n)（每层的分区操作）&#x3D;  O(nlog n)</p>
+<p><strong>自主导航</strong>是指NPC能够在游戏世界中自主移动，从一个地点到达另一个地点，避开障碍物和敌人。强化学习可以帮助NPC实现这一目标：</p>
+<ol>
+<li><strong>环境建模</strong>：将游戏世界建模为一个网格或连续的状态空间，状态包括NPC的当前位置、周围的障碍物和目标位置等。</li>
+<li><strong>动作选择</strong>：定义NPC可以执行的动作，如前进、后退、左转、右转等。</li>
+<li><strong>奖励函数</strong>：设计奖励函数以引导NPC学会导航。例如，到达目标位置给予高奖励，碰到障碍物或偏离路径给予惩罚。</li>
+<li><strong>训练过程</strong>：通过强化学习算法（如Q学习或深度Q网络DQN），NPC逐渐学会在复杂环境中自主导航，找到最优路径到达目标。</li>
+</ol>
 </blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">quick_sort</span>(<span class="hljs-params">nums, low, high</span>):<br>  <span class="hljs-keyword">if</span> low &lt; high:<br>    pi = partition(nums, low, high)<br>    <span class="hljs-comment"># 递归实现左右分区快排</span><br>    quick_sort(nums, low, pi-<span class="hljs-number">1</span>)<br>    quick_sort(nums, pi+<span class="hljs-number">1</span>, high)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">partition</span>(<span class="hljs-params">nums, low, high</span>):<br>  <span class="hljs-comment"># 选取基准数</span><br>  pivot = nums[high]<br>  i = low<br>  <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(low,high):<br>    <span class="hljs-keyword">if</span> nums[j] &lt; pivot:<br>      nums[i],nums[j] = nums[j],nums[i]<br>      i += <span class="hljs-number">1</span><br>  nums[i],nums[high] = nums[high],nums[i]<br>  <span class="hljs-keyword">return</span> i<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="7-堆排序"><a href="#7-堆排序" class="headerlink" title="7.堆排序"></a>7.堆排序</h4><blockquote>
-<p>堆排序的主要思想是将数组转化为一个大顶堆，然后通过不断将堆顶（最大值）与<strong>未排序部分</strong>的最后一个元素交换并重新调整堆来实现排序。</p>
-<p>从小到大排序，建立大根堆；从大到小排序，建立小根堆。</p>
-<p>大根堆：每个结点的值都大于等于其孩子结点的值；小根堆：每个结点的值都小于等于其孩子结点的值。</p>
-</blockquote>
-<p>排序过程：</p>
+<ul>
+<li>任务完成</li>
+</ul>
 <blockquote>
-<p><strong>1.构建大顶堆</strong>：将数组转化为一个大顶堆。</p>
-<p><strong>2.交换堆顶元素和末尾元素</strong>：将堆顶（最大元素）与未排序部分的最后一个元素交换，并缩小堆的范围。</p>
-<p><strong>3.调整堆</strong>：调整交换后的堆，使其重新成为大顶堆。</p>
-<p><strong>4.重复步骤2和步骤3</strong>，直到堆的范围缩小到1。</p>
+<p><strong>任务完成</strong>涉及NPC根据预定目标执行一系列动作，可能包括导航、交互和战斗等。强化学习在这一方面的应用步骤如下：</p>
+<ol>
+<li><strong>任务分解</strong>：将复杂任务分解为多个子任务，每个子任务可以定义一个独立的状态空间和动作集。</li>
+<li><strong>多任务学习</strong>：使用强化学习算法（如策略梯度方法、演员-评论家方法）来训练NPC完成每个子任务，并学会在不同任务间切换。</li>
+<li><strong>层次化强化学习</strong>：引入层次化策略（hierarchical policies），高层策略决定任务分配和切换，低层策略负责具体的任务执行。</li>
+<li><strong>任务规划与执行</strong>：结合路径规划和任务完成，使NPC能够自主决定行动策略，完成复杂任务。例如，NPC需要先导航到特定地点，再与特定角色交互，最后返回起点。</li>
+</ol>
 </blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">heapify</span>(<span class="hljs-params">arr, h_size, h_index</span>):<br>  	<span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    调整堆，使其满足大顶堆的性质</span><br><span class="hljs-string">    :param arr: 数组</span><br><span class="hljs-string">    :param h_size: 堆的大小</span><br><span class="hljs-string">    :param h_index: 要调整的节点索引</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 左右结点的索引值</span><br>    left = <span class="hljs-number">2</span>*(h_index) + <span class="hljs-number">1</span><br>    right = <span class="hljs-number">2</span>*(h_index) + <span class="hljs-number">2</span><br>    <span class="hljs-comment"># 先设置最大值为当前结点值</span><br>    maxIndex = h_index<br>    <span class="hljs-comment"># 判断左右结点值是否大于它，进行交换调整</span><br>    <span class="hljs-keyword">if</span> left &lt; h_size <span class="hljs-keyword">and</span> arr[left] &gt; arr[maxIndex]:<br>        maxIndex = left<br>    <span class="hljs-keyword">if</span> right &lt; h_size <span class="hljs-keyword">and</span> arr[right] &gt; arr[maxIndex]:<br>        maxIndex = right<br>    <span class="hljs-keyword">if</span> maxIndex != h_index:<br>        arr[h_index], arr[maxIndex] = arr[maxIndex], arr[h_index]<br>        <span class="hljs-comment"># 递归调整被交换的子树</span><br>        heapify(arr, h_size, maxIndex)<br>        <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">heap_sort</span>(<span class="hljs-params">arr</span>):<br>    <span class="hljs-comment"># 创建大根堆</span><br>    n = <span class="hljs-built_in">len</span>(arr)<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n//<span class="hljs-number">2</span>-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>):<br>        heapify(arr,n,i)<br><br>    <span class="hljs-comment"># 逐步将最大值交换末尾，然后动态调整剩余堆，使其保持大根堆的性质</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n-<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,-<span class="hljs-number">1</span>):<br>        <span class="hljs-comment"># 将最大值交换到末尾</span><br>        arr[i],arr[<span class="hljs-number">0</span>] = arr[<span class="hljs-number">0</span>],arr[i]<br>        <span class="hljs-comment"># 调整剩余大根堆</span><br>        heapify(arr,i,<span class="hljs-number">0</span>)<br></code></pre></td></tr></table></figure>
-
-<p>使用迭代方法来避免递归调用栈，使其空间复杂度保持$O(1)$，迭代方法并不会造成时间复杂度的增加，是因为迭代深度还是类似于堆的高度，所以为$O(\log n)$：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">heapify</span>(<span class="hljs-params">arr, n, i</span>):<br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        largest = i  <span class="hljs-comment"># 初始化最大值为当前节点</span><br>        left = <span class="hljs-number">2</span> * i + <span class="hljs-number">1</span>  <span class="hljs-comment"># 左子节点</span><br>        right = <span class="hljs-number">2</span> * i + <span class="hljs-number">2</span>  <span class="hljs-comment"># 右子节点</span><br><br>        <span class="hljs-comment"># 如果左子节点存在且大于当前最大值，则更新最大值为左子节点</span><br>        <span class="hljs-keyword">if</span> left &lt; n <span class="hljs-keyword">and</span> arr[left] &gt; arr[largest]:<br>            largest = left<br>        <span class="hljs-comment"># 如果右子节点存在且大于当前最大值，则更新最大值为右子节点</span><br>        <span class="hljs-keyword">if</span> right &lt; n <span class="hljs-keyword">and</span> arr[right] &gt; arr[largest]:<br>            largest = right<br>        <span class="hljs-comment"># 如果最大值不是当前节点，则交换并继续调整子树</span><br>        <span class="hljs-keyword">if</span> largest != i:<br>            arr[i], arr[largest] = arr[largest], arr[i]<br>            i = largest<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">break</span><br></code></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
+<ul>
+<li>路径规划</li>
+</ul>
+<blockquote>
+<p><strong>路径规划</strong>是指在复杂环境中找到从起点到终点的最优路径。强化学习在路径规划中的应用包括：</p>
+<ol>
+<li><strong>环境建模</strong>：将环境建模为一个图或网格，每个节点代表一个位置，边表示相邻位置之间的连接。</li>
+<li><strong>动作选择</strong>：定义在每个节点上可以执行的动作，如移动到相邻节点。</li>
+<li><strong>奖励函数</strong>：设计奖励函数以引导NPC找到最优路径。例如，靠近目标位置给予正奖励，增加路径长度给予负奖励。</li>
+<li><strong>训练过程</strong>：使用强化学习算法（如A3C、DQN），让NPC通过多次尝试逐渐学会在不同环境中找到最优路径。</li>
+<li><strong>动态路径规划</strong>：强化学习可以帮助NPC在动态环境中实时调整路径，避开突然出现的障碍物或追击敌人。</li>
+</ol>
+</blockquote>
+<h3 id="2-强化学习的框架"><a href="#2-强化学习的框架" class="headerlink" title="2.强化学习的框架"></a>2.强化学习的框架</h3><p>强化学习问题通常可以用<strong>马尔可夫决策过程</strong>（Markov Decision Process, MDP）来建模，MDP由以下组成：</p>
+<ol>
+<li><p>**状态空间 (S)**：所有可能状态的集合。</p>
+</li>
+<li><p>**动作空间 (A)**：所有可能动作的集合。</p>
+</li>
+<li><p>**状态转移概率 (P(s’|s,a))**：从状态 (s) 执行动作 (a) 后转移到状态 (s’) 的概率。</p>
+</li>
+<li><p>**奖励函数 (R(s,a,s’))**：从状态 (s) 执行动作 (a) 后转移到状态 (s’) 所获得的即时奖励。</p>
+</li>
+</ol>
+<h3 id="3-强化学习的目标"><a href="#3-强化学习的目标" class="headerlink" title="3.强化学习的目标"></a>3.强化学习的目标</h3><p>强化学习的目标是找到一个策略 ($\pi$)，使得在该策略下的累积奖励期望值最大。累积奖励通常定义为折扣回报 ($G_t$)：</p>
+<p>$$<br> G_t &#x3D; R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots &#x3D; \sum_{k&#x3D;0}^{\infty} \gamma^k R_{t+k+1}<br>$$<br>其中，($\gamma \in [0, 1]$) 是折扣因子，表示未来奖励的重要性。</p>
+<h3 id="4-强化学习方法"><a href="#4-强化学习方法" class="headerlink" title="4.强化学习方法"></a>4.强化学习方法</h3><p>强化学习的目标是找到一种策略，使得在长时间内获得的总奖励最大化。常见的强化学习算法主要分为以下几类：</p>
+<pre><code class="hljs">1.	值迭代方法（Value Iteration Methods）：直接估计价值函数，包括动态规划方法。
+2.	策略迭代方法（Policy Iteration Methods）：直接优化策略，包括策略梯度方法。
+3.	值策略结合方法（Actor-Critic Methods）：同时估计价值函数和优化策略。
+</code></pre>
+<p>主要算法：</p>
+<ol>
+<li>   Q-Learning：<br>离线学习方法，不依赖具体策略。<br>更新公式： $Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma \max_{a{\prime}} Q(s{\prime},a{\prime}) - Q(s,a) \right]$<br>目标是找到最优状态-动作价值函数 $Q^*(s, a)$。</li>
+<li>   SARSA（State-Action-Reward-State-Action）：<br>在线学习方法，依赖具体策略。<br>更新公式： $Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma Q(s{\prime},a{\prime}) - Q(s,a) \right] $<br>使用当前策略估计Q值。</li>
+<li>   DQN（Deep Q-Networks）：<br>使用神经网络近似Q值函数。<br>经验回放（Experience Replay）和目标网络（Target Network）用于提高训练稳定性和效率。</li>
+<li>   策略梯度方法（Policy Gradient Methods）：<br>直接优化策略，使得累积奖励期望值最大化。<br>REINFORCE算法：使用蒙特卡罗方法估计梯度并更新策略参数。<br>更新公式： $\theta \leftarrow \theta + \alpha \nabla_\theta \log \pi_\theta(a|s) G_t $</li>
+<li>   Actor-Critic Methods：<br>结合策略梯度和价值函数估计方法。<br>Actor更新策略参数，Critic更新价值函数。<br>更新公式：<br>Actor： $\theta \leftarrow \theta + \alpha \nabla_\theta \log \pi_\theta(a|s) \delta $<br>Critic： $w \leftarrow w + \beta \delta \nabla_w V_w(s) $<br>其中 $\delta &#x3D; r + \gamma V_w(s{\prime}) - V_w(s) $是TD误差。</li>
+</ol>
 
                 
               </div>
@@ -386,12 +412,12 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Algorithm/" class="category-chain-item">Algorithm</a>
+  <a href="/categories/Deep-Learning/" class="category-chain-item">Deep Learning</a>
   
   
     <span>></span>
     
-  <a href="/categories/Algorithm/Basic/" class="category-chain-item">Basic</a>
+  <a href="/categories/Deep-Learning/Reinforcement-Learning/" class="category-chain-item">Reinforcement Learning</a>
   
   
 
@@ -408,7 +434,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Algorithm/" class="print-no-link">#Algorithm</a>
+        <a href="/tags/Reinforcement-Learning/" class="print-no-link">#Reinforcement Learning</a>
       
     </div>
   
@@ -420,8 +446,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Algorithm-Sort</div>
-      <div>https://adzuki23.github.io/2024/07/07/Algorithm/</div>
+      <div>Reinforcement Learning</div>
+      <div>https://adzuki23.github.io/2024/07/18/ReinforcementLearning/</div>
     </div>
     <div class="license-meta">
       
@@ -433,7 +459,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年7月7日</div>
+          <div>2024年7月18日</div>
         </div>
       
       
@@ -470,18 +496,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/18/ReinforcementLearning/" title="Reinforcement Learning">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Reinforcement Learning</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/07/04/LLM-Transformer/" title="LLM-Transformer">
-                        <span class="hidden-mobile">LLM-Transformer</span>
+                      <a href="/2024/07/07/Algorithm/" title="Algorithm-Sort">
+                        <span class="hidden-mobile">Algorithm-Sort</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

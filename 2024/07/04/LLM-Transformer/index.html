@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/LLM.webp">
 <meta property="article:published_time" content="2024-07-03T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-05T02:33:35.562Z">
+<meta property="article:modified_time" content="2024-07-08T11:39:08.882Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Transformer">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2k 字
+          3.2k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          17 分钟
+          27 分钟
         
       </span>
     
@@ -314,8 +314,8 @@
                 
                 <h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>Transformer 模型是由谷歌在2017 年提出并首先应用于机器翻译的神经网络模型结构。Transformer 结构完全通过注意力机制完成对源语言序列和目标语言序列全局依赖的建模。</p>
 <p><strong>参考文章：</strong></p>
-<p>本文只是对参考文章做一些记录总结，内容全部来源于以下文章，写的非常详细：</p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454482273%E3%80%81">https://zhuanlan.zhihu.com/p/454482273、</a></p>
+<p>本文只是做一些学习记录总结，内容全部来源于作者<a target="_blank" rel="noopener" href="https://www.zhihu.com/people/lemonround">猛猿</a>以下文章，写的非常详细：</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454482273%E3%80%81https://zhuanlan.zhihu.com/p/456863215%E7%AD%89">https://zhuanlan.zhihu.com/p/454482273、https://zhuanlan.zhihu.com/p/456863215等</a></p>
 <p><strong>结构图：</strong></p>
 <p><img src="/2024/07/04/LLM-Transformer/1740792-20200714150528222-1369583497.png" srcset="/img/loading.gif" lazyload alt="Transformer结构"></p>
 <h3 id="1-位置编码"><a href="#1-位置编码" class="headerlink" title="1. 位置编码"></a>1. 位置编码</h3><hr>
@@ -333,15 +333,15 @@
 <li>不同的位置向量是可以通过线性转换得到的。</li>
 </ul>
 </blockquote>
-<h5 id="1-2-1用周期函数-Sin-表示Position-Encoding"><a href="#1-2-1用周期函数-Sin-表示Position-Encoding" class="headerlink" title="1.2.1用周期函数 Sin 表示Position Encoding:"></a>1.2.1<strong>用周期函数 Sin 表示Position Encoding:</strong></h5><p>我们把位置向量当中的每一个元素都用一个sin函数来表示，则第t个token的位置向量可以表示为：<br>$$<br>PE_t &#x3D; [\sin(\frac{1}{2^0}t), \sin(\frac{1}{2^1}t),\cdots,\sin(\frac{1}{2^{i-1}}t),\cdots,\sin(\frac{1}{2^{d_{model}-1}}t)]<br>$$<br>结合下图，来理解一下这样设计的含义。图中每一行表示一个$PE_t$ ，每一列表示$PE_t$ 中的第<code>i</code>个元素。</p>
+<h5 id="1-2-1用周期函数-Sin-表示Position-Encoding"><a href="#1-2-1用周期函数-Sin-表示Position-Encoding" class="headerlink" title="1.2.1用周期函数 Sin 表示Position Encoding:"></a>1.2.1<strong>用周期函数 Sin 表示Position Encoding:</strong></h5><p>我们把位置向量当中的每一个元素都用一个sin函数来表示，则第t个token的位置向量可以表示为：<br>$$<br>PE_t &#x3D; [\sin(\frac{1}{2^0}t), \sin(\frac{1}{2^1}t),\cdots,\sin(\frac{1}{2^{i-1}}t),\cdots,\sin(\frac{1}{2^{d_{model}-1}}t)]<br>$$<br>结合下图，来理解一下这样设计的含义，图中每一行表示一个$PE_t$ ，每一列表示$PE_t$ 中的第<code>i</code>个元素。<code>d_model</code>表示token的维度。</p>
 <blockquote>
-<p>每一列表示$PE_t$中的第<code>i</code>个元素。旋钮用于调整精度，越往右边的旋钮，需要调整的精度越大，因此指针移动的步伐越小。每一排的旋钮都在上一排的基础上进行调整（函数中 t 的作用）。通过频率$\frac{1}{2^{i-1}}$来控制sin函数的波长，频率不断减小，则波长不断变大，此时sin函数对t的变动越不敏感，以此来达到越向右的旋钮，指针移动步伐越小的目的。 这也类似于二进制编码，每一位上都是0和1的交互，越往低位走（越往左边走），交互的频率越慢。</p>
+<p>旋钮用于调整精度，越往右边的旋钮，需要调整的精度越大，因此指针移动的步伐越小。每一排的旋钮都在上一排的基础上进行调整（函数中 t 的作用）。通过频率$\frac{1}{2^{i-1}}$来控制sin函数的波长，频率不断减小，则波长不断变大，此时sin函数对t的变动越不敏感，以此来达到越向右的旋钮，指针移动步伐越小的目的。 这也类似于二进制编码，每一位上都是0和1的交互，越往低位走（越往左边走），交互的频率越慢。</p>
 </blockquote>
 <p><img src="/2024/07/04/LLM-Transformer/v2-eb3d818037adb892dafcf26a6ef433cc_1440w.webp" srcset="/img/loading.gif" lazyload alt="用周期函数Sin表示位置编码"></p>
 <p>由于sin是周期函数，因此从纵向来看，如果函数的频率偏大，引起波长偏短，则不同t下的位置向量可能出现重合的情况。比如在下图中(d_model &#x3D; 3），图中的点表示每个token的位置向量，颜色越深，token的位置越往后，在频率偏大的情况下，位置响亮点连成了一个闭环，靠前位置（黄色）和靠后位置（棕黑色）竟然靠得非常近：</p>
 <p><img src="/2024/07/04/LLM-Transformer/v2-a76698f2225c5ed7bc49b2259548cf2a_1440w.webp" srcset="/img/loading.gif" lazyload alt="d_model = 3下的sin函数"></p>
 <p>为了避免这种情况，我们尽量将函数的波长拉长。一种简单的解决办法是同一把所有的频率都设成一个非常小的值。因此在transformer的论文中，采用了$\frac{1}{10000^{i&#x2F;{d_{model}-1}}}$这个频率（这里 i 其实不是表示第 i 个位置，但是大致意思差不多，下面会细说） </p>
-<p>总结一下，到这里我们把位置向量表示为，其中$w_i$等于$\frac{1}{10000^{i&#x2F;{d_{model}-1}}}$<br>$$<br>PE_t &#x3D; [\sin(w_0t), \sin(w_1t),\cdots,\sin(w_{i-1}t),\cdots,\sin(w_{d_{model}-1}t)]<br>$$</p>
+<p>总结一下，到这里我们把位置向量表示为：其中$w_i$等于$\frac{1}{10000^{i&#x2F;{d_{model}-1}}}$<br>$$<br>PE_t &#x3D; [\sin(w_0t), \sin(w_1t),\cdots,\sin(w_{i-1}t),\cdots,\sin(w_{d_{model}-1}t)]<br>$$</p>
 <h5 id="1-2-2-用sin和cos交替来表示位置"><a href="#1-2-2-用sin和cos交替来表示位置" class="headerlink" title="1.2.2 用sin和cos交替来表示位置"></a>1.2.2 用sin和cos交替来表示位置</h5><p>目前为止，我们的位置向量实现了如下功能： </p>
 <blockquote>
 <ul>
@@ -365,12 +365,68 @@
 </blockquote>
 <p><img src="/2024/07/04/LLM-Transformer/v2-b6c64586260ebed24339052adec7bca8_1440w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
 <h4 id="1-5-Transformer位置编码的重要性质"><a href="#1-5-Transformer位置编码的重要性质" class="headerlink" title="1.5 Transformer位置编码的重要性质"></a>1.5 Transformer位置编码的重要性质</h4><ol>
-<li>两个位置编码的点积(dot product)仅取决于偏移量$\Delta t$ ，也即两个位置编码的点积可以反应出两个位置编码间的距离。</li>
-<li>位置向量的点积可以用于表示<strong>距离</strong>(distance-aware)，但是它却不能用来表示位置的<strong>方向性</strong>(lack-of-directionality)。</li>
-<li>在Transformer的论文中，比较了用positional encoding和learnable position embedding(让模型自己学位置参数）两种方法，得到的结论是两种方法对模型最终的衡量指标差别不大。不过在后面的BERT中，已经改成用learnable position embedding的方法了，也许是因为positional encoding在进attention层后一些优异性质消失的原因（猜想）。Positional encoding有一些想象+实验+论证的意味，而编码的方式也不只这一种，比如把sin和cos换个位置，依然可以用来编码。</li>
+<li><p>两个位置编码的点积(dot product)仅取决于偏移量$\Delta t$ ，即两个位置编码的点积可以反应出两个位置编码间的距离。</p>
+<p><img src="/2024/07/04/LLM-Transformer/image-20240707215149249.png" srcset="/img/loading.gif" lazyload alt="两个位置编码的点积仅取决于偏移量证明公式"></p>
+</li>
+<li><p>位置向量的点积可以用于表示<strong>距离</strong>(distance-aware)，但是它却不能用来表示位置的<strong>方向性</strong>(lack-of-directionality)。</p>
+</li>
+<li><p>在Transformer的论文中，比较了用positional encoding和learnable position embedding(让模型自己学位置参数）两种方法，得到的结论是两种方法对模型最终的衡量指标差别不大。不过在后面的BERT中，已经改成用learnable position embedding的方法了，也许是因为positional encoding在进attention层后一些优异性质消失的原因（猜想）。Positional encoding有一些想象+实验+论证的意味，而编码的方式也不只这一种，比如把sin和cos换个位置，依然可以用来编码。</p>
+</li>
 </ol>
 <h3 id="2-Self-Attention（自注意力机制）"><a href="#2-Self-Attention（自注意力机制）" class="headerlink" title="2.Self-Attention（自注意力机制）"></a>2.Self-Attention（自注意力机制）</h3><hr>
-<h4 id="2-1-Attention构造"><a href="#2-1-Attention构造" class="headerlink" title="2.1 Attention构造"></a>2.1 Attention构造</h4>
+<h4 id="2-1-Attention构造"><a href="#2-1-Attention构造" class="headerlink" title="2.1 Attention构造"></a>2.1 Attention构造</h4><p>在RNN当中，tokens是一个一个被喂给模型的。比如在x3的位置，模型要等x1和x2的信息都处理完成后，才可以处理x3。</p>
+<p><img src="/2024/07/04/LLM-Transformer/u=3242639576,199183504&fm=253&fmt=auto&app=138&f=JPEG.jpeg" srcset="/img/loading.gif" lazyload alt="RNN"></p>
+<p>这种构造造成的缺点：</p>
+<ol>
+<li><p><strong>Sequential operations的复杂度随着序列长度的增加而增加。</strong><br>这是指模型下一步计算的等待时间，在RNN中为O(N)。该复杂度越大，模型并行计算的能力越差，反之则反。</p>
+</li>
+<li><p><strong>Maximum Path length的复杂度随着序列长度的增加而增加。</strong><br>这是指信息从一个数据点传送到另一个数据点所需要的距离，在RNN中同样为O(N)，距离越大，则在传送的过程中越容易出现信息缺失的情况，即数据点对于远距离处的信息，是很难“看见”的。</p>
+</li>
+</ol>
+<p>那么，在处理序列化数据的时候，是否有办法，在提升模型的并行运算能力的同时，对于序列中的每个token，也能让它不损失信息地看见序列里的其他tokens呢？ Attention就作为一种很好的改进办法出现了。每个token生成其对应的输出的过程是同时进行的，计算不需要等待。</p>
+<p><img src="/2024/07/04/LLM-Transformer/v2-9b6041b7d63b4e73325ed34898b9d5fd_r.jpg" srcset="/img/loading.gif" lazyload alt="Self Attention"></p>
+<h4 id="2-2-Attention计算过程图解"><a href="#2-2-Attention计算过程图解" class="headerlink" title="2.2 Attention计算过程图解"></a>2.2 Attention计算过程图解</h4><p><strong>query，key，value的产生：</strong></p>
+<p>假设batch_size&#x3D;1，输入序列X的形状为(seq_len &#x3D; 4, d_model &#x3D; 6)，则对于这串序列，我们产生三个参数矩阵：$W^Q、W^K、W^V$ 。通过上述的矩阵乘法，我们可以得到最终的结果Q，K，V。如下图所示：</p>
+<p><img src="/2024/07/04/LLM-Transformer/v2-ab15fd18a31f3a63ef100688e9a5747f_1440w.webp" srcset="/img/loading.gif" lazyload alt="query，key，value的产生"></p>
+<p>一般来说， $W^Q$和$W^K$都同样使用$k_{dim}$， $W^V$使用$v_{dim}$。$k_{dim}$和$v_{dim}$不一定要相等，但在transformer的原始论文中，采用的策略是：$K_{dim}&#x3D;V_{dim}&#x3D;d_{model}&#x2F;&#x2F;n_{heads}$，其中$n_{heads}$为self-attention的头数。</p>
+<p><strong>query，key，value的意义：</strong> </p>
+<ul>
+<li><p>query向量类比于询问。某个token问：“其余的token都和我有多大程度的相关呀？” </p>
+<blockquote>
+<p>Query用于与Key矩阵进行点积操作，以计算当前输入与所有输入之间的相似度或关联程度。这个相似度决定了当前输入关注其他输入的程度。</p>
+</blockquote>
+</li>
+<li><p>key向量类比于索引。某个token说：“我把每个询问内容的回答都压缩了下装在我的key里” </p>
+<blockquote>
+<p>Key矩阵代表所有输入中每个单词（或输入）的特征，用于匹配Query以计算相似度。通过点积操作，Key帮助Query找到相关性高的输入。</p>
+</blockquote>
+</li>
+<li><p>value向量类比于回答。某个token说：“我把我自身涵盖的信息又抽取了一层装在我的value里” </p>
+<blockquote>
+<p>Value矩阵代表所有输入中每个单词（或输入）的实际信息值，它是最终的加权结果。Value提供实际的信息内容，它会根据计算得到的注意力分数进行加权平均，从而得到每个输入的最终表示。这些加权后的值将被用于后续的层或输出。</p>
+</blockquote>
+</li>
+</ul>
+<p><img src="/2024/07/04/LLM-Transformer/v2-980e1c0abb79f7d16785a59d55618991_r.jpg" srcset="/img/loading.gif" lazyload alt="Attention计算过程"></p>
+<p>以图中的token a2为例： </p>
+<ul>
+<li>它产生一个query，每个query都去和别的token的key做“<strong>某种方式</strong>”的计算，得到的结果我们称为attention score（即为图中的$\alpha_{2,i}’$）。则一共得到四个attention score（attention score又可以被称为attention weight）。 </li>
+<li>将这四个score再分别乘上每个token的value，我们会得到四个抽取信息完毕的向量。 </li>
+<li>将这四个向量相加，就是最终a2过attention模型后所产生的结果b2。</li>
+</ul>
+<h4 id="2-3-Attention-Score-计算"><a href="#2-3-Attention-Score-计算" class="headerlink" title="2.3 Attention Score 计算"></a>2.3 Attention Score 计算</h4><p>$$<br>Attention(Q,K,V)&#x3D;softmax(\frac{QK^T}{\sqrt{d_k}})V<br>$$</p>
+<p>其中$d_k$就是$k_{dim}$，而$softmax(\frac{QK^T}{\sqrt{d_k}})$就是Attention Score矩阵，我们来详细看下这个矩阵的计算过程:</p>
+<p><img src="/2024/07/04/LLM-Transformer/v2-a5856289c63896fbb4dd9e7151bbde67_1440w.webp" srcset="/img/loading.gif" lazyload alt="Attention Score矩阵"></p>
+<p><strong>（勘误：紫色方框中的下标有误 )</strong></p>
+<p>在softmax之后，attention score矩阵的<strong>每一行表示一个token</strong>，<strong>每一列表示该token和对应位置token的$\alpha$值</strong>，因为进行了softmax，每一行的$\alpha$值相加等于1。</p>
+<p>论文中所采用的是scaled dot-product，因为乘上了因子$1&#x2F;\sqrt{d_k}$​ ，<font color="red">乘因子$1&#x2F;\sqrt{d_k}$ 的原因</font><strong>是为了使得在softmax的过程中，梯度下降得更加稳定，避免因为梯度过小而造成模型参数更新的停滞</strong>。下面我们通过数学证明，来解释这个结论：</p>
+<hr>
+<p>假设输入向量 ( q ) 和 ( k ) 的各个分量是独立同分布的随机变量，均值为0，方差为1，则q、k的点积的期望值和方差为：</p>
+<p>期望：$\mathbb{E}[q \cdot k] &#x3D; 0$；方差：$\text{Var}(q \cdot k) &#x3D; d_k$</p>
+<p>如果不进行缩放，点积的方差为 ( $d_k$ )，随着 ( $d_k$ ) 增大，点积的值会变得越来越大，这会导致Softmax函数的输入值也变大，从而使得Softmax函数的梯度变得很小，如下所示。通过乘以 ($ \frac{1}{\sqrt{d_k}}$ )，点积的方差变为1，这样可以使得点积的值在一个较小的范围内波动，保持数值稳定性，避免梯度消失问题。加上下图进行理解：</p>
+<p><img src="/2024/07/04/LLM-Transformer/image-20240707231309184.png" srcset="/img/loading.gif" lazyload alt="对于第i个token的j和j‘处的梯度计算"></p>
+<hr>
+
                 
               </div>
             
@@ -441,7 +497,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月5日</div>
+          <div>2024年7月8日</div>
         </div>
       
       
