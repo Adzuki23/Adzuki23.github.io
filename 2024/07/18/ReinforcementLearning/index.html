@@ -16,26 +16,26 @@
   <meta name="author" content="Hongyu Li">
   <meta name="keywords" content="DeepLearning,CV">
   
-    <meta name="description" content="强化学习。">
+    <meta name="description" content="学习强化学习。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Reinforcement-Learning">
+<meta property="og:title" content="Reinforcement Learning">
 <meta property="og:url" content="https://adzuki23.github.io/2024/07/18/ReinforcementLearning/index.html">
 <meta property="og:site_name" content="Hongyu Li">
-<meta property="og:description" content="强化学习。">
+<meta property="og:description" content="学习强化学习。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://adzuki23.github.io/img/cover/DeepLearning.png">
+<meta property="og:image" content="https://adzuki23.github.io/img/cover/RL.jpg">
 <meta property="article:published_time" content="2024-07-17T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-08T15:50:09.950Z">
+<meta property="article:modified_time" content="2024-07-18T15:44:27.504Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Reinforcement Learning">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/DeepLearning.png">
+<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/RL.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Reinforcement-Learning - Hongyu Li</title>
+  <title>Reinforcement Learning - Hongyu Li</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -228,7 +228,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Reinforcement-Learning"></span>
+            <span id="subtitle" data-typed-text="Reinforcement Learning"></span>
           
         </div>
 
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.7k 字
+          3.1k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          15 分钟
+          26 分钟
         
       </span>
     
@@ -307,93 +307,160 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Reinforcement-Learning</h1>
+            <h1 id="seo-header">Reinforcement Learning</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="Reinforcement-Learning"><a href="#Reinforcement-Learning" class="headerlink" title="Reinforcement Learning"></a>Reinforcement Learning</h2><h3 id="1-什么是强化学习"><a href="#1-什么是强化学习" class="headerlink" title="1.什么是强化学习"></a>1.什么是强化学习</h3><p>强化学习（Reinforcement Learning）是一种机器学习方法，旨在通过与环境的交互来学习最优策略，从而最大化累积奖励。它通常包括以下几个核心概念，强化学习任务通常用马尔可夫决策过程（Markov Decision Process，简称MDP）来描述，是一种描述机器与环境交互的框架。</p>
-<ol>
-<li><p><strong>代理（Agent）</strong>：进行决策的主体，例如一个机器人、游戏玩家或自动驾驶汽车。</p>
-</li>
-<li><p><strong>环境（Environment）</strong>：代理与之交互的外部世界，例如一个迷宫、游戏世界或道路交通系统。</p>
-</li>
-<li><p><strong>状态（State, s）</strong>：环境在某一时刻的具体情况，是对当前情景的描述。</p>
-</li>
-<li><p><strong>动作（Action, a）</strong>：代理在某一状态下可以采取的行为。</p>
-</li>
-<li><p><strong>奖励（Reward, r）</strong>：代理在采取某一动作后从环境中获得的反馈信号，用来指导代理学习。</p>
-</li>
-<li><p><strong>策略（Policy, π）</strong>：代理选择动作的规则或方法，通常表示为从状态到动作的映射。</p>
-</li>
-<li><p><strong>价值函数（Value Function）</strong>：评估某一状态或状态-动作对的好坏，通常包括状态价值函数 (V(s)) 和状态-动作价值函数 (Q(s, a))。</p>
-</li>
-</ol>
-<p><img src="/2024/07/18/ReinforcementLearning/v2-de28587d31566e2973a2383918255197_b.jpg" srcset="/img/loading.gif" lazyload alt="强化学习的马尔可夫决策过程"></p>
-<p>强化学习在游戏、机器人控制、资源管理等领域有广泛应用。例如，AlphaGo使用强化学习战胜了世界顶级围棋选手，OpenAI的Dota 2 AI在复杂的团队游戏中表现出色。强化学习在开放世界游戏中的NPC自主导航、任务完成和路径规划等方面有广泛应用。以下是详细介绍：</p>
-<ul>
-<li>自主导航</li>
-</ul>
+                <h2 id="Reinforcement-Learning"><a href="#Reinforcement-Learning" class="headerlink" title="Reinforcement Learning"></a>Reinforcement Learning</h2><p><strong>强化学习的目标：找到最优策略</strong></p>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240715174712469.png" srcset="/img/loading.gif" lazyload alt="Reinforcement Learning基本脉络"></p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>以grid-world [网格世界] 为例：</p>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240715181615315.png" srcset="/img/loading.gif" lazyload alt="grid-world：位置为S1-S9"></p>
+<h4 id="1-State"><a href="#1-State" class="headerlink" title="1. State"></a>1. State</h4><p>agent相对于environment的状态，在grid-world中是指agent的<code>location</code>。</p>
 <blockquote>
-<p><strong>自主导航</strong>是指NPC能够在游戏世界中自主移动，从一个地点到达另一个地点，避开障碍物和敌人。强化学习可以帮助NPC实现这一目标：</p>
-<ol>
-<li><strong>环境建模</strong>：将游戏世界建模为一个网格或连续的状态空间，状态包括NPC的当前位置、周围的障碍物和目标位置等。</li>
-<li><strong>动作选择</strong>：定义NPC可以执行的动作，如前进、后退、左转、右转等。</li>
-<li><strong>奖励函数</strong>：设计奖励函数以引导NPC学会导航。例如，到达目标位置给予高奖励，碰到障碍物或偏离路径给予惩罚。</li>
-<li><strong>训练过程</strong>：通过强化学习算法（如Q学习或深度Q网络DQN），NPC逐渐学会在复杂环境中自主导航，找到最优路径到达目标。</li>
-</ol>
+<p>在FrozenLake这个小游戏中就是以0-15表示所处位置来表示State，</p>
 </blockquote>
-<ul>
-<li>任务完成</li>
-</ul>
+<p>更复杂的情况可以其它state，比如agent的速度、加速度等等。把所有状态放到一起就得到了<strong>State space</strong>。表示为$S&#x3D;{s_i} $</p>
+<h4 id="2-Action"><a href="#2-Action" class="headerlink" title="2. Action"></a>2. Action</h4><p>对于每一个状态，有一系列可采取的行动。在grid-world中是指<code>up</code>、<code>down</code>、<code>left</code>、<code>right</code>、<code>stay</code>这五个动作。把所有动作放到一起就得到了<strong>Action space</strong>。特别的是，不同状态下的Action Space是不一样的，因此表示为$A(s_i)&#x3D;{a_i} $</p>
+<h4 id="3-State-transition"><a href="#3-State-transition" class="headerlink" title="3. State transition"></a>3. State transition</h4><p>当采取一个Action时，agent从一个状态<code>s1</code>移动到另一个状态<code>s2</code>。</p>
+<h5 id="3-1-Tabular"><a href="#3-1-Tabular" class="headerlink" title="3.1 Tabular"></a>3.1 <strong>Tabular</strong></h5><p>我们可以用表格的方式来罗列出所有可能性，但是有个局限，它只能表示确定的情况，如果agent向上走可能被弹到s1，s4，甚至被连续弹到s7这些情况，就无法用表格的方法。</p>
+<h5 id="3-2-State-transition-probability"><a href="#3-2-State-transition-probability" class="headerlink" title="3.2 State transition probability"></a>3.2 <strong>State transition probability</strong></h5><p>引入条件概率来描述state transition，下列公式还是用的确定性例子。<br>$$<br>p(s_2|s_1,a2)&#x3D;1 \<br>p(s_i|s_1,a2)&#x3D;0<br>$$</p>
+<h4 id="4-Policy"><a href="#4-Policy" class="headerlink" title="4. Policy"></a>4. Policy</h4><p>告诉agent，如果我在状态$S_i$，我应该采取什么action。</p>
+<p>用数学的表达方式–条件概率来描述它，在强化学习中 $\pi$ 表示为策略，下面的式子表示在$s_1$的状况下，采取各个action的概率：<br>$$<br>\pi(a_1|s_1)&#x3D;0\<br>\pi(a_2|s_1)&#x3D;0.5\<br>\pi(a_3|s_1)&#x3D;0.5\<br>\pi(a_4|s_1)&#x3D;0\<br>\pi(a_5|s_1)&#x3D;0<br>$$</p>
+<h4 id="5-Reward"><a href="#5-Reward" class="headerlink" title="5. Reward"></a>5. Reward</h4><p>采取了action后得到的一个实数，正数表示鼓励，负数表示惩罚。</p>
+<h5 id="5-1-Tabular"><a href="#5-1-Tabular" class="headerlink" title="5.1 Tabular"></a>5.1 <strong>Tabular</strong></h5><p>对于一些确定的状况（执行一个action一定会得到确定的reward），可以用表格表示法。</p>
+<p>例子见补充-【Q表–FrozenLake游戏】</p>
+<h5 id="5-2-Conditional-probability"><a href="#5-2-Conditional-probability" class="headerlink" title="5.2 Conditional probability"></a>5.2 <strong>Conditional probability</strong></h5><p>对于一些不确定的情况，可以用数学的表达方式–条件概率来表示。</p>
+<p>比如当前在$s_1$，如果我们选择了$a_1$，得到reward为-1的概率为：$p(r&#x3D;1|s_1,a_1)$</p>
+<h4 id="6-Trajectory"><a href="#6-Trajectory" class="headerlink" title="6. Trajectory"></a>6. Trajectory</h4><p>表示一条state-action-reward链</p>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240716140222610.png" srcset="/img/loading.gif" lazyload alt="state-action-reward"></p>
+<h4 id="7-Return"><a href="#7-Return" class="headerlink" title="7. Return"></a>7. Return</h4><p>是把沿着一条Trajectory所得到的所有reward加起来。</p>
+<p>Discounted Return：</p>
+<p>如果我们到达target（s9）后，策略还在不断运行，此时采取保持不动的动作（s5），Trajectory如下所示：</p>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240716142143668.png" srcset="/img/loading.gif" lazyload alt="image-20240716142143668"></p>
+<p>则return为：$0+0+0+1+1+1+1+…+1&#x3D;\infty$，这个return会<strong>发散</strong>。</p>
+<p>Discounted Return引入一个Discounted rate：$\gamma \in [0,1) $<br>$$<br>Discounted Return &#x3D; 0+\gamma0+\gamma^20+\gamma^31+\gamma^41+\dots \<br>&#x3D;\gamma^3(1+\gamma+\gamma^2+\dots)\<br>&#x3D;\gamma^3(\frac{1}{1-\gamma})<br>$$</p>
+<ol>
+<li>使得return不再发散</li>
+<li>平衡更远未来和更近未来得到的reward</li>
+</ol>
+<h4 id="8-Episode"><a href="#8-Episode" class="headerlink" title="8. Episode"></a>8. Episode</h4><p>可以理解为一个包含<code>terminal states</code>的trajectory。</p>
+<h4 id="9-Markov-decision-process（MDP）"><a href="#9-Markov-decision-process（MDP）" class="headerlink" title="9. Markov decision process（MDP）"></a>9. Markov decision process（MDP）</h4><p>Key elements of MDP: </p>
+<ol>
+<li><p>Sets:</p>
 <blockquote>
-<p><strong>任务完成</strong>涉及NPC根据预定目标执行一系列动作，可能包括导航、交互和战斗等。强化学习在这一方面的应用步骤如下：</p>
-<ol>
-<li><strong>任务分解</strong>：将复杂任务分解为多个子任务，每个子任务可以定义一个独立的状态空间和动作集。</li>
-<li><strong>多任务学习</strong>：使用强化学习算法（如策略梯度方法、演员-评论家方法）来训练NPC完成每个子任务，并学会在不同任务间切换。</li>
-<li><strong>层次化强化学习</strong>：引入层次化策略（hierarchical policies），高层策略决定任务分配和切换，低层策略负责具体的任务执行。</li>
-<li><strong>任务规划与执行</strong>：结合路径规划和任务完成，使NPC能够自主决定行动策略，完成复杂任务。例如，NPC需要先导航到特定地点，再与特定角色交互，最后返回起点。</li>
-</ol>
-</blockquote>
 <ul>
-<li>路径规划</li>
+<li>State: the set of states $S$</li>
+<li>Action: the set of actions $A$ is associated for state $s\in S$</li>
+<li>Reward: the set of rewards $R(s,a)$</li>
 </ul>
-<blockquote>
-<p><strong>路径规划</strong>是指在复杂环境中找到从起点到终点的最优路径。强化学习在路径规划中的应用包括：</p>
-<ol>
-<li><strong>环境建模</strong>：将环境建模为一个图或网格，每个节点代表一个位置，边表示相邻位置之间的连接。</li>
-<li><strong>动作选择</strong>：定义在每个节点上可以执行的动作，如移动到相邻节点。</li>
-<li><strong>奖励函数</strong>：设计奖励函数以引导NPC找到最优路径。例如，靠近目标位置给予正奖励，增加路径长度给予负奖励。</li>
-<li><strong>训练过程</strong>：使用强化学习算法（如A3C、DQN），让NPC通过多次尝试逐渐学会在不同环境中找到最优路径。</li>
-<li><strong>动态路径规划</strong>：强化学习可以帮助NPC在动态环境中实时调整路径，避开突然出现的障碍物或追击敌人。</li>
-</ol>
 </blockquote>
-<h3 id="2-强化学习的框架"><a href="#2-强化学习的框架" class="headerlink" title="2.强化学习的框架"></a>2.强化学习的框架</h3><p>强化学习问题通常可以用<strong>马尔可夫决策过程</strong>（Markov Decision Process, MDP）来建模，MDP由以下组成：</p>
-<ol>
-<li><p>**状态空间 (S)**：所有可能状态的集合。</p>
 </li>
-<li><p>**动作空间 (A)**：所有可能动作的集合。</p>
+<li><p>Probability distribution</p>
+<blockquote>
+<ul>
+<li>State transition probabilty: $p(s’|s,a)$</li>
+<li>Reward probability: $p(r|s,a)$</li>
+</ul>
+</blockquote>
 </li>
-<li><p>**状态转移概率 (P(s’|s,a))**：从状态 (s) 执行动作 (a) 后转移到状态 (s’) 的概率。</p>
+<li><p>Policy</p>
+<blockquote>
+<p>$\pi(a|s)$</p>
+</blockquote>
 </li>
-<li><p>**奖励函数 (R(s,a,s’))**：从状态 (s) 执行动作 (a) 后转移到状态 (s’) 所获得的即时奖励。</p>
+<li><p>Markov property：简而言之，下一状态只和我当前的状态和选择的动作有关。</p>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240716144810109.png" srcset="/img/loading.gif" lazyload alt="Markov property: state and reward"></p>
 </li>
 </ol>
-<h3 id="3-强化学习的目标"><a href="#3-强化学习的目标" class="headerlink" title="3.强化学习的目标"></a>3.强化学习的目标</h3><p>强化学习的目标是找到一个策略 ($\pi$)，使得在该策略下的累积奖励期望值最大。累积奖励通常定义为折扣回报 ($G_t$)：</p>
-<p>$$<br> G_t &#x3D; R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots &#x3D; \sum_{k&#x3D;0}^{\infty} \gamma^k R_{t+k+1}<br>$$<br>其中，($\gamma \in [0, 1]$) 是折扣因子，表示未来奖励的重要性。</p>
-<h3 id="4-强化学习方法"><a href="#4-强化学习方法" class="headerlink" title="4.强化学习方法"></a>4.强化学习方法</h3><p>强化学习的目标是找到一种策略，使得在长时间内获得的总奖励最大化。常见的强化学习算法主要分为以下几类：</p>
-<pre><code class="hljs">1.	值迭代方法（Value Iteration Methods）：直接估计价值函数，包括动态规划方法。
-2.	策略迭代方法（Policy Iteration Methods）：直接优化策略，包括策略梯度方法。
-3.	值策略结合方法（Actor-Critic Methods）：同时估计价值函数和优化策略。
-</code></pre>
-<p>主要算法：</p>
+<p>​	当Policy确定时，Markov decision process就是Markov process</p>
+<h3 id="Bellman-Equation"><a href="#Bellman-Equation" class="headerlink" title="Bellman Equation"></a>Bellman Equation</h3><h4 id="1-为什么Return是重要的？"><a href="#1-为什么Return是重要的？" class="headerlink" title="1. 为什么Return是重要的？"></a>1. 为什么Return是重要的？</h4><p>以下图为例，s1处有三种策略，哪一种是最好的？直观来说，第一个策略是最好的，因为它不会进入到forbidden area。第二种最差，第三种中间。</p>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240716174935512.png" srcset="/img/loading.gif" lazyload alt="s1处的三种Policy"></p>
+<p>那我们能不能<strong>用数学来描述</strong>这一种直观？-答案就是：<strong>Return</strong>。它能够评估策略。<br>$$<br>return_1 &#x3D; 0+\gamma1+\gamma^21+\dots &#x3D; \frac{\gamma}{1-\gamma}\<br>return_2 &#x3D; -1+\gamma1+\gamma^21+\dots &#x3D; -1 + \frac{\gamma}{1-\gamma}\<br>return_3 &#x3D; 0.5(-1 + \frac{\gamma}{1-\gamma})  + 0.5(\frac{\gamma}{1-\gamma})&#x3D;-0.5+\frac{\gamma}{1-\gamma}\<br>$$<br><strong>怎么计算Return？</strong></p>
+<p>上面的计算是基于return的定义。</p>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240717151717838.png" srcset="/img/loading.gif" lazyload alt="一条Trajectory"></p>
+<p>这里我们用 $v_i$ 来表示从 $s_i$ 出发的return：</p>
+<p>$$<br>v_1 &#x3D; r_1+\gamma r_2+\gamma^2 r_3+\dots<br>$$<br><strong>Bootstrapping方法</strong>：从不同状态出发得到的return依赖于从其他状态得到的return：</p>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240717152406412.png" srcset="/img/loading.gif" lazyload alt="Bootstrapping"></p>
+<p>这个式子看上去很奇怪，我要得到v1就得得到v4，而得到v4又要得到v1，很矛盾，但是用矩阵的思想去解决就很简单：</p>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240717152635582.png" srcset="/img/loading.gif" lazyload alt="matrix-vector"></p>
+<p>上述这个式子就是Bellman Equation，但这个是针对确定性情况，对于一般情况，之后会介绍一般化的Bellman Equation。</p>
+<h4 id="2-State-Value"><a href="#2-State-Value" class="headerlink" title="2. State Value"></a>2. State Value</h4><p>首先考虑一个采取动作是 $A_t$ 的单步过程：<br>$$<br>S_t \to R_{t+1},S_{t+1}$$<br>$$<br>这一步中的所有的这些跳跃，都是由<strong>条件概分布</strong>决定的：</p>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240717153528466.png" srcset="/img/loading.gif" lazyload alt="probability distributions"></p>
+<p>上述是一个单步的过程，可以延伸到求解一条trajectory的 discounted return ：$G_t$：<br>$$<br>G_t &#x3D; R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}+\dots<br>$$<br><strong>state value就是 $G_t$ 的期望值</strong>，它的计算公式是：<br>$$<br>v_\pi(s)&#x3D;\mathbb{E}[G_t|S_t&#x3D;s]<br>$$<br>他是一个基于状态和策略的函数，其中：</p>
+<ul>
+<li>$v(s)$ 表示从状态 $s$ 出发得到的return；</li>
+<li>$\pi $表示policy</li>
+</ul>
+<h4 id="3-return和state-value有什么区别和联系？"><a href="#3-return和state-value有什么区别和联系？" class="headerlink" title="3. return和state value有什么区别和联系？"></a>3. return和state value有什么区别和联系？</h4><p>return是对单个trajectory，而state value是对多个可行的trajectory得到的return求平均值。</p>
+<h4 id="4-Bellman-Equation"><a href="#4-Bellman-Equation" class="headerlink" title="4. Bellman Equation"></a>4. Bellman Equation</h4><p><strong>如何推导Bellman equation？</strong><br>$$<br>v_\pi(s)&#x3D;\mathbb{E}[G_t|S_t&#x3D;s]&#x3D;\mathbb{E}[R_{t+1}+\gamma G_{t+1}|S_t&#x3D;s]&#x3D;\mathbb{E}[R_{t+1}|S_t&#x3D;s]+\gamma \mathbb{E}[G_{t+1}|S_t&#x3D;s]<br>$$<br>在状态 s 下能获得的reward的均值：<br>$$<br>\mathbb{E}[R_{t+1}|S_t&#x3D;s] &#x3D; \sum_a\pi(a|s)\mathbb{E}[R_{t+1}|S_t&#x3D;s,A_t&#x3D;a]&#x3D;\sum_a\pi(a|s)\sum_r p(r|s,a)r<br>$$<br>在状态 s 下能获得的下一个状态 s’ 的return的均值：<br>$$<br>\mathbb{E}[G_{t+1}|S_t&#x3D;s] &#x3D; \sum_{s’}\mathbb{E}[G_{t+1}|S_{t+1}&#x3D;s’]p(s’|s)&#x3D;\sum_{s’}v_\pi(s’)\sum_ap(s’|s,a)\pi(a|s)<br>$$<br><strong>最终的Bellman equation如下所示：它描述了不同状态的state value之间的关系：</strong></p>
+<blockquote>
+<p>它并不只是一个”式子“，如果我们有n个状态，最终我们就会有n个这样的式子，通过这n个式子我们就能把state value求解出来</p>
+</blockquote>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240717165709791.png" srcset="/img/loading.gif" lazyload alt="Bellman equation"></p>
+<h4 id="5-Bellman-Equation：Matrix-vector-form"><a href="#5-Bellman-Equation：Matrix-vector-form" class="headerlink" title="5. Bellman Equation：Matrix-vector form"></a>5. Bellman Equation：Matrix-vector form</h4><p><strong>如何求解Bellman Equation？</strong><br>$$<br>v_\pi(s_i)&#x3D;r_\pi(s_i)+\gamma\sum_{s_j}p_\pi(s_j|s_i)v_\pi(s_j)&#x3D;r_\pi+\gamma P_\pi v_\pi<br>$$<br><img src="/2024/07/18/ReinforcementLearning/image-20240717174251267.png" srcset="/img/loading.gif" lazyload alt="Bellman Equation"></p>
+<p>用矩阵向量的形式表示bellman equation的求解过程，下面有一个例子：</p>
+<p><img src="/2024/07/18/ReinforcementLearning/image-20240717174647038.png" srcset="/img/loading.gif" lazyload alt="image-20240717174647038"></p>
+<p><strong>求解State Value:</strong></p>
+<p>为什么要求解state value？</p>
+<blockquote>
+<p><strong>policy evaluation</strong>：给定一个policy，求解出对应的state values叫做policy evaluation。</p>
+<p>通过state value来评估策略的好坏，我们才能进一步改进策略，所以求解bellman equation进而求解state value是十分重要的。</p>
+</blockquote>
+<p>怎么求解state value？</p>
+<blockquote>
+<p>$v_\pi&#x3D;r_\pi+\gamma P_\pi v_\pi \to v_\pi&#x3D;(I-\gamma P_\pi)^{-1}r_\pi$，我们可以通过求逆矩阵来求解，但是在实际中，当状态空间比较大时，矩阵的维数也比较大，求逆计算量高。</p>
+<p>在实际中我们经常用一种迭代的方法：$v_{k+1}&#x3D;r_\pi+\gamma P_\pi v_k$，当$k\to\infty$时，$x_k\to v_\pi$，$v_\pi$就是真实的state value</p>
+</blockquote>
+<p>在强化学习中，特别是对于马尔可夫决策过程（Markov Decision Process, MDP），状态值函数 ( V(s) ) 的计算可以通过迭代方法来进行，这种方法称为<strong>值迭代</strong>（Value Iteration）或<strong>策略迭代</strong>（Policy Iteration）。迭代法的基本思想是逐步更新状态值，直到收敛到一个稳定的值，这比直接求解逆矩阵更高效，尤其是在状态空间较大时。</p>
+<h3 id="值迭代法"><a href="#值迭代法" class="headerlink" title="值迭代法"></a>值迭代法</h3><p>值迭代法是一种迭代算法，用于找到最优值函数 ( V^* ) 和最优策略。其基本思想是反复应用Bellman方程更新每个状态的值，直到值函数收敛。</p>
+<p>Bellman最优方程定义为：<br>[ V^*(s) &#x3D; \max_{a \in \mathcal{A}} \left[ R(s, a) + \gamma \sum_{s’} P(s’ | s, a) V^*(s’) \right] ]</p>
+<p>值迭代法的步骤如下：</p>
 <ol>
-<li>   Q-Learning：<br>离线学习方法，不依赖具体策略。<br>更新公式： $Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma \max_{a{\prime}} Q(s{\prime},a{\prime}) - Q(s,a) \right]$<br>目标是找到最优状态-动作价值函数 $Q^*(s, a)$。</li>
-<li>   SARSA（State-Action-Reward-State-Action）：<br>在线学习方法，依赖具体策略。<br>更新公式： $Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma Q(s{\prime},a{\prime}) - Q(s,a) \right] $<br>使用当前策略估计Q值。</li>
-<li>   DQN（Deep Q-Networks）：<br>使用神经网络近似Q值函数。<br>经验回放（Experience Replay）和目标网络（Target Network）用于提高训练稳定性和效率。</li>
-<li>   策略梯度方法（Policy Gradient Methods）：<br>直接优化策略，使得累积奖励期望值最大化。<br>REINFORCE算法：使用蒙特卡罗方法估计梯度并更新策略参数。<br>更新公式： $\theta \leftarrow \theta + \alpha \nabla_\theta \log \pi_\theta(a|s) G_t $</li>
-<li>   Actor-Critic Methods：<br>结合策略梯度和价值函数估计方法。<br>Actor更新策略参数，Critic更新价值函数。<br>更新公式：<br>Actor： $\theta \leftarrow \theta + \alpha \nabla_\theta \log \pi_\theta(a|s) \delta $<br>Critic： $w \leftarrow w + \beta \delta \nabla_w V_w(s) $<br>其中 $\delta &#x3D; r + \gamma V_w(s{\prime}) - V_w(s) $是TD误差。</li>
+<li><p><strong>初始化值函数：</strong><br>初始化每个状态 ( s ) 的值 ( V(s) )，可以全部设为零或其他初始值。</p>
+</li>
+<li><p><strong>更新值函数：</strong><br>对每个状态 ( s ) ，根据当前的值函数 ( V(s) ) ，使用Bellman方程更新：<br>[ V(s) \leftarrow \max_{a \in \mathcal{A}} \left[ R(s, a) + \gamma \sum_{s’} P(s’ | s, a) V(s’) \right] ]</p>
+</li>
+<li><p><strong>检查收敛性：</strong><br>重复步骤2，直到值函数的变化小于一个预设的阈值，即：<br>[ \max_{s} |V_{new}(s) - V_{old}(s)| &lt; \epsilon ]</p>
+</li>
+<li><p><strong>提取最优策略：</strong><br>一旦值函数收敛，最优策略可以通过选择每个状态 ( s ) 下的最优动作 ( a ) 得到：<br>[ \pi^*(s) &#x3D; \arg\max_{a \in \mathcal{A}} \left[ R(s, a) + \gamma \sum_{s’} P(s’ | s, a) V^*(s’) \right] ]</p>
+</li>
 </ol>
+<h3 id="策略迭代法"><a href="#策略迭代法" class="headerlink" title="策略迭代法"></a>策略迭代法</h3><p>策略迭代法通过反复执行策略评估和策略改进两个步骤来找到最优策略。</p>
+<ol>
+<li><p><strong>策略评估：</strong><br>给定一个策略 ( \pi ) ，计算其对应的值函数 ( V^\pi(s) ) ，直到收敛。使用Bellman期望方程进行更新：<br>[ V^\pi(s) &#x3D; R(s, \pi(s)) + \gamma \sum_{s’} P(s’ | s, \pi(s)) V^\pi(s’) ]</p>
+</li>
+<li><p><strong>策略改进：</strong><br>给定当前的值函数 ( V^\pi ) ，更新策略，使得每个状态下选择的动作最大化值函数：<br>[ \pi_{new}(s) &#x3D; \arg\max_{a \in \mathcal{A}} \left[ R(s, a) + \gamma \sum_{s’} P(s’ | s, a) V^\pi(s’) \right] ]</p>
+</li>
+<li><p><strong>重复上述步骤：</strong><br>反复执行策略评估和策略改进，直到策略不再改变，即达到最优策略。</p>
+</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>迭代法（无论是值迭代还是策略迭代）通过逐步更新状态值或策略，最终收敛到最优解。这种方法避免了直接求解逆矩阵带来的巨大计算量，特别适用于状态空间较大的情况。</p>
+<p>例如，值迭代法通过反复应用Bellman最优方程，逐步逼近最优值函数，而策略迭代法通过交替进行策略评估和策略改进，最终找到最优策略。这两种迭代方法在实践中广泛应用于强化学习任务中。</p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><h3 id="Q表–FrozenLake游戏"><a href="#Q表–FrozenLake游戏" class="headerlink" title="Q表–FrozenLake游戏"></a>Q表–FrozenLake游戏</h3><p>关于Q表的实际应用，以FrozenLake这一个小游戏为例：使用ε-贪心策略选择动作 <code>a</code>。该策略在探索和利用之间进行权衡。</p>
+<p>![FrozenLake](ReinforcementLearning&#x2F;屏幕截图 2024-07-16 110659.png)</p>
+<p>代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> gymnasium <span class="hljs-keyword">as</span> gym<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">import</span> time<br><br>env = gym.make(<span class="hljs-string">&#x27;FrozenLake-v1&#x27;</span>, render_mode = <span class="hljs-string">&#x27;human&#x27;</span>)<br>s = env.reset()<br>env.render()<br><br><span class="hljs-comment">#Epsilon-Greedy approach for Exploration and Exploitation of the state-action spaces</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">epsilon_greedy</span>(<span class="hljs-params">Q,s,na</span>):<br>    epsilon = <span class="hljs-number">0.1</span><br>    p = np.random.uniform(low=<span class="hljs-number">0</span>,high=<span class="hljs-number">1</span>)<br>    <span class="hljs-keyword">if</span> p &gt; epsilon:<br>        <span class="hljs-comment"># say here,initial policy = for each state consider the action having highest Q-value</span><br>        <span class="hljs-keyword">return</span> np.argmax(Q[s,:])<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> env.action_space.sample()<br><br><span class="hljs-comment"># Q-Learning Implementation</span><br><span class="hljs-comment"># Initializing Q-table with zeros</span><br>Q = np.zeros([env.observation_space.n,env.action_space.n])<br><br><span class="hljs-comment"># set hyperparameters</span><br>lr = <span class="hljs-number">0.5</span> <span class="hljs-comment">#learning rate</span><br>y = <span class="hljs-number">0.9</span> <span class="hljs-comment">#discount factor lambda</span><br>eps = <span class="hljs-number">100000</span> <span class="hljs-comment">#total episodes being 100000</span><br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(eps):<br>    s = env.reset()[<span class="hljs-number">0</span>]<br>    t = <span class="hljs-literal">False</span><br>    <span class="hljs-keyword">if</span> i % <span class="hljs-number">100</span> == <span class="hljs-number">0</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;当前迭代数：<span class="hljs-subst">&#123;i&#125;</span>&quot;</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;当前Q值表：<span class="hljs-subst">&#123;Q&#125;</span>&quot;</span>)<br>    <span class="hljs-keyword">while</span>(<span class="hljs-literal">True</span>):<br>        a = epsilon_greedy(Q,s,env.action_space.n)<br>        s_,r,t,_,_ = env.step(a)<br>        <span class="hljs-keyword">if</span> (r==<span class="hljs-number">0</span>):<br>            <span class="hljs-keyword">if</span> t==<span class="hljs-literal">True</span>:<br>                r = -<span class="hljs-number">5</span> <span class="hljs-comment"># to give negative rewards when holes turn up</span><br>                Q[s_] = np.ones(env.action_space.n)*r <span class="hljs-comment">#in terminal state Q value equals the reward</span><br>            <span class="hljs-keyword">else</span>:<br>                r = -<span class="hljs-number">1</span> <span class="hljs-comment"># to give negative rewards to avoid long routes</span><br>        <span class="hljs-keyword">if</span> (r==<span class="hljs-number">1</span>):<br>                r = <span class="hljs-number">100</span><br>                Q[s_] = np.ones(env.action_space.n)*r <span class="hljs-comment">#in terminal state Q value equals the reward</span><br>        Q[s,a] = Q[s,a] + lr * (r + y*np.<span class="hljs-built_in">max</span>(Q[s_,a]) - Q[s,a])<br>        s = s_<br>        <span class="hljs-keyword">if</span> (t == <span class="hljs-literal">True</span>) :<br>            <span class="hljs-keyword">break</span><br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Q-table&quot;</span>)<br><span class="hljs-built_in">print</span>(Q)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Output after learning&quot;</span>)<br><span class="hljs-comment">#learning ends with the end of the above loop of several episodes above</span><br><span class="hljs-comment">#let&#x27;s check how much our agent has learned</span><br>s = env.reset()<br>env.render()<br><span class="hljs-keyword">while</span>(<span class="hljs-literal">True</span>):<br>    a = np.argmax(Q[s[<span class="hljs-number">0</span>]])<br>    s_,r,t,_ = env.step(a)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;===============&quot;</span>)<br>    env.render()<br>    s = s_<br>    <span class="hljs-keyword">if</span>(t==<span class="hljs-literal">True</span>) :<br>        <span class="hljs-keyword">break</span><br></code></pre></td></tr></table></figure>
+
+<h6 id="Q-learning的更新公式"><a href="#Q-learning的更新公式" class="headerlink" title="Q-learning的更新公式"></a>Q-learning的更新公式</h6><hr>
+<p>Q-learning的更新公式是基于贝尔曼方程（Bellman Equation），用于估计在给定状态下采取某个动作的长期回报。下面详细解释为什么Q-learning的更新公式是这样的。</p>
+<p><strong>1. 贝尔曼方程</strong></p>
+<p>贝尔曼方程描述了在某个状态下的动作价值（Q值）如何与该状态下的即时奖励和未来状态的最大Q值相关联。贝尔曼方程形式如下：<br>$$<br>Q(s, a) &#x3D; \mathbb{E}[r + \gamma \max_{a’} Q(s’, a’) | s, a]<br>$$<br>其中：</p>
+<ul>
+<li>$Q(s,a)$ 是在状态 $s$ 下采取动作 $a$ 的动作价值（Q值）。</li>
+<li>$r$ 是即时奖励。</li>
+<li>$\gamma$ 是折扣因子（介于0和1之间），它决定了未来奖励在当前决策中的重要性。</li>
+<li>$s′$是动作 $a$ 在状态$s$ 下导致的下一个状态。</li>
+<li>$\max_{a’} Q(s’, a’)$是在状态$ s’ $下采取最佳动作 $a’ $的最大Q值。</li>
+</ul>
+<p><strong>Q-learning更新公式</strong></p>
+<p>Q-learning是一种无模型的强化学习算法，通过交互环境并更新Q表来逼近贝尔曼方程。其更新公式如下：<br>$$<br>Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a’} Q(s’, a’) - Q(s, a) \right)<br>$$<br>其中：</p>
+<ul>
+<li>$\alpha$ 是学习率，控制更新步长的大小。</li>
+<li><strong>新信息</strong>：当agent在状态 s下采取动作 a 并观察到即时奖励 r 和下一个状态 s′ 时，它获得了关于Q值的新信息，即$r + \gamma \max_{a’} Q(s’, a’)$。</li>
+<li><strong>TD误差</strong>：通过计算当前Q值与新信息的差值，我们得到了时间差分（Temporal Difference，TD）误差： $\delta &#x3D; r + \gamma \max_{a’} Q(s’, a’) - Q(s, a)$</li>
+<li><strong>更新Q值</strong>：使用TD误差来调整Q值： $Q(s,a)←Q(s,a)+αδ$</li>
+</ul>
 
                 
               </div>
@@ -446,7 +513,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Reinforcement-Learning</div>
+      <div>Reinforcement Learning</div>
       <div>https://adzuki23.github.io/2024/07/18/ReinforcementLearning/</div>
     </div>
     <div class="license-meta">
@@ -465,7 +532,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月8日</div>
+          <div>2024年7月18日</div>
         </div>
       
       
@@ -495,6 +562,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/07/18/OpenCV/" title="OpenCV">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">OpenCV</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

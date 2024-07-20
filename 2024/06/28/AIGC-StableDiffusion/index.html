@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/AIGC.jpeg">
 <meta property="article:published_time" content="2024-06-27T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-04T10:04:14.484Z">
+<meta property="article:modified_time" content="2024-07-20T09:07:19.700Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Stable Diffusion">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.3k 字
+          4.4k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          36 分钟
+          37 分钟
         
       </span>
     
@@ -312,11 +312,12 @@
             
               <div class="markdown-body">
                 
-                <h2 id="AIGC–Stable-Diffusion"><a href="#AIGC–Stable-Diffusion" class="headerlink" title="AIGC–Stable Diffusion"></a>AIGC–Stable Diffusion</h2><p><strong>Stable Diffusion</strong>是一个基于Latent Diffusion Model（LDM）的文转图AI模型，其使用了<strong>CLIP ViT-L&#x2F;14的文本编码器</strong>，能够通过文本提示调整图像。它在运行时将成像过程分离成“<strong>扩散 （diffusion）</strong>”的过程，从有噪声的情况开始，逐渐改善图像，直到完全没有噪声，逐步接近所提供的文本描述。</p>
+                <p>[TOC]</p>
+<h2 id="AIGC–Stable-Diffusion"><a href="#AIGC–Stable-Diffusion" class="headerlink" title="AIGC–Stable Diffusion"></a>AIGC–Stable Diffusion</h2><p><strong>Stable Diffusion</strong>是一个基于Latent Diffusion Model（LDM）的文转图AI模型，其使用了<strong>CLIP ViT-L&#x2F;14的文本编码器</strong>，能够通过文本提示调整图像。它在运行时将成像过程分离成“<strong>扩散 （diffusion）</strong>”的过程，从有噪声的情况开始，逐渐改善图像，直到完全没有噪声，逐步接近所提供的文本描述。</p>
 <p><strong>参考文章：</strong></p>
 <blockquote>
 <ol>
-<li><p>在文章写完去扣源码时候才找到这两篇文章，写的非常牛逼，非常细节！！文章中许多图、想法来源于它：</p>
+<li><p>在文章写完去学源码时候才找到这两篇文章，写的非常牛逼，非常细节！！文章中许多图、想法来源于它：</p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/613337342%E3%80%81https://zhuanlan.zhihu.com/p/615310965">https://zhuanlan.zhihu.com/p/613337342、https://zhuanlan.zhihu.com/p/615310965</a></p>
 </li>
 <li><p>这三篇文章介绍DM模型还有其他内容等非常深入浅出，难以理解的数学公式介绍的非常详细，非常牛逼！！</p>
@@ -476,7 +477,10 @@
 <p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240704122722262.png" srcset="/img/loading.gif" lazyload alt="ELBO"></p>
 </li>
 <li><p>重参数「Reparamterization」技术</p>
-<p>解决“从一个带参数的分布中进行采样”转变到“从一个确定的分布中进行采样”，以解决梯度无法传递的问题。</p>
+<p>之前想得到<code>t</code>时刻的加噪图像，需要：$q(x_t|x_{t-1})$；通过重参数技术：$q(x_t|x_0)$</p>
+<p>具体来说，在重参数的表达下，第t个时刻的输入图片可以表示为：$x_t &#x3D; \sqrt{\bar{\alpha_t}}x_0+\sqrt{1-\bar{\alpha_t}}\epsilon$</p>
+<p>也就是说，我们每次只需要对符合高斯分布的噪声 $\epsilon$ 采样，就能得到 t 时刻的加噪图</p>
+<p>“从一个带参数的分布中进行采样”转变到“从一个确定的分布中进行采样”，解决了梯度无法传递的问题。</p>
 </li>
 </ol>
 <h3 id="4-补充知识"><a href="#4-补充知识" class="headerlink" title="4. 补充知识"></a>4. 补充知识</h3><hr>
@@ -606,7 +610,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月4日</div>
+          <div>2024年7月20日</div>
         </div>
       
       
@@ -637,9 +641,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/03/LLM-LangChain/" title="LLM-LangChain">
+                      <a href="/2024/07/03/LLM-T5/" title="LLM-T5">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LLM-LangChain</span>
+                        <span class="hidden-mobile">LLM-T5</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/LLM.webp">
 <meta property="article:published_time" content="2024-07-03T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-08T11:39:08.882Z">
+<meta property="article:modified_time" content="2024-07-20T09:11:19.955Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Transformer">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.2k 字
+          5.9k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          27 分钟
+          49 分钟
         
       </span>
     
@@ -312,7 +312,8 @@
             
               <div class="markdown-body">
                 
-                <h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>Transformer 模型是由谷歌在2017 年提出并首先应用于机器翻译的神经网络模型结构。Transformer 结构完全通过注意力机制完成对源语言序列和目标语言序列全局依赖的建模。</p>
+                <p>[TOC]</p>
+<h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>Transformer 模型是由谷歌在2017 年提出并首先应用于机器翻译的神经网络模型结构。Transformer 结构完全通过注意力机制完成对源语言序列和目标语言序列全局依赖的建模。</p>
 <p><strong>参考文章：</strong></p>
 <p>本文只是做一些学习记录总结，内容全部来源于作者<a target="_blank" rel="noopener" href="https://www.zhihu.com/people/lemonround">猛猿</a>以下文章，写的非常详细：</p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454482273%E3%80%81https://zhuanlan.zhihu.com/p/456863215%E7%AD%89">https://zhuanlan.zhihu.com/p/454482273、https://zhuanlan.zhihu.com/p/456863215等</a></p>
@@ -426,6 +427,86 @@
 <p>如果不进行缩放，点积的方差为 ( $d_k$ )，随着 ( $d_k$ ) 增大，点积的值会变得越来越大，这会导致Softmax函数的输入值也变大，从而使得Softmax函数的梯度变得很小，如下所示。通过乘以 ($ \frac{1}{\sqrt{d_k}}$ )，点积的方差变为1，这样可以使得点积的值在一个较小的范围内波动，保持数值稳定性，避免梯度消失问题。加上下图进行理解：</p>
 <p><img src="/2024/07/04/LLM-Transformer/image-20240707231309184.png" srcset="/img/loading.gif" lazyload alt="对于第i个token的j和j‘处的梯度计算"></p>
 <hr>
+<h4 id="2-4-Masked-Attention"><a href="#2-4-Masked-Attention" class="headerlink" title="2.4 Masked Attention"></a>2.4 Masked Attention</h4><p>在transformer的decoder层中，我们用到了masked attention。在序列生成任务（如机器翻译或文本生成）中，模型在生成第<code>t</code>个位置的单词时，不应该看到第<code>t+1</code>个位置及其之后的单词。Masked Attention通过掩码来阻止模型在计算当前位置的注意力权重时访问未来的位置，从而避免了信息泄露。</p>
+<p>具体来说，在实现Masked Attention时，通常会构建一个上三角形矩阵掩码，这个掩码矩阵的下三角部分为1（允许注意），上三角部分为0（屏蔽注意）。在计算注意力权重时，这个掩码矩阵会被加到注意力分数上，通过对屏蔽位置施加一个大的负数，从而在softmax计算时将这些位置的权重归零。示例代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">masked_attention</span>(<span class="hljs-params">Q, K, V, mask</span>):<br>    scores = torch.matmul(Q, K.transpose(-<span class="hljs-number">2</span>, -<span class="hljs-number">1</span>)) / (K.size(-<span class="hljs-number">1</span>) ** <span class="hljs-number">0.5</span>)<br>    scores = scores.masked_fill(mask == <span class="hljs-number">0</span>, <span class="hljs-built_in">float</span>(<span class="hljs-string">&#x27;-inf&#x27;</span>))<br>    attention_weights = F.softmax(scores, dim=-<span class="hljs-number">1</span>)<br>    output = torch.matmul(attention_weights, V)<br>    <span class="hljs-keyword">return</span> output<br><br><span class="hljs-comment"># 示例输入</span><br>Q = torch.rand(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)  <span class="hljs-comment"># (batch_size, seq_length, d_k)</span><br>K = torch.rand(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)<br>V = torch.rand(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)<br>mask = torch.tril(torch.ones(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>)).unsqueeze(<span class="hljs-number">0</span>).repeat(<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)  <span class="hljs-comment"># 下三角掩码</span><br><br>output = masked_attention(Q, K, V, mask)<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-5-Multihead-Attention"><a href="#2-5-Multihead-Attention" class="headerlink" title="2.5 Multihead Attention"></a>2.5 Multihead Attention</h4><p>多头注意力通过多个并行的注意力头来处理输入，每个注意力头可以关注输入序列的不同部分或不同的特征子空间。这样，模型能够捕获更丰富、更细粒度的信息，而不是单一头注意力所能提供的有限视角。</p>
+<p>不同的注意力头可以学习到不同类型的关系和模式，这使得模型在处理复杂的序列关系时更具灵活性和表达力。例如，一个注意力头可能专注于短距离依赖关系，而另一个注意力头可能专注于长距离依赖关系。</p>
+<blockquote>
+<p>在NLP中，这种模式识别同样重要。比如第一个head用来识别词语间的指代关系(某个句子里有一个单词it，这个it具体指什么呢），第二个head用于识别词语间的时态关系（看见yesterday就要用过去式）等等。 </p>
+</blockquote>
+<p>具体实现上，多头注意力通过以下步骤实现：</p>
+<ol>
+<li><p><strong>线性变换</strong>：输入的查询（Q）、键（K）、值（V）向量分别经过线性变换，得到多个头的Q‘、K’、V‘。</p>
+</li>
+<li><p><strong>独立计算注意力</strong>：对每个头的Q、K、V分别计算注意力权重，并对V进行加权求和。</p>
+</li>
+<li><p><strong>连接和线性变换</strong>：将所有头的输出连接在一起，并通过一个线性变换得到最终的输出。</p>
+</li>
+</ol>
+<p>示例代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MultiheadAttention</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, d_model, num_heads</span>):<br>        <span class="hljs-built_in">super</span>(MultiheadAttention, self).__init__()<br>        <span class="hljs-keyword">assert</span> d_model % num_heads == <span class="hljs-number">0</span><br>        self.d_k = d_model // num_heads<br>        self.num_heads = num_heads<br><br>        self.linear_Q = nn.Linear(d_model, d_model)<br>        self.linear_K = nn.Linear(d_model, d_model)<br>        self.linear_V = nn.Linear(d_model, d_model)<br>        self.linear_out = nn.Linear(d_model, d_model)<br><br>        self.attention = nn.MultiheadAttention(embed_dim=d_model, num_heads=num_heads)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, Q, K, V, mask=<span class="hljs-literal">None</span></span>):<br>        batch_size = Q.size(<span class="hljs-number">0</span>)<br><br>        <span class="hljs-comment"># 线性变换并分割成多头</span><br>        <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">        view操作将Q的形状从 (batch_size, seq_length, d_model) 转换为 (batch_size, seq_length, num_heads, d_k)，</span><br><span class="hljs-string">        其中 d_k = d_model // num_heads。具体来说，这一步通过view将d_model维度拆分成两个维度：num_heads和d_k。</span><br><span class="hljs-string">        transpose操作交换了第1维和第2维，使得Q的形状变为 (batch_size, num_heads, seq_length, d_k)。</span><br><span class="hljs-string">        这是因为我们希望将多个头分开处理，而不是在序列长度维度上处理。</span><br><span class="hljs-string">        &#x27;&#x27;&#x27;</span><br>        Q = self.linear_Q(Q).view(batch_size, -<span class="hljs-number">1</span>, self.num_heads, self.d_k).transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>        K = self.linear_K(K).view(batch_size, -<span class="hljs-number">1</span>, self.num_heads, self.d_k).transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>        V = self.linear_V(V).view(batch_size, -<span class="hljs-number">1</span>, self.num_heads, self.d_k).transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br><br>        <span class="hljs-comment"># 计算注意力</span><br>        scores = torch.matmul(Q, K.transpose(-<span class="hljs-number">2</span>, -<span class="hljs-number">1</span>)) / (self.d_k ** <span class="hljs-number">0.5</span>)<br>        <span class="hljs-keyword">if</span> mask <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>            scores = scores.masked_fill(mask == <span class="hljs-number">0</span>, <span class="hljs-built_in">float</span>(<span class="hljs-string">&#x27;-inf&#x27;</span>))<br>        attention_weights = torch.nn.functional.softmax(scores, dim=-<span class="hljs-number">1</span>)<br>        attention_output = torch.matmul(attention_weights, V)<br><br>        <span class="hljs-comment"># 连接多头输出并进行线性变换</span><br>        attention_output = attention_output.transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>).contiguous().view(batch_size, -<span class="hljs-number">1</span>, self.num_heads * self.d_k)<br>        output = self.linear_out(attention_output)<br><br>        <span class="hljs-keyword">return</span> output<br><br><span class="hljs-comment"># 示例输入</span><br>d_model = <span class="hljs-number">512</span><br>num_heads = <span class="hljs-number">8</span><br><span class="hljs-comment"># (batch_size, seq_length, d_model)</span><br>Q = torch.rand(<span class="hljs-number">2</span>, <span class="hljs-number">10</span>, d_model) <br>K = torch.rand(<span class="hljs-number">2</span>, <span class="hljs-number">10</span>, d_model)<br>V = torch.rand(<span class="hljs-number">2</span>, <span class="hljs-number">10</span>, d_model)<br>mask = <span class="hljs-literal">None</span><br><br>multihead_attention = MultiheadAttention(d_model, num_heads)<br>output = multihead_attention(Q, K, V, mask)<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="3-Layer-Normalization（层归一化）"><a href="#3-Layer-Normalization（层归一化）" class="headerlink" title="3.Layer Normalization（层归一化）"></a>3.Layer Normalization（层归一化）</h3><h4 id="3-1-Batch-Normalization"><a href="#3-1-Batch-Normalization" class="headerlink" title="3.1 Batch Normalization"></a>3.1 Batch Normalization</h4><p>Batch Normalization（以下简称BN）的方法最早由<a href="https://link.zhihu.com/?target=https://arxiv.org/pdf/1502.03167.pdf">Ioffe&amp;Szegedy</a>在2015年提出，主要用于解决在深度学习中产生的内部协变量偏移-ICS（Internal Covariate Shift）的问题。在BasicKnowledge那篇文章中我们详细介绍了Batch Normalization的原理和作用。Batch Normalization被广泛用在CNN任务上来处理图像，针对文本任务，它有以下缺点：</p>
+<blockquote>
+<ol>
+<li>“长短不一”：文本中某些位置没有足够的batch的数据，使得计算出来的$\mu$ 、$\sigma ^2$产生偏差。</li>
+<li>测试集中出现比训练集更长的数据，由于BN在训练中累积 ，在测试中使用累计的经验统计量的原因，导致测试集中多出来的数据没有相应的统计量以供使用。 （<strong>在实际应用中，通常会对语言类的数据设置一个max_len，多裁少pad，这时没有上面所说的这个问题。但这里我们讨论的是理论上的情况，即理论上，诸如Transformer这样的模型，是支持任意长度的输入数据的</strong>）。</li>
+<li>在 RNN 中，每个时间步的数据依赖于前面时间步的隐藏状态。Batch Normalization 对当前时间步的数据进行归一化时引入了整个批次的信息，可能会破坏这种依赖关系。例如，某个时间步的输入特征会因批次内其他时间步的均值和方差的变化而变化，从而影响隐藏状态的更新。这破坏了 RNN 模型逐步构建时间依赖性的能力。</li>
+</ol>
+</blockquote>
+<h4 id="3-2-Layer-Normalization"><a href="#3-2-Layer-Normalization" class="headerlink" title="3.2 Layer Normalization"></a>3.2 Layer Normalization</h4><p><strong>做法：</strong></p>
+<p>Layer Normalization整体做法类似于BN，不同的是LN不是在特征维度间进行标准化操作（横向操作），而是在整条数据间进行标准化操作（纵向操作）。以图像任务为例：</p>
+<blockquote>
+<p>BN：对一个batch里同一channel上的所有数据求取均值和方差</p>
+<p>LN：在一张图片里所有channel的pixel范围内计算均值和方差</p>
+</blockquote>
+<p>以下图为例：$Z^i_j$：<code>i</code>表示第几个样本，<code>j</code>表示维度</p>
+<p><img src="/2024/07/04/LLM-Transformer/v2-bd1fa944470997e03e89a64e9ce2b469_1440w.webp" srcset="/img/loading.gif" lazyload alt="Batch Normalization"></p>
+<p><img src="/2024/07/04/LLM-Transformer/v2-839ecea737782bc8a8af321f2d4f8633_1440w.webp" srcset="/img/loading.gif" lazyload alt="Layer Normalization"></p>
+<p><strong>优点：</strong></p>
+<p>LN使得各条数据间在进行标准化的时候相互独立，因此LN在训练和测试过程中是一致的。LN不需要保留训练过程中的 ，每当来一条数据时，对这条数据的指定范围内单独计算所需统计量即可。</p>
+<h4 id="3-3-Transformer-LN改进方法：Pre-LN"><a href="#3-3-Transformer-LN改进方法：Pre-LN" class="headerlink" title="3.3 Transformer LN改进方法：Pre-LN"></a>3.3 Transformer LN改进方法：Pre-LN</h4><p>原始transformer中，采用的是Post-LN，即LN在residule block（图中addtion）之后。<a href="https://link.zhihu.com/?target=https://arxiv.org/pdf/2002.04745.pdf">Xiong et al. (2020)</a>中提出了一种更优Pre-LN的架构，即LN在residule block之前，它能和Post-LN达到相同甚至更好的训练结果，同时规避了在训练Post-LN中产生的种种问题。两种架构的具体形式可以见下图。</p>
+<p><img src="/2024/07/04/LLM-Transformer/v2-b71299f375bd3e5ec3dd86051b3d2cb8_1440w.webp" srcset="/img/loading.gif" lazyload alt="Post-LN和Pre-LN"></p>
+<p>Post-LN 是原始 Transformer 论文中的默认设置。在这种情况下，学习率 warm-up 策略显得尤为重要，因为 Post-LN 的训练可能会不稳定，尤其是深层模型中。Warm-up 可以帮助缓解这种不稳定性，具体原因如下：</p>
+<blockquote>
+<p><strong>训练初期稳定性</strong>：在模型训练初期，参数初始化较为随机，直接使用较大的学习率可能导致梯度过大，参数更新幅度过大。Warm-up 可以平缓地增加学习率，使模型逐步适应训练数据，减少训练初期的震荡。</p>
+<p><strong>梯度问题</strong>：Post-LN 中，归一化层在残差连接之后，可能导致梯度传播过程中逐层缩小。Warm-up 阶段的低学习率可以在一定程度上防止梯度消失或爆炸问题。</p>
+</blockquote>
+<h3 id="4-ResNet（残差网络）"><a href="#4-ResNet（残差网络）" class="headerlink" title="4. ResNet（残差网络）"></a>4. ResNet（残差网络）</h3><p>弄清楚一个问题：<strong>为什么「嵌入&#x2F;每一层输出」需要再次输入到 Add &amp; Norm 层？</strong></p>
+<blockquote>
+<p><strong>梯度传递的稳定性</strong>：残差连接使得梯度可以直接通过加法路径传递，从而缓解深层网络中的梯度消失问题。</p>
+<p><strong>模型收敛性和训练速度</strong>：归一化操作确保了每一层的输入分布是稳定的，有助于模型的快速收敛。</p>
+<p><strong>信息保留</strong>：通过残差连接，输入信息不会在每一层中丢失，而是持续传递到更深层次的网络中。</p>
+</blockquote>
+<p>下列代码示例中输入嵌入 x 直接加到多头注意力层的输出 sublayer_output 上，然后进行层归一化，输出的形状与输入相同。通过这种设计，确保了每一层的输出在传递过程中保持稳定并保留原始信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">AddNorm</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, d_model, dropout=<span class="hljs-number">0.1</span></span>):<br>        <span class="hljs-built_in">super</span>(AddNorm, self).__init__()<br>        self.norm = nn.LayerNorm(d_model)<br>        self.dropout = nn.Dropout(dropout)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x, sublayer_output</span>):<br>        <span class="hljs-keyword">return</span> self.norm(x + self.dropout(sublayer_output))<br><br><span class="hljs-comment"># 示例输入</span><br>batch_size = <span class="hljs-number">2</span><br>seq_length = <span class="hljs-number">10</span><br>d_model = <span class="hljs-number">512</span><br><br>x = torch.rand(batch_size, seq_length, d_model)  <span class="hljs-comment"># 输入嵌入</span><br>sublayer_output = torch.rand(batch_size, seq_length, d_model)  <span class="hljs-comment"># 多头注意力层的输出</span><br><br><span class="hljs-comment"># Add &amp; Norm 层</span><br>add_norm = AddNorm(d_model)<br>output = add_norm(x, sublayer_output)<br><br><span class="hljs-built_in">print</span>(output.shape)  <span class="hljs-comment"># (batch_size, seq_length, d_model)</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="6-其他"><a href="#6-其他" class="headerlink" title="6. 其他"></a>6. 其他</h3><h4 id="6-1-weight-tying"><a href="#6-1-weight-tying" class="headerlink" title="6.1 weight tying"></a>6.1 weight tying</h4><p>在Transformer模型中，weight tying 是一种减少模型参数数量的方法。具体而言，它是在多个不同的层之间共享权重。这种技术可以显著降低模型的参数数量，从而减小模型的复杂性和内存占用，同时还能帮助模型在训练时更好地泛化。</p>
+<p>在Transformer模型中，最常见的weight tying场景有两个：</p>
+<ol>
+<li><p>Embedding层和输出层之间的weight tying：</p>
+<p>在自然语言处理（NLP）任务中，输入的词嵌入（word embeddings）和输出的词概率分布（通常通过softmax层得到）都需要一个词汇表大小的矩阵。通常情况下，这两个矩阵是独立的，但通过weight tying，这两个矩阵可以共享同一个权重。</p>
+<p>这种共享可以通过以下方式实现：假设输入的词嵌入矩阵为  E ，输出层的权重矩阵为  W ，则通过将  W  设置为  $E^T $ 来实现共享。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TransformerModel</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, vocab_size, d_model</span>):<br>        <span class="hljs-built_in">super</span>(TransformerModel, self).__init__()<br>        self.embedding = nn.Embedding(vocab_size, d_model)<br>        self.transformer = nn.Transformer(d_model)<br>        self.fc_out = nn.Linear(d_model, vocab_size)<br><br>        <span class="hljs-comment"># Weight tying: set the output layer weights to be the same as the embedding layer weights</span><br>        self.fc_out.weight = self.embedding.weight<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, src, tgt</span>):<br>        src_emb = self.embedding(src)<br>        tgt_emb = self.embedding(tgt)<br>        transformer_output = self.transformer(src_emb, tgt_emb)<br>        output = self.fc_out(transformer_output)<br>        <span class="hljs-keyword">return</span> output<br><br><span class="hljs-comment"># 示例参数</span><br>vocab_size = <span class="hljs-number">10000</span>  <span class="hljs-comment"># 词汇表大小</span><br>d_model = <span class="hljs-number">512</span>       <span class="hljs-comment"># 嵌入维度</span><br><br><span class="hljs-comment"># 创建模型实例</span><br>model = TransformerModel(vocab_size, d_model)<br></code></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>Encoder和Decoder之间的weight tying：</p>
+<p>在一些Seq2Seq模型（如翻译模型）中，编码器和解码器可以使用相同的权重。这种共享可以通过将编码器和解码器的相应层设置为相同的权重来实现。</p>
+</li>
+</ol>
 
                 
               </div>
@@ -497,7 +578,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月8日</div>
+          <div>2024年7月20日</div>
         </div>
       
       
