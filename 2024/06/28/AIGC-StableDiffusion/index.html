@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/AIGC.jpeg">
 <meta property="article:published_time" content="2024-06-27T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-20T09:07:19.700Z">
+<meta property="article:modified_time" content="2024-07-23T04:18:52.768Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Stable Diffusion">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.4k 字
+          4.9k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          37 分钟
+          41 分钟
         
       </span>
     
@@ -504,6 +504,36 @@
 </blockquote>
 <p>其中，Encoder 能够将一个图像压缩到低维空间表示，在 Stable Diffusion 模型中，将原始输入图像通过 Encode 转换成 Latent Space 中的向量表示 Latent Image；</p>
 <p>Decoder 能够将一个压缩表示的图像向量数据转换成高维空间表示，在 Stable Diffusion 模型中将 Latent Space 中图像的向量表示 Latent Image 通过 Decode 转换成 Pixel Space 中的视觉图像。</p>
+<p><strong>其中一些概念：</strong></p>
+<ol>
+<li><p>连续表示（Continuous Representation）</p>
+<p>输入数据：假设输入数据  x  是一张图像。</p>
+<p>编码器（Encoder）：编码器  E  是一个神经网络，通常由多个卷积层组成。它将输入图像  x  映射到一个连续的在表示 $z_e &#x3D; E(x)$，这里， $z_e$  是一个连续值的向量，表示图像的特征。</p>
+</li>
+<li><p>向量表示（Vector Representation）</p>
+<p>码本（Codebook）：码本  e  是一个固定大小的向量集合，记为  ${e_1, e_2, \ldots, e_K}$ ，其中  K  是码本向量的数量。每个向量  $e_i$  通常是随机初始化的，并在训练过程中更新。</p>
+</li>
+<li><p>量化表示（Quantized Representation）</p>
+<p>向量量化（Vector Quantization）：向量量化的目的是将连续的潜在表示  $z_e$  映射到离散的码本向量 $ e_i $。具体来说，对于每个  $z_e$ ，找到与其最接近的码本向量 $ e_i $，并用  $e_i $ 代替 $ z_e $。</p>
+<p>量化过程如下：$z_q &#x3D; \text{argmin}_{e_i} | z_e - e_i |$，这里，$ z_q $ 是量化后的离散潜在表示，它与最近的码本向量  $e_i$相等。</p>
+</li>
+<li><p>解码过程（Decoding Process）</p>
+<p>解码器（Decoder）：解码器  D  将量化后的离散潜在表示  z_q  映射回输入数据空间，重建输入图像：$\hat{x} &#x3D; D(z_q)$，这里， $\hat{x}$  是解码器生成的重建图像。</p>
+</li>
+</ol>
+<p><strong>损失函数（Loss Function）:</strong></p>
+<p>VQ-VAE 的损失函数由三部分组成：</p>
+<ol>
+<li><p>重构损失（Reconstruction Loss）：衡量原始输入  x  和重建输出  \hat{x}  之间的差异，通常使用均方误差（MSE）。<br>$$<br>\mathcal{L}_{\text{recon}} &#x3D; | x - \hat{x} |^2<br>$$</p>
+</li>
+<li><p>向量量化损失（Vector Quantization Loss）：鼓励码本向量  $e_i $ 接近连续潜在表示  $z_e $<br>$$<br>\mathcal{L}_{\text{vq}} &#x3D; | \text{sg}[z_e] - e_i |^2<br>$$<br>其中，$\text{sg}$ 表示停止梯度（stop gradient），即在反向传播时不计算其梯度。</p>
+</li>
+<li><p>承诺损失（Commitment Loss）：鼓励连续潜在表示  $z_e$  稳定，以减少解码器的训练难度。<br>$$<br>\mathcal{L}_{\text{commit}} &#x3D; \beta | z_e - \text{sg}[e_i] |<br>$$<br>其中，$\beta$ 是超参数，控制承诺损失的权重。</p>
+</li>
+<li><p>总损失函数是上述三部分损失的加权和：</p>
+</li>
+</ol>
+<p>$$<br>\mathcal{L} &#x3D; \mathcal{L}{\text{recon}} + \mathcal{L}{\text{vq}} + \mathcal{L}_{\text{commit}}<br>$$</p>
 <h4 id="4-2-什么叫做转换为潜在空间中的向量表示，它和提取的图像特征不是一回事吗？"><a href="#4-2-什么叫做转换为潜在空间中的向量表示，它和提取的图像特征不是一回事吗？" class="headerlink" title="4.2 什么叫做转换为潜在空间中的向量表示，它和提取的图像特征不是一回事吗？"></a>4.2 什么叫做转换为潜在空间中的向量表示，它和提取的图像特征不是一回事吗？</h4><p>将图像转换为潜在空间中的向量表示是特征提取的进一步抽象和压缩过程。这一过程的主要目的是将高维的、冗长的特征图压缩为低维的紧凑表示，同时保留图像的核心信息，便于后续的生成和操作。</p>
 <ul>
 <li><p>图像特征提取</p>
@@ -610,7 +640,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月20日</div>
+          <div>2024年7月23日</div>
         </div>
       
       
@@ -641,9 +671,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/03/LLM-T5/" title="LLM-T5">
+                      <a href="/2024/07/03/LLM-CLIP/" title="LLM-CLIP">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LLM-T5</span>
+                        <span class="hidden-mobile">LLM-CLIP</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
