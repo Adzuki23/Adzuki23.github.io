@@ -16,26 +16,26 @@
   <meta name="author" content="Hongyu Li">
   <meta name="keywords" content="DeepLearning,CV">
   
-    <meta name="description" content="学习Docker的基本原理、作用、和虚拟机的区别，以及基本操作等。">
+    <meta name="description" content="Llama系列">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker">
-<meta property="og:url" content="https://adzuki23.github.io/2024/05/15/Docker/index.html">
+<meta property="og:title" content="Llama">
+<meta property="og:url" content="https://adzuki23.github.io/2024/07/30/LLM-Llama/index.html">
 <meta property="og:site_name" content="Hongyu Li">
-<meta property="og:description" content="学习Docker的基本原理、作用、和虚拟机的区别，以及基本操作等。">
+<meta property="og:description" content="Llama系列">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://adzuki23.github.io/img/cover/docker.png">
-<meta property="article:published_time" content="2024-05-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-30T14:47:37.312Z">
+<meta property="og:image" content="https://adzuki23.github.io/img/cover/llama.webp">
+<meta property="article:published_time" content="2024-07-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-08-03T11:47:30.956Z">
 <meta property="article:author" content="Hongyu Li">
-<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Llama">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/docker.png">
+<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/llama.webp">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Docker - Hongyu Li</title>
+  <title>Llama - Hongyu Li</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -228,7 +228,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Docker"></span>
+            <span id="subtitle" data-typed-text="Llama"></span>
           
         </div>
 
@@ -239,8 +239,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-05-15 00:00" pubdate>
-          2024年5月15日 凌晨
+        <time datetime="2024-07-30 00:00" pubdate>
+          2024年7月30日 凌晨
         </time>
       </span>
     
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          2.3k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          9 分钟
+          20 分钟
         
       </span>
     
@@ -307,96 +307,115 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Docker</h1>
+            <h1 id="seo-header">Llama</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><hr>
-<p>Docker是一个用于<strong>构建(build)</strong>,<strong>运行(run)</strong>,<strong>传送(share)</strong> 应用程序的平台</p>
+                <p>[TOC]</p>
+<h2 id="Llama"><a href="#Llama" class="headerlink" title="Llama"></a>Llama</h2><p><strong>参考文章：</strong></p>
+<p>本文只是做一些学习记录总结，内容全部来源于以下文章和chatgpt，写的非常详细：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_51957239/article/details/139044825">https://blog.csdn.net/qq_51957239/article/details/139044825</a></p>
+<hr>
+<h3 id="1-模型架构"><a href="#1-模型架构" class="headerlink" title="1. 模型架构"></a>1. 模型架构</h3><p><img src="/2024/07/30/LLM-Llama/1*h0svec4VnlBaMGdd06uILw.png" srcset="/img/loading.gif" lazyload alt="Llama"></p>
+<h3 id="2-RMSNorm"><a href="#2-RMSNorm" class="headerlink" title="2. RMSNorm"></a>2. RMSNorm</h3><p><strong>RMSNorm（Root Mean Square Layer Normalization）</strong>是一种标准化方法，用于替代传统的 LayerNorm（Layer Normalization）。它主要是为了减少 LayerNorm 中的计算开销，同时仍能保持模型训练的稳定性和性能。相比于 LayerNorm，它省略了对均值的去除，因此计算更为简洁。</p>
+<p>给定一个输入向量  x ，RMSNorm 的计算步骤如下：</p>
 <ol>
-<li><strong>将应用程序打包为一个个的集装箱</strong>，小鲸鱼(Docker)就会帮我们将它们运送到任何需要的地方</li>
+<li><p>计算 RMS 值：$\text{RMS}(x) &#x3D; \sqrt{\frac{1}{d} \sum_{i&#x3D;1}^{d} x_i^2}$；其中， $d$ 是向量的维度，$ x_i$  是向量中的第 $ i$  个元素。</p>
+</li>
+<li><p>标准化输入：$y_i &#x3D; \frac{x_i}{\text{RMS}(x)}$；这是对每个输入特征进行缩放，使其除以均方根值。</p>
+</li>
+<li><p>缩放和偏移：通常会引入可学习的参数 $ \gamma $ 和 $ \beta $ 来进一步调整归一化后的输出：$\text{RMSNorm}(x) &#x3D; \gamma y + \beta$。</p>
+</li>
 </ol>
-<p><img src="/2024/05/15/Docker/docker.png" srcset="/img/loading.gif" lazyload alt="集装箱"></p>
-<ol start="2">
-<li><strong>每个集装箱将下列文件打包在一起</strong>（应用程序和它运行时所需要的各种依赖包、第三方软件库、配置文件等），以便在任何环境中都可以正确的运行</li>
-</ol>
-<p><img src="/2024/05/15/Docker/image-20240515112551349.png" srcset="/img/loading.gif" lazyload alt="集装箱内文件"></p>
-<h3 id="为什么要使用Docker"><a href="#为什么要使用Docker" class="headerlink" title="为什么要使用Docker"></a>为什么要使用Docker</h3><hr>
-<p>比如我们写了一个网站：</p>
+<h3 id="3-SwiGLU"><a href="#3-SwiGLU" class="headerlink" title="3. SwiGLU"></a>3. SwiGLU</h3><p><strong>SwiGLU（Switch GLU）</strong> 是一种激活函数，用于神经网络中特别是 Transformer 模型的前馈神经网络（FFN）部分。它是一种改进的激活函数，通过结合线性变换和非线性激活来提高模型的表达能力和性能。SwiGLU 是 GLU（Gated Linear Unit）激活函数的变种。</p>
+<p><strong>SwiGLU</strong> 公式为：<br>$$<br>\text{SwiGLU}(x) &#x3D; (xW_1) \odot \text{SiLU}(xW_2)<br>$$</p>
+<blockquote>
+<p>其中：</p>
+<ul>
+<li>( $W_1$,$ W_2$ ) 是权重矩阵（通常大小为 ( $d \times 4d$ ) 和 ( $d \times 4d$ )，如果前馈层扩展到 4 倍大小）。</li>
+<li>( $\text{SiLU}$ ) 是 sigmoid 线性单元激活函数，定义为：$\text{SiLU}(x) &#x3D; x \sigma(x)$。其中 ( $\sigma(x)$ ) 是 sigmoid 函数。</li>
+</ul>
+</blockquote>
+<p><strong>特点:</strong></p>
 <ol>
-<li><p>前端使用Vue搭建界面</p>
+<li><p><strong>非线性激活</strong>: SwiGLU 使用 SiLU 作为激活函数，提供了非线性变换。这比单纯的 ReLU 或 GELU 更复杂，捕捉了更多的模式和特征。</p>
 </li>
-<li><p>后端使用SpringBoot微服务框架来提供各种服务和接口</p>
+<li><p><strong>门控机制</strong>: 和 GLU 类似，SwiGLU 也具有门控机制，这使得模型能够动态地调整通道的开闭，从而更加灵活地控制信息流。</p>
 </li>
-<li><p>使用MySQL数据库来存储数据</p>
+<li><p><strong>性能提升</strong>: 在一些 Transformer 变体中，SwiGLU 已被证明能够提升模型的性能，如改善模型的收敛性和表达能力。</p>
 </li>
 </ol>
+<h3 id="4-RoPE"><a href="#4-RoPE" class="headerlink" title="4. RoPE"></a>4. RoPE</h3><p><strong>RoPE（Rotary Position Embedding）</strong> 是一种位置编码方法，用于在 Transformer 模型中表示序列数据的位置信息。与传统的绝对位置编码（例如，正弦-余弦位置编码）不同，RoPE 提供了一种相对位置编码的方式，使模型能够更好地捕捉序列数据中相对位置的重要性。</p>
 <ul>
-<li><strong>如果没有使用Docker</strong>，我们在生产环境和测试环境中都需要进行各种配置：</li>
-</ul>
-<p><img src="/2024/05/15/Docker/image-20240515113511454.png" srcset="/img/loading.gif" lazyload alt="开发环境和测试环境"></p>
-<ul>
-<li><strong>如果有了Docker</strong>，我们可以将这些（前端、后端、数据库等）打包成一个个的集装箱，只要在开发环境中运行成功了，在其他环境中也一定可以成功。</li>
-</ul>
-<p><img src="/2024/05/15/Docker/image-20240515113744151.png" srcset="/img/loading.gif" lazyload alt="开发环境和测试环境"></p>
-<h3 id="Docker和虚拟机的区别"><a href="#Docker和虚拟机的区别" class="headerlink" title="Docker和虚拟机的区别"></a>Docker和虚拟机的区别</h3><hr>
+<li><p>传统位置编码的局限性：</p>
+<p>传统的绝对位置编码（如正弦-余弦位置编码）将每个位置编码为一个固定的向量，这些向量与输入的词嵌入相加输入到模型中。这种方法的局限性在于，它只能编码绝对位置，而不能直接表示相对位置之间的关系。</p>
+</li>
+<li><p>RoPE 的核心思想：</p>
+<p>RoPE 的核心思想是通过旋转输入的词嵌入来引入位置信息。具体来说，RoPE 将输入向量根据其位置应用一个旋转矩阵，这个旋转矩阵的旋转角度依赖于该位置。</p>
+</li>
+<li><p>数学描述：</p>
+<p>假设输入向量的维度为  d ，我们将其分为两两一组，每组有 2 个维度。对于位置 ( p ) 的输入向量 ( x )，RoPE 定义的旋转变换可以表示为：<br>$$<br>RoPE(x, p) &#x3D; Concat[RoPE_{even}(x, p), RoPE_{odd}(x, p)]<br>$$<br>其中，$RoPE_{even}(x, p)、RoPE_{odd}(x, p)$分别作用在输入向量的偶数和奇数维度上。</p>
+<p>具体的旋转操作可以描述为：</p>
+<p>$$<br>RoPE_{even}(x, p) &#x3D; x_{even}\cos(p\theta) - x_{odd}\sin(p\theta)<br>$$<br>$$<br>RoPE_{odd}(x, p) &#x3D; x_{even}\sin(p\theta) + x_{odd}\cos(p\theta)<br>$$</p>
+<p>这里的 $p$ 表示位置， $\theta$ 是一个基于输入维度和位置信息的旋转角度参数。</p>
+</li>
+<li><p>优点</p>
 <ol>
-<li>架构差异：虚拟机是基于<strong>虚拟化技术</strong>（<strong>hypervisor</strong>）实现的，创建一个完整的虚拟硬件环境，模拟一台计算机，包括处理器、内存、硬盘等设备。而Docker则是基于<strong>容器化技术</strong>（<strong>Containerization</strong>），使用Docker引擎访问宿主机操作系统，将应用程序打包到容器中。因此，Docker的架构更加轻量级，启动速度也更快。</li>
-<li>隔离原理：虚拟机通常隔离整个操作系统，进程无法直接访问宿主机资源和数据，需要通过网络或共享文件夹等方式交互。Docker使用Linux内核的namespace和cgroups功能，实现对不同容器中进程的隔离，允许它们共享宿主机资源同时独立运行。</li>
+<li><p><strong>相对位置编码</strong>: RoPE 提供了一种自然的方式来捕捉序列中元素的相对位置信息。这对于序列建模任务，如自然语言处理中的文本理解和生成，尤其有用。</p>
+</li>
+<li><p><strong>位置不变性</strong>: 由于 RoPE 的旋转性质，模型能够更好地学习到与位置无关的模式，这对于捕捉序列中的长期依赖性有帮助。</p>
+</li>
+<li><p><strong>可扩展性</strong>: RoPE 可以很容易地扩展到不同长度的序列，不像一些绝对位置编码方法那样依赖于固定长度。</p>
+</li>
 </ol>
-<h3 id="基本原理和概念"><a href="#基本原理和概念" class="headerlink" title="基本原理和概念"></a>基本原理和概念</h3><hr>
-<p><strong>Docker中的镜像、容器和仓库</strong></p>
-<ul>
-<li><p>镜像和容器的关系就像Java中的类和实例的关系一样：</p>
+</li>
+</ul>
+<p>？？？？</p>
+<h3 id="5-GQA"><a href="#5-GQA" class="headerlink" title="5. GQA"></a>5. GQA</h3><p>在理解什么是GQA之前，我们还需要知道两个概念：MHA和MQA，下图展示了MHA，MQA，GQA的区别：</p>
+<p><img src="/2024/07/30/LLM-Llama/c2cf23e34c46b9cb29503cedda9e8ae8.jpeg" srcset="/img/loading.gif" lazyload alt="MHA，MQA，GQA"></p>
+<p><strong>MHA：</strong></p>
+<p>MHA(Multi-Head Attention)：多头注意力机制，将输入数据分成多个头（heads），这些头通常具有不同的权重矩阵，因此可以关注输入序列中的不同部分和特征。每个头独立地执行注意力计算。每次做 Attention，不同head的 Q、K、V 就做好自己运算就可以，输出时各个head的输出结果加起来就行。</p>
+<p><strong>MQA：</strong></p>
+<p>MQA(Multi-Query Attention)：多查询注意力机制，MQA的原理很简单，简单来说Q仍然是多头，K，V是共享的。它将原生Transformer每一层多头注意力的Key线性映射矩阵、Value线性映射矩阵改为该层下所有头共享，也就是说K、V矩阵每层只有一个。</p>
+<p>举例来说，以ChatGLM2-6B为例，一共28层，32个注意力头，输入维度从4096经过Q、K、V矩阵映射维度为128，若采用原生多头注意力机制，则Q、K、V矩阵各有28×32个，而采用MQA的方式则整个模型包含28×32个Q矩阵，28×1个K矩阵，28×1个V矩阵。这种方法在提高推理效率的同时，也能够保持模型的性能。</p>
+<p><strong>GQA：</strong></p>
+<p>MQA虽然能最大程度减少KV Cache所需的缓存空间，但是可想而知参数的减少意味着精度的下降，所以为了在精度和计算之间做一个trade-off，GQA (Group Query Attention)应运而生，即Q依然是多头，但是分组共享K,V，既减少了K,V缓存所需的缓存空间，也暴露了大部分参数不至于精度损失严重。</p>
+<p><strong>KV Cache：</strong></p>
+<p>大模型推理性能优化的一个常用技术是KV Cache。</p>
+<p>在自回归生成任务中，模型需要逐个生成序列中的tokens，每次生成一个新token时，都会更新输入序列并重新计算自注意力。然而，已生成的部分（历史tokens）对应的Key和Value向量在生成后续token时往往保持不变或变化较小。KV Cache正是利用了这一性质，通过将这些历史tokens对应的Key和Value向量存储起来（缓存），在后续计算中直接复用，而不是每次都重新计算。</p>
+<h3 id="6-BPE–Sentence-piece"><a href="#6-BPE–Sentence-piece" class="headerlink" title="6. BPE–Sentence piece"></a>6. BPE–Sentence piece</h3><h3 id="7-MoE结构"><a href="#7-MoE结构" class="headerlink" title="7. MoE结构"></a>7. MoE结构</h3><p><strong>MoE（Mixture-of-Experts）</strong>是一种深度学习中的架构，旨在提高模型的性能和效率，尤其在处理大规模数据时表现优越。MoE结构通过将任务分配给多个专家模型（子模型）来实现。这些专家模型通常具有不同的能力或特长，而最终的输出是由一个门控网络（gating network）根据输入数据动态选择的。</p>
+<p><strong>MoE的基本组成部分：</strong></p>
 <ol>
-<li><strong>镜像是一个只读的模版</strong>，它可以用来创建容器</li>
-<li><strong>容器是Docker的运行实例</strong>，它提供了一个独立的可移植的环境，可以在这个环境中运行应用程序</li>
+<li><p><strong>专家模型（Experts）</strong>：</p>
+<p>这些是多个并行的子模型，每个模型都有自己特定的参数集和能力。</p>
+<p>专家模型的结构可以是全连接层、卷积神经网络、Transformer等多种类型，具体取决于任务和数据的需求。</p>
+</li>
+<li><p><strong>门控网络（Gating Network）</strong>：</p>
+<p>门控网络的任务是根据输入数据的特征，动态地为每个输入样本选择最合适的专家模型。</p>
+<p>它通常输出一个概率分布，这些概率值表示每个专家模型的重要性或选择的权重。</p>
+<p>在前向传播时，只有少数几个专家模型会被激活（参与计算），以减少计算资源的使用。</p>
+</li>
+<li><p><strong>组合机制</strong>：</p>
+<p>门控网络计算出的权重用于加权求和专家模型的输出，形成最终的模型输出。</p>
+<p>这种组合可以是简单的加权和，也可以是更复杂的操作，取决于具体的应用场景。</p>
+</li>
 </ol>
-</li>
-<li><p>Docker仓库是用来存储Docker镜像的地方，最流行和最常用的仓库就是Dockerhub，实现镜像的共享和复用</p>
-</li>
-</ul>
-<h3 id="Docker的安装"><a href="#Docker的安装" class="headerlink" title="Docker的安装"></a>Docker的安装</h3><hr>
-<p><img src="/2024/05/15/Docker/image-20240515122544372.png" srcset="/img/loading.gif" lazyload alt="Docker Daemon"></p>
+<p><strong>MoE的优势：</strong></p>
 <ol>
-<li><p>Docker采用Client-Server架构模式</p>
-<ul>
-<li>Docker Client和Docker Daemon之间通过Socket或者RESTful API进行通信</li>
-<li>Docker Daemon就是服务端的守护进程，他负责管理Docker的各种资源</li>
-<li>Docker Client负责向Docker Daemon发送请求，Docker Daemon接收到请求后进行处理，然后将结果返回给Client。因此我们在终端中输入的各种命令，都是Client发送给Docker Daemon的</li>
-</ul>
+<li><p><strong>计算效率</strong>：</p>
+<p>由于每次只有一部分专家模型被激活，MoE结构可以显著减少计算开销，尤其适用于大型模型。</p>
 </li>
-<li><p>容器化和Dockerfile</p>
-<p><strong>容器化</strong>：顾名思义就是将应用程序打包为容器，在容器中运行应用程序的过程</p>
-<p><strong>Dockerfile</strong>：是一个文本文件，里面包含了一条条的指令，用来告诉Docker如何来构建镜像，这个镜像中包含了我们应用程序执行的所有命令，也就是上边提到的依赖、第三方软件包、配置文件等</p>
-<p>这个过程简单来说可以分成三个步骤:</p>
-<ul>
-<li>首先需要创建一个Dockerfile，来告诉Docker构建应用程序镜像所需要的步骤和配置</li>
-<li>使用Dockerfile来构建镜像</li>
-<li>使用镜像创建和运行容器</li>
-</ul>
+<li><p><strong>模型容量</strong>：</p>
+<p>通过并行多个专家模型，MoE可以在不显著增加计算资源的情况下增加模型的表示能力。</p>
+</li>
+<li><p><strong>适应性和灵活性</strong>：</p>
+<p>门控网络可以根据输入数据选择不同的专家模型，使得MoE在处理多样化和复杂数据时表现更好。</p>
 </li>
 </ol>
-<h3 id="实践环节"><a href="#实践环节" class="headerlink" title="实践环节"></a>实践环节</h3><hr>
-<p>dockerfile：</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-comment"># 使用官方Python运行时作为父镜像</span><br><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.8</span>-slim<br> <br><span class="hljs-comment"># 设置工作目录</span><br><span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app</span><br> <br><span class="hljs-comment"># 安装虚拟环境包</span><br><span class="hljs-keyword">RUN</span><span class="language-bash"> python -m pip install --upgrade pip &amp;&amp; \</span><br><span class="language-bash">    pip install virtualenv</span><br> <br><span class="hljs-comment"># 创建虚拟环境</span><br><span class="hljs-keyword">RUN</span><span class="language-bash"> virtualenv venv</span><br> <br><span class="hljs-comment"># 每次进入容器时激活虚拟环境</span><br><span class="hljs-keyword">ENV</span> VIRTUAL_ENV=/app/venv<br><span class="hljs-keyword">ENV</span> PATH=/app/venv/bin:$PATH<br><br><span class="hljs-keyword">CMD</span><span class="language-bash"> [<span class="hljs-string">&quot;bash&quot;</span>]</span><br></code></pre></td></tr></table></figure>
-
-
-
-<p>创建镜像：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># -t表示镜像标签 比如python-venv:1.0/python-venv:lastest等</span><br><span class="hljs-comment"># .表示dockerfile所在的目录</span><br>docker build -t python-venv . <br></code></pre></td></tr></table></figure>
-
-
-
-<p>创建容器：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 当 -i 和 -t 一起使用时，Docker 将为你提供一个交互式 shell，类似于在本地终端中使用命令行。这意味着你可以在容器中执行命令、输入数据、查看输出等。这种方式特别适用于调试、运行交互式程序或者简单的命令行操作。</span><br><span class="hljs-comment"># --rm 会在容器停止后自动删除容器</span><br>docker run -it --<span class="hljs-built_in">rm</span> --name my-python-container python-venv<br></code></pre></td></tr></table></figure>
-
-
-
-
-
-
+<p><strong>应用场景：</strong></p>
+<p>MoE结构在许多领域有广泛应用，包括自然语言处理、计算机视觉和推荐系统等。在这些应用中，MoE通常用于处理大规模数据集，并且能够适应数据的多样性。</p>
+<h3 id="8-数据集来源"><a href="#8-数据集来源" class="headerlink" title="8. 数据集来源"></a>8. 数据集来源</h3>
                 
               </div>
             
@@ -414,12 +433,12 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Develop/" class="category-chain-item">Develop</a>
+  <a href="/categories/Deep-Learning/" class="category-chain-item">Deep Learning</a>
   
   
     <span>></span>
     
-  <a href="/categories/Develop/Docker/" class="category-chain-item">Docker</a>
+  <a href="/categories/Deep-Learning/LLM/" class="category-chain-item">LLM</a>
   
   
 
@@ -436,7 +455,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Docker/" class="print-no-link">#Docker</a>
+        <a href="/tags/Llama/" class="print-no-link">#Llama</a>
       
     </div>
   
@@ -448,8 +467,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Docker</div>
-      <div>https://adzuki23.github.io/2024/05/15/Docker/</div>
+      <div>Llama</div>
+      <div>https://adzuki23.github.io/2024/07/30/LLM-Llama/</div>
     </div>
     <div class="license-meta">
       
@@ -461,13 +480,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年5月15日</div>
+          <div>2024年7月30日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月30日</div>
+          <div>2024年8月3日</div>
         </div>
       
       
@@ -498,15 +517,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/05/15/RCNN/" title="R-CNN Series">
+                      <a href="/2024/08/03/RTDETR/" title="RT-DETR">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">R-CNN Series</span>
+                        <span class="hidden-mobile">RT-DETR</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2024/07/23/Yolo/" title="YOLO">
+                        <span class="hidden-mobile">YOLO</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

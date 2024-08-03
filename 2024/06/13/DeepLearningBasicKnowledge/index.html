@@ -16,16 +16,16 @@
   <meta name="author" content="Hongyu Li">
   <meta name="keywords" content="DeepLearning,CV">
   
-    <meta name="description" content="记录一些基础知识原理。">
+    <meta name="description" content="记录一些深度学习的基础知识原理。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BasicKnowledge">
 <meta property="og:url" content="https://adzuki23.github.io/2024/06/13/DeepLearningBasicKnowledge/index.html">
 <meta property="og:site_name" content="Hongyu Li">
-<meta property="og:description" content="记录一些基础知识原理。">
+<meta property="og:description" content="记录一些深度学习的基础知识原理。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/DeepLearning.png">
 <meta property="article:published_time" content="2024-06-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-23T04:25:39.383Z">
+<meta property="article:modified_time" content="2024-08-03T11:48:20.536Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Deep Learning">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.5k 字
+          6.8k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          30 分钟
+          57 分钟
         
       </span>
     
@@ -313,19 +313,174 @@
               <div class="markdown-body">
                 
                 <p>[TOC]</p>
-<h3 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h3><blockquote>
+<h2 id="方差"><a href="#方差" class="headerlink" title="方差"></a>方差</h2><p>方差是统计学中的一个基本概念，用于度量一组数据的离散程度，即数据点与其均值之间的偏离程度。方差越大，数据点的离散程度越大；方差越小，数据点的离散程度越小。在神经网络的背景下，理解方差对于理解模型的信号传递、梯度更新等非常重要。</p>
+<h3 id="方差的定义"><a href="#方差的定义" class="headerlink" title="方差的定义"></a>方差的定义</h3><p>对于一组随机变量 ($X &#x3D; {x_1, x_2, \dots, x_n}$)，其方差  $\text{Var}(X)$  定义为数据点到均值的平方差的平均值。公式为：</p>
+<p>$$<br>\text{Var}(X) &#x3D; \frac{1}{n}\sum_{i&#x3D;1}^{n} (x_i - \mu)^2<br>$$<br>其中， $\mu$  是数据的均值，定义为：</p>
+<p>$$<br>\mu &#x3D; \frac{1}{n}\sum_{i&#x3D;1}^{n} x_i<br>$$</p>
+<h3 id="方差与梯度"><a href="#方差与梯度" class="headerlink" title="方差与梯度"></a>方差与梯度</h3><p>使用链式法则，梯度的计算过程如下：</p>
+<p>$$<br>\frac{\partial L}{\partial W_i} &#x3D; \frac{\partial L}{\partial z} \cdot \frac{\partial z}{\partial x} \cdot \frac{\partial x}{\partial W_i}<br>$$<br>其中 $z &#x3D; \text{ReLU}(x) $；  $x &#x3D; W_i \cdot a + b$ ，$W_i$  是权重矩阵， $a$  是输入， $b$  是偏置。</p>
+<ul>
+<li><p>梯度消失：</p>
+<p><strong>在使用 sigmoid 或 tanh 这类激活函数</strong>时，如果输入的方差很大，输出可能集中在接近 0 或 1（sigmoid）或者 -1 或 1（tanh）的极端值，集中在饱和区间，导致梯度$\frac{\partial z}{\partial x}$非常小，甚至接近于零，造成梯度消失。这种情况使得权重更新很慢或几乎不更新，网络无法有效学习。</p>
+</li>
+<li><p>梯度爆炸：</p>
+<p><strong>在使用 ReLU 这类激活函数时</strong>，方差较大的输入&#x2F;权重可能导致前向传播中的输出方差很大，从而在反向传播中导致梯度的方差也增大。这可能引发梯度爆炸的问题，使得模型无法稳定训练。梯度放大原因的详细解释：</p>
+<blockquote>
+<ol>
+<li><p>从损失函数到输出的梯度：$\frac{\partial L}{\partial z} $。这是损失函数关于网络输出的梯度。如果输出  z  很大且对应的损失较大，那么该梯度可能也会很大。</p>
+<ol start="2">
+<li>   从激活到输入的梯度：$ \frac{\partial z}{\partial x} $。对于ReLU激活函数，梯度为1或0。当  x &gt; 0  时，ReLU 的梯度为1。这意味着，假设输入  x  是正的，ReLU不会对梯度产生缩放或放大效应。</li>
+<li>   从输入到权重的梯度：$\frac{\partial x}{\partial W_i}$。这里的  $x &#x3D; W_i \cdot a + b$ ，所以：$\frac{\partial x}{\partial W_i} &#x3D; a$。当输入特征  a  非常大时，这个梯度也会很大。</li>
+</ol>
+</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<h2 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h2><p>为什么需要激活函数？</p>
+<p>如果不使用激励函数，那么每一层节点的输入都是上层输出的线性函数，无论你神经网络有多少层，输出都是输入的线性组合。相当于最原始的感知机（Perceptron），也没有隐藏层的效果，那么网络的逼近能力就非常有限。因此，引入非线性函数作为激励函数，能够使深层神经网络表达能力更加强大（不再是输入的线性组合，而是几乎可以逼近任意函数）。</p>
+<hr>
+<h3 id="GELU"><a href="#GELU" class="headerlink" title="GELU"></a>GELU</h3><p><strong>GELU（Gaussian Error Linear Unit）</strong>是一种基于高斯误差函数的激活函数，能够自适应地学习输入的非线性关系。其公式为：<br>$$<br> \text{GELU}(x) &#x3D; x \cdot \Phi(x)<br>$$<br>其中， $\Phi(x) $ 是标准高斯分布的累积分布函数（CDF），具体表示为：<br>$$<br>\Phi(x) &#x3D; \frac{1}{2} \left[1 + \text{erf}\left(\frac{x}{\sqrt{2}}\right)\right]<br>$$<br>输入：x 是单一的标量或张量。</p>
+<p><strong>计算过程：</strong></p>
+<ol>
+<li>x 通过高斯误差函数的累积分布函数  $\Phi(x)$  进行变换。</li>
+<li>计算结果是$x$和$\Phi(x)$的逐元素乘积。</li>
+</ol>
+<p><strong>特点：</strong></p>
+<p>GELU 平滑且连续，不会像ReLU那样存在硬性截止（即负数直接输出为0）。它根据输入值自适应地缩放和偏移，这使得它在某些任务中能比ReLU等其他激活函数表现更好。</p>
+<h3 id="SiLU-Swish"><a href="#SiLU-Swish" class="headerlink" title="SiLU &#x2F; Swish"></a>SiLU &#x2F; Swish</h3><p><strong>SiLU &#x2F; Swish</strong>（Sigmoid Linear Unit），是一种平滑且非线性的激活函数。它结合了 sigmoid 的门控效果和线性部分的有界性。SiLU 的公式为：<br>$$<br>\text{SiLU|Swish}_{\beta}(x) &#x3D; x \cdot \sigma(\beta x)<br>$$</p>
+<h3 id="SwiGLU"><a href="#SwiGLU" class="headerlink" title="SwiGLU"></a>SwiGLU</h3><p><strong>SwiGLU（Switch GLU）</strong> 是一种激活函数，用于神经网络中特别是 Transformer 模型的前馈神经网络（FFN）部分。它是一种改进的激活函数，通过结合线性变换和非线性激活来提高模型的表达能力和性能。SwiGLU 是 GLU（Gated Linear Unit）激活函数的变种。</p>
+<p><strong><a target="_blank" rel="noopener" href="https://kikaben.com/swiglu-2020/#ffn-with-swish-activation">GLU</a></strong> 通过一个门控机制（由 sigmoid 函数输出的值控制），调节线性变换的输出。GLU 的基本形式为：<br>$$<br>\text{GLU}(x) &#x3D; (xW_1 + b_1) \odot \sigma(xW_2 + b_2)<br>$$</p>
+<blockquote>
+<p>其中：</p>
+<ul>
+<li>( x ) 是输入。</li>
+<li>( $W_1$, $W_2$ ) 是权重矩阵。</li>
+<li>( $b_1$, $b_2$ ) 是偏置向量。</li>
+<li>( $\sigma$ ) 是 sigmoid 函数。</li>
+<li>( $\odot$ ) 表示按元素乘积。</li>
+</ul>
+</blockquote>
+<p><strong>SwiGLU</strong> 则稍有不同，公式为：<br>$$<br>\text{SwiGLU}(x) &#x3D; (xW_1) \odot \text{SiLU}(xW_2)<br>$$</p>
+<blockquote>
+<p>其中：</p>
+<ul>
+<li>( $W_1$,$ W_2$ ) 是权重矩阵（通常大小为 ( $d \times 4d$ ) 和 ( $d \times 4d$ )，如果前馈层扩展到 4 倍大小）。</li>
+<li>$\text{SiLU}(x) &#x3D; x \sigma(x)$。其中 ( $\sigma(x)$ ) 是 sigmoid 函数。</li>
+</ul>
+</blockquote>
+<p><strong>特点:</strong></p>
+<ol>
+<li><p><strong>非线性激活</strong>: SwiGLU 使用 SiLU 作为激活函数，提供了非线性变换。这比单纯的 ReLU 或 GELU 更复杂，捕捉了更多的模式和特征。</p>
+</li>
+<li><p><strong>门控机制</strong>: 和 GLU 类似，SwiGLU 也具有门控机制，这使得模型能够动态地调整通道的开闭，从而更加灵活地控制信息流。</p>
+</li>
+<li><p><strong>性能提升</strong>: 在一些 Transformer 变体中，SwiGLU 已被证明能够提升模型的性能，如改善模型的收敛性和表达能力。</p>
+</li>
+</ol>
+<p><img src="/2024/06/13/DeepLearningBasicKnowledge/cell-3-output-1.png" srcset="/img/loading.gif" lazyload alt="ReLU,GELU和SiLU激活函数"></p>
+<h2 id="梯度消失-梯度爆炸"><a href="#梯度消失-梯度爆炸" class="headerlink" title="梯度消失&#x2F;梯度爆炸"></a>梯度消失&#x2F;梯度爆炸</h2><p>梯度消失和梯度爆炸是深度神经网络训练中的两个常见问题，它们主要发生在反向传播过程中，影响模型的学习和收敛。</p>
+<h3 id="梯度消失"><a href="#梯度消失" class="headerlink" title="梯度消失"></a>梯度消失</h3><p>梯度消失是指在反向传播过程中，随着网络层数的增加，梯度逐渐变小，甚至接近于零。这使得参数更新非常缓慢，影响模型的学习效率，特别是在深层网络中，这种情况更为显著。</p>
+<p><strong>原因</strong>：</p>
+<ul>
+<li><strong>激活函数的特性</strong>：像 <code>sigmoid</code> 和 <code>tanh</code> 这样的激活函数在输入绝对值较大时，导数趋近于零，导致梯度值变得非常小。</li>
+<li><strong>权重初始化不当</strong>：初始权重值过小也可能导致前向传播中输出值的幅度过小，从而在反向传播中梯度减小。</li>
+</ul>
+<p><strong>解决方法</strong>：</p>
+<ol>
+<li><strong>使用ReLU及其变种激活函数</strong>：ReLU（Rectified Linear Unit）激活函数在正数区域导数恒为1，有效缓解了梯度消失问题。此外，其他变种如Leaky ReLU、Parametric ReLU等在负值区域也有非零斜率，进一步减轻了梯度消失。</li>
+<li><strong>权重初始化方法</strong>：使用He初始化或Xavier初始化可以确保每层输出的方差在合理范围内，避免梯度消失。</li>
+<li><strong>批归一化（Batch Normalization）</strong>：在每一层之后进行输入归一化，使得每一层的输入保持均值为0、方差为1，从而稳定梯度的分布。</li>
+</ol>
+<h3 id="梯度爆炸"><a href="#梯度爆炸" class="headerlink" title="梯度爆炸"></a>梯度爆炸</h3><p>梯度爆炸是指在反向传播过程中，随着网络层数的增加，梯度值变得非常大，导致权重更新不稳定，甚至使得模型无法正常训练。</p>
+<p><strong>原因</strong>：</p>
+<ul>
+<li><strong>激活函数的特性</strong>：即使是<code>ReLU</code>这样的激活函数，在输入值非常大时，输出值也会非常大，导致梯度的乘积在反向传播中迅速增长。</li>
+<li><strong>权重初始化不当</strong>：初始权重值过大，可能导致前向传播中信号的增长，从而使得反向传播中的梯度变得非常大。</li>
+</ul>
+<p><strong>解决方法</strong>：</p>
+<ol>
+<li><strong>梯度裁剪（Gradient Clipping）</strong>：在反向传播时，将梯度的L2范数限制在某一阈值内。如果梯度的L2范数超过这个阈值，则将梯度缩放到阈值内。这样可以防止梯度过大。</li>
+<li><strong>使用适当的权重初始化</strong>：He初始化或Xavier初始化可以控制输出方差，防止前向传播中信号过大。</li>
+<li><strong>学习率调整</strong>：使用较小的学习率或自适应学习率方法（如Adam、RMSprop），可以减小梯度爆炸的影响，防止参数更新过大。</li>
+</ol>
+<h3 id="其他通用解决方法"><a href="#其他通用解决方法" class="headerlink" title="其他通用解决方法"></a>其他通用解决方法</h3><ul>
+<li><strong>使用正则化</strong>：如L2正则化（权重衰减），可以防止权重值变得过大，间接抑制梯度爆炸。</li>
+<li><strong>更好的优化算法</strong>：如Adam优化器，它能够自适应地调整学习率，有助于减缓梯度消失和爆炸问题。</li>
+</ul>
+<h2 id="过拟合"><a href="#过拟合" class="headerlink" title="过拟合"></a>过拟合</h2><p>过拟合是指模型在训练数据上表现得很好，但在测试数据上表现不佳的现象，这通常是因为模型在训练数据上学习到了过多的细节和噪声，从而无法很好地泛化到新数据。</p>
+<h3 id="防止过拟合的方法"><a href="#防止过拟合的方法" class="headerlink" title="防止过拟合的方法"></a>防止过拟合的方法</h3><ol>
+<li><p><strong>增加训练数据和数据增强</strong></p>
+<p>更多的数据通常有助于模型更好地学习数据的分布，而不是记住训练样本的细节。如果可能，获取更多多样化的训练数据。</p>
+<p>通过对现有的训练数据进行变换（如旋转、翻转、缩放、裁剪、颜色变化等），可以增加训练数据的多样性，从而使模型更具鲁棒性。数据增强特别适用于计算机视觉任务。</p>
+</li>
+<li><p><strong>正则化损失函数</strong></p>
+<p>正则化是在损失函数中增加一个惩罚项，用于限制模型参数的大小，从而防止过拟合。常见的正则化方法包括：</p>
+<blockquote>
+<p><strong>L1 正则化（Lasso）</strong>：增加权重绝对值的和作为惩罚项。</p>
+<p><strong>L2 正则化（Ridge）</strong>：增加权重平方和作为惩罚项。</p>
+<p><strong>Elastic Net</strong>：结合了L1和L2正则化的优点。</p>
+</blockquote>
+</li>
+<li><p><strong>Dropout正则化</strong></p>
+<p>在每次训练迭代时，随机“丢弃”一些神经元，即暂时移除它们。这有助于减少神经元之间的依赖性，使模型更加鲁棒。Dropout通常在全连接层中使用，但也可以在卷积层中应用。</p>
+</li>
+<li><p><strong>正则化的权重初始化</strong></p>
+<p>适当的权重初始化方法可以防止神经网络的训练过程中出现梯度爆炸或消失的问题，进而减少过拟合的风险。例如，使用He初始化、Xavier初始化等方法。</p>
+<p>He初始化和Xavier初始化是两种常用的神经网络权重初始化方法，它们的选择通常取决于激活函数的类型和网络层的性质。这些方法的目的都是在训练初期保持每层输出的方差尽量一致，防止梯度消失或爆炸问题，从而加速网络的收敛。</p>
+<hr>
+<p><strong>Xavier初始化</strong></p>
+<p><strong>定义</strong>：Xavier初始化，也称为Glorot初始化，是通过使每层的输入和输出的方差相等来初始化权重。对于一个具有 ( $n_{in}$ ) 个输入神经元和 ( $n_{out}$ ) 个输出神经元的全连接层，权重初始化为一个均值为0、方差为以下值的正态分布或均匀分布：</p>
+<p><strong>均匀分布</strong>：<br>$$<br>W \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_{in} + n_{out}}}, \sqrt{\frac{6}{n_{in} + n_{out}}}\right)<br>$$</p>
+<p><strong>正态分布</strong>：<br>$$<br>W \sim \mathcal{N}\left(0, \frac{2}{n_{in} + n_{out}}\right)<br>$$</p>
+<p><strong>适用条件</strong>：</p>
+<ul>
+<li><strong>激活函数</strong>：Xavier初始化适用于对称的激活函数，例如 <code>tanh</code>、<code>sigmoid</code> 等。这些函数的输出范围是有限的，对权重的方差要求较为严格。</li>
+<li><strong>网络类型</strong>：适用于全连接层和卷积层等。特别是在深度较浅的网络或使用对称激活函数时效果较好。</li>
+</ul>
+<p><strong>He初始化</strong></p>
+<p><strong>定义</strong>：He初始化是专为ReLU和ReLU变种激活函数设计的初始化方法，因为这些函数具有非对称性（负值部分输出为零）。对于具有 ( $n_{in}$ ) 个输入神经元的层，权重初始化为一个均值为0、方差为以下值的正态分布或均匀分布：</p>
+<p><strong>均匀分布</strong>：<br>$$<br>W \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_{in}}}, \sqrt{\frac{6}{n_{in}}}\right)<br>$$<br><strong>正态分布</strong>：<br>$$<br>W \sim \mathcal{N}\left(0, \frac{2}{n_{in}}\right)<br>$$</p>
+<p><strong>适用条件</strong>：</p>
+<ul>
+<li><strong>激活函数</strong>：He初始化主要适用于ReLU（Rectified Linear Unit）及其变种，如 <code>Leaky ReLU</code>、<code>Parametric ReLU</code>、<code>ELU</code> 等。这些函数的特点是非对称且可能输出很大的正值，因此需要较大的方差来保持信号的流动。</li>
+<li><strong>网络类型</strong>：适用于全连接层和卷积层。尤其在深度较大的网络中，使用ReLU类激活函数时，He初始化可以帮助防止梯度消失问题。</li>
+</ul>
+<p><strong>总结</strong></p>
+<ul>
+<li><strong>Xavier初始化</strong>：适用于对称激活函数（如<code>tanh</code>、<code>sigmoid</code>），其主要目的是在整个网络中保持输入和输出的方差相同。</li>
+<li><strong>He初始化</strong>：专为ReLU及其变种设计，适用于这些非对称激活函数，能够有效防止梯度消失问题。</li>
+</ul>
+<hr>
+</li>
+<li><p><strong>早停法（Early Stopping）</strong></p>
+<p>在训练过程中监控验证集的损失，当验证集损失不再降低或开始上升时，停止训练。这有助于避免模型在训练集上过度拟合。</p>
+</li>
+<li><p><strong>减小模型复杂度</strong></p>
+<p>通过减少模型的参数数量，如降低网络的层数、减少每层的神经元或卷积核数量，可以减少模型的复杂度，使其不容易在训练数据上过拟合。</p>
+</li>
+<li><p><strong>Batch Normalization</strong></p>
+<p>Batch Normalization通过标准化每一层的输入来加速训练过程，同时对模型的轻微正则化效果有助于防止过拟合。</p>
+</li>
+</ol>
+<h2 id="归一化技术"><a href="#归一化技术" class="headerlink" title="归一化技术"></a>归一化技术</h2><h3 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h3><blockquote>
 <p>Batch Normalization (BN) 是一种深度学习技术，用于在训练过程中标准化神经网络的输入。其主要目的是加速训练过程并提高模型的稳定性和性能。</p>
 </blockquote>
-<hr>
-<h4 id="举例说明"><a href="#举例说明" class="headerlink" title="举例说明"></a>举例说明</h4><p>假设我们有一个图像分类任务，输入图像的像素值在 0 到 255 之间。我们将像素值缩放到 0 到 1 之间，但不同批次的数据分布可能不同。例如，一个批次的图像可能大部分像素值集中在 0.1 到 0.3 之间，而另一个批次的图像像素值集中在 0.7 到 0.9 之间。这种输入数据分布的变化会导致模型训练不稳定。</p>
+<p><strong>举例说明：</strong></p>
+<p>假设我们有一个图像分类任务，输入图像的像素值在 0 到 255 之间。我们将像素值缩放到 0 到 1 之间，但不同批次的数据分布可能不同。例如，一个批次的图像可能大部分像素值集中在 0.1 到 0.3 之间，而另一个批次的图像像素值集中在 0.7 到 0.9 之间。这种输入数据分布的变化会导致模型训练不稳定。</p>
 <p>通过使用 Batch Normalization，我们可以在每层网络中对输入进行标准化，使得每层的输入在训练过程中保持均值为 0、方差为 1 的分布，从而加快收敛速度并提高模型的稳定性和性能。</p>
-<h4 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h4><ol>
-<li><p><strong>计算批次均值和方差</strong>： 对于一个批次的输入 $x&#x3D;&lt;!–swig￼2–&gt;<br>$$</p>
+<p><strong>具体实现：</strong></p>
+<ol>
+<li><p><strong>计算批次均值和方差</strong>： 对于一个批次的输入 $x&#x3D;{x_1,x_2,…,x_m}$，其中 m 是批次的大小，每个输入的维度为 $d$，首先<strong>计算每个维度上</strong>的均值 $\mu$ 和方差 $\sigma^2$<br>$$<br>\mu &#x3D; \frac{1}{m} \sum_{i&#x3D;1}^{m} x_i<br>$$</p>
+<p>$$<br>\sigma^2 &#x3D; \frac{1}{m} \sum_{i&#x3D;1}^{m} (x_i - \mu)^2<br>$$</p>
+</li>
+<li><p>将输入数据标准化为均值为 0，方差为 1 的分布，其中，$\epsilon$ 是一个很小的数，用于避免除零错误：<br>$$<br>\hat{x_i} &#x3D; \frac{x_i - \mu}{\sqrt{\sigma^2 + \epsilon}}<br>$$</p>
 </li>
 <li><p>引入两个可训练参数 $\gamma$ 和 $\beta$，分别用于缩放和平移标准化后的输入，以保证模型的表达能力，其中，$\gamma$ 和 $\beta$ 是与输入维度相同的参数：<br>$$<br>y_i &#x3D; \gamma \hat{x_i} + \beta<br>$$</p>
 </li>
 </ol>
-<h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><p>Batch Normalization 之所以对网络训练产生积极作用，主要有以下几个原因：</p>
+<p><strong>作用：</strong></p>
+<p>Batch Normalization 之所以对网络训练产生积极作用，主要有以下几个原因：</p>
 <ol>
 <li><p><strong>减轻内部协变量偏移（Internal Covariate Shift）</strong>： 内部协变量偏移是指在训练过程中，由于前一层参数的变化，后续层的输入分布也发生变化，从而影响训练效率。</p>
 <p>BN 通过标准化每一层的输入，使得每一层的输入分布更加稳定，从而减轻了层间输入分布变化带来的影响。这使得网络在训练时更容易收敛。</p>
@@ -337,12 +492,14 @@
 <li><p><strong>缓解梯度消失和梯度爆炸</strong>： 标准化后的输入使得数据的尺度更加一致，从而缓解了梯度消失和梯度爆炸问题，特别是在深层神经网络中。</p>
 </li>
 </ol>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><span class="hljs-keyword">import</span> torch.optim <span class="hljs-keyword">as</span> optim<br><br><span class="hljs-comment"># 定义一个简单的神经网络</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SimpleNN</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(SimpleNN, self).__init__()<br>        self.fc1 = nn.Linear(<span class="hljs-number">784</span>, <span class="hljs-number">256</span>)<br>        self.bn1 = nn.BatchNorm1d(<span class="hljs-number">256</span>)<br>        self.fc2 = nn.Linear(<span class="hljs-number">256</span>, <span class="hljs-number">10</span>)<br>        <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        x = self.fc1(x)<br>        x = self.bn1(x)<br>        x = torch.relu(x)<br>        x = self.fc2(x)<br>        <span class="hljs-keyword">return</span> x<br><br><span class="hljs-comment"># 初始化网络、损失函数和优化器</span><br>model = SimpleNN()<br>criterion = nn.CrossEntropyLoss()<br>optimizer = optim.SGD(model.parameters(), lr=<span class="hljs-number">0.01</span>, momentum=<span class="hljs-number">0.9</span>)<br><br><span class="hljs-comment"># 示例训练步骤</span><br><span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):<br>    <span class="hljs-keyword">for</span> inputs, labels <span class="hljs-keyword">in</span> train_loader:<br>        optimizer.zero_grad()<br>        outputs = model(inputs)<br>        loss = criterion(outputs, labels)<br>        loss.backward()<br>        optimizer.step()<br><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;Epoch <span class="hljs-subst">&#123;epoch+<span class="hljs-number">1</span>&#125;</span>, Loss: <span class="hljs-subst">&#123;loss.item()&#125;</span>&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>实现：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 定义一个简单的神经网络</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SimpleNN</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(SimpleNN, self).__init__()<br>        self.fc1 = nn.Linear(<span class="hljs-number">784</span>, <span class="hljs-number">256</span>)<br>        self.bn1 = nn.BatchNorm1d(<span class="hljs-number">256</span>)<br>        self.fc2 = nn.Linear(<span class="hljs-number">256</span>, <span class="hljs-number">10</span>)<br></code></pre></td></tr></table></figure>
 
 
 
 <h3 id="Layer-Normalization"><a href="#Layer-Normalization" class="headerlink" title="Layer Normalization"></a>Layer Normalization</h3><p>在深度学习中，Layer Normalization（层归一化）是一种标准化技术，用于减轻训练过程中不同层之间的内部协变量偏移（internal covariate shift）现象。在Layer Normalization中，归一化操作是在特征维度上进行的，这与Batch Normalization不同。具体来说：</p>
-<h4 id="特征维度上的归一化"><a href="#特征维度上的归一化" class="headerlink" title="特征维度上的归一化"></a>特征维度上的归一化</h4><p>假设我们有一个输入向量 $\mathbf{x} &#x3D; [x_1, x_2, \ldots, x_d] $，其中 ( d ) 是特征的维数。在Layer Normalization中，归一化是在每个样本的特征维度上独立进行的。具体步骤如下：</p>
+<p><strong>特征维度上的归一化：</strong></p>
+<p>假设我们有一个输入向量 $\mathbf{x} &#x3D; [x_1, x_2, \ldots, x_d] $，其中 ( d ) 是特征的维数。在Layer Normalization中，归一化是在每个样本的特征维度上独立进行的。具体步骤如下：</p>
 <ol>
 <li>计算均值和方差：</li>
 </ol>
@@ -361,25 +518,35 @@
 </ol>
 <p>​	其中， ( $\gamma$ ) 和 ( $\beta$ ) 是可学习的参数，分别用于缩放和平移。</p>
 <p>总的来说，Layer Normalization是在每个样本的特征维度上进行归一化，而不是在样本维度上进行归一化，这使得它在处理不同批次大小（尤其是小批次或批次大小为1）的情况下表现更好。</p>
-<h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h3><h4 id="1-L1、L2和Huber损失"><a href="#1-L1、L2和Huber损失" class="headerlink" title="1. L1、L2和Huber损失"></a>1. L1、L2和Huber损失</h4><blockquote>
+<h3 id="Group-Normalization"><a href="#Group-Normalization" class="headerlink" title="Group Normalization"></a>Group Normalization</h3><h3 id="RMS-Normalization"><a href="#RMS-Normalization" class="headerlink" title="RMS Normalization"></a>RMS Normalization</h3><p><strong>RMSNorm（Root Mean Square Layer Normalization）</strong>是一种标准化方法，用于替代传统的 LayerNorm（Layer Normalization）。它主要是为了减少 LayerNorm 中的计算开销，同时仍能保持模型训练的稳定性和性能。相比于 LayerNorm，它省略了对均值的去除，因此计算更为简洁。</p>
+<p>给定一个输入向量  x ，RMSNorm 的计算步骤如下：</p>
+<ol>
+<li><p>计算 RMS 值：$\text{RMS}(x) &#x3D; \sqrt{\frac{1}{d} \sum_{i&#x3D;1}^{d} x_i^2}$；其中， $d$ 是向量的维度，$ x_i$  是向量中的第 $ i$  个元素。</p>
+</li>
+<li><p>标准化输入：$y_i &#x3D; \frac{x_i}{\text{RMS}(x)}$；这是对每个输入特征进行缩放，使其除以均方根值。</p>
+</li>
+<li><p>缩放和偏移：通常会引入可学习的参数 $ \gamma $ 和 $ \beta $ 来进一步调整归一化后的输出：$\text{RMSNorm}(x) &#x3D; \gamma y + \beta$。</p>
+</li>
+</ol>
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><h3 id="回归任务"><a href="#回归任务" class="headerlink" title="回归任务"></a>回归任务</h3><blockquote>
 <p>L1损失和L2损失是两种常见的损失函数，通常用于机器学习和深度学习中的回归问题。它们的主要区别在于计算损失的方法和对模型的影响。</p>
 </blockquote>
-<h5 id="L1损失（绝对误差损失）："><a href="#L1损失（绝对误差损失）：" class="headerlink" title="L1损失（绝对误差损失）："></a>L1损失（绝对误差损失）：</h5><p>L1损失函数的计算方式是预测值与真实值之差的绝对值的和：</p>
-<p>$$<br> L1 &#x3D; \sum_{i} |y_i - \hat{y}_i| <br>$$<br>其中，$y_i$是真实值，$\hat{y}_i $ 是预测值。</p>
+<h5 id="L1损失（绝对误差损失）"><a href="#L1损失（绝对误差损失）" class="headerlink" title="L1损失（绝对误差损失）"></a>L1损失（绝对误差损失）</h5><p>L1损失函数的计算方式是预测值与真实值之差的绝对值的和：</p>
+<p>$$<br>L1 &#x3D; \sum_{i} |y_i - \hat{y}_i| <br>$$<br>其中，$y_i$是真实值，$\hat{y}_i $ 是预测值。</p>
 <p><strong>特点：</strong></p>
 <ul>
 <li>对离群点（outliers）更为鲁棒，因为离群点对总损失的贡献相对较小。</li>
 <li>L1损失倾向于产生稀疏的模型参数，这在某些应用中是一个优势，比如特征选择。</li>
 </ul>
-<h5 id="L2损失（二次误差损失）："><a href="#L2损失（二次误差损失）：" class="headerlink" title="L2损失（二次误差损失）："></a>L2损失（二次误差损失）：</h5><p>L2损失函数的计算方式是预测值与真实值之差的平方和：</p>
+<h5 id="L2损失（二次误差损失）"><a href="#L2损失（二次误差损失）" class="headerlink" title="L2损失（二次误差损失）"></a>L2损失（二次误差损失）</h5><p>L2损失函数的计算方式是预测值与真实值之差的平方和：</p>
 <p>$$<br>L2 &#x3D; \sum_{i} (y_i - \hat{y}_i)^2 <br>$$<br><strong>特点：</strong></p>
 <ul>
 <li>对离群点更为敏感，因为误差的平方会放大离群点对总损失的贡献。</li>
 <li>L2损失倾向于平滑的模型参数，使得模型在整体上更为平滑和稳定。</li>
 </ul>
-<h5 id="Huber损失："><a href="#Huber损失：" class="headerlink" title="Huber损失："></a>Huber损失：</h5><p>结合了L1和L2损失的优点，对离群点较为鲁棒。定义为：<br>$$<br>L_\delta (a) &#x3D;<br>\begin{cases}<br>\frac{1}{2} a^2 &amp; \text{for } |a| \le \delta \<br>\delta (|a| - \frac{1}{2} \delta) &amp; \text{otherwise}<br>\end{cases}<br>$$<br>其中，$ a $是<strong>预测误差</strong>（$a &#x3D; y - \hat{y}$），$\delta $是一个超参数。</p>
-<h4 id="2-分类任务"><a href="#2-分类任务" class="headerlink" title="2. 分类任务"></a>2. 分类任务</h4><h5 id="交叉熵损失（Cross-Entropy-Loss）："><a href="#交叉熵损失（Cross-Entropy-Loss）：" class="headerlink" title="交叉熵损失（Cross-Entropy Loss）："></a>交叉熵损失（Cross-Entropy Loss）：</h5><p>常用于分类问题，尤其是多分类问题。对于二分类问题，交叉熵损失定义为：<br>$$<br> L &#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^{N} [y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i)]<br>$$<br>其中，$y_i$是真实标签，$ \hat{y}_i $ 是预测的概率。</p>
-<h5 id="焦点损失（Focal-Loss）「RetinaNet」："><a href="#焦点损失（Focal-Loss）「RetinaNet」：" class="headerlink" title="焦点损失（Focal Loss）「RetinaNet」："></a>焦点损失（Focal Loss）「RetinaNet」：</h5><p>Focal Loss 是一种专门为解决类别不平衡问题而设计的损失函数，最早由 Facebook AI 研究院在 2017 年提出，用于目标检测中的 RetinaNet 模型。它通过减少易分类样本的损失，增加难分类样本的损失，使得模型更加关注难分类的样本。</p>
+<h5 id="Huber损失"><a href="#Huber损失" class="headerlink" title="Huber损失"></a>Huber损失</h5><p>结合了L1和L2损失的优点，对离群点较为鲁棒。定义为：<br>$$<br>L_\delta (a) &#x3D;<br>\begin{cases}<br>\frac{1}{2} a^2 &amp; \text{for } |a| \le \delta \<br>\delta (|a| - \frac{1}{2} \delta) &amp; \text{otherwise}<br>\end{cases}<br>$$<br>其中，$ a $是<strong>预测误差</strong>（$a &#x3D; y - \hat{y}$），$\delta $是一个超参数。</p>
+<h3 id="分类任务"><a href="#分类任务" class="headerlink" title="分类任务"></a>分类任务</h3><h5 id="交叉熵损失（Cross-Entropy-Loss）"><a href="#交叉熵损失（Cross-Entropy-Loss）" class="headerlink" title="交叉熵损失（Cross-Entropy Loss）"></a>交叉熵损失（Cross-Entropy Loss）</h5><p>常用于分类问题，尤其是多分类问题。对于二分类问题，交叉熵损失定义为：<br>$$<br> L &#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^{N} [y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i)]<br>$$<br>其中，$y_i$是真实标签，$ \hat{y}_i $ 是预测的概率。</p>
+<h5 id="焦点损失（Focal-Loss）「RetinaNet」"><a href="#焦点损失（Focal-Loss）「RetinaNet」" class="headerlink" title="焦点损失（Focal Loss）「RetinaNet」"></a>焦点损失（Focal Loss）「RetinaNet」</h5><p>Focal Loss 是一种专门为解决类别不平衡问题而设计的损失函数，最早由 Facebook AI 研究院在 2017 年提出，用于目标检测中的 RetinaNet 模型。它通过减少易分类样本的损失，增加难分类样本的损失，使得模型更加关注难分类的样本。</p>
 <ol>
 <li><p>定义</p>
 <blockquote>
@@ -393,7 +560,7 @@
 <p>$$<br>\text{FL}(p_t) &#x3D; - (1 - p_t)^\gamma \log(p_t)<br>$$</p>
 <ol start="3">
 <li><p>多分类 Focal Loss</p>
-<p>对于多分类问题，标准的交叉熵损失函数如下，其中，( N ) 是类别数量，( y_i ) 是目标类别的one-hot编码，( p_i ) 是模型对第 ( i ) 类的预测概率。<br>$$<br>\text{CE}(p_t) &#x3D; - \sum_{i&#x3D;1}^N y_i \log(p_i)<br>$$</p>
+<p>对于多分类问题，标准的交叉熵损失函数如下，其中，( N ) 是类别数量，( $y_i$ ) 是目标类别的one-hot编码，( $p_i$ ) 是模型对第 ( $i$) 类的预测概率。<br>$$<br>\text{CE}(p_t) &#x3D; - \sum_{i&#x3D;1}^N y_i \log(p_i)<br>$$</p>
 <p>多分类问题下的 Focal Loss 公式为：<br>$$<br>\text{FL}(p_t) &#x3D; - \sum_{i&#x3D;1}^N y_i (1 - p_i)^\gamma \log(p_i)<br>$$</p>
 </li>
 </ol>
@@ -402,26 +569,14 @@
 <p>1.减小易分类样本的损失：当 $p_t$ 较大时，说明样本容易被正确分类，此时  $(1 - p_t)^\gamma$ 会变小，从而减小该样本的损失。<br>2.增加难分类样本的损失：当  $p_t$  较小时，说明样本难以被正确分类，此时  $(1 - p_t)^\gamma $ 会变大，从而增加该样本的损失。</p>
 </blockquote>
 <p><strong>Focal Loss 的优势：</strong></p>
-<pre><code class="hljs">1.	缓解类别不平衡问题：在目标检测任务中，背景类通常占据大部分样本，而前景类样本较少。Focal Loss 通过调节因子，使模型更关注前景类的难分类样本，缓解类别不平衡问题。
-2.	提升检测性能：由于 Focal Loss 增加了难分类样本的损失，模型在训练过程中会更倾向于关注这些样本，从而提升检测性能，尤其是在小目标检测和复杂背景下的检测性能。
+<pre><code class="hljs">1.缓解类别不平衡问题：在目标检测任务中，背景类通常占据大部分样本，而前景类样本较少。Focal Loss 通过调节因子，使模型更关注前景类的难分类样本，缓解类别不平衡问题。
+2.提升检测性能：由于 Focal Loss 增加了难分类样本的损失，模型在训练过程中会更倾向于关注这些样本，从而提升检测性能，尤其是在小目标检测和复杂背景下的检测性能。
 </code></pre>
-<h5 id="对比损失（Contrastive-Loss）："><a href="#对比损失（Contrastive-Loss）：" class="headerlink" title="对比损失（Contrastive Loss）："></a>对比损失（Contrastive Loss）：</h5><p>常用于度量学习中的孪生网络（Siamese Network）。对于一对样本，损失函数定义为：<br>$$<br> L &#x3D; \frac{1}{2N} \sum_{i&#x3D;1}^{N} [y_i d_i^2 + (1 - y_i) \max(0, m - d_i)^2]<br>$$<br>其中，$d_i$是样本对之间的距离，$m$是一个边界阈值。</p>
-<h4 id="3-KL散度（Kullback-Leibler-Divergence）："><a href="#3-KL散度（Kullback-Leibler-Divergence）：" class="headerlink" title="3. KL散度（Kullback-Leibler Divergence）："></a>3. KL散度（Kullback-Leibler Divergence）：</h4><p>常用于变分自编码器（VAE）等生成模型，用于度量两个概率分布之间的差异：</p>
+<h5 id="对比损失（Contrastive-Loss）"><a href="#对比损失（Contrastive-Loss）" class="headerlink" title="对比损失（Contrastive Loss）"></a>对比损失（Contrastive Loss）</h5><p>常用于度量学习中的孪生网络（Siamese Network）。对于一对样本，损失函数定义为：<br>$$<br> L &#x3D; \frac{1}{2N} \sum_{i&#x3D;1}^{N} [y_i d_i^2 + (1 - y_i) \max(0, m - d_i)^2]<br>$$<br>其中，$d_i$是样本对之间的距离，$m$是一个边界阈值。</p>
+<h3 id="KL散度（Kullback-Leibler-Divergence）"><a href="#KL散度（Kullback-Leibler-Divergence）" class="headerlink" title="KL散度（Kullback-Leibler Divergence）"></a>KL散度（Kullback-Leibler Divergence）</h3><p>常用于变分自编码器（VAE）等生成模型，用于度量两个概率分布之间的差异：</p>
 <p>$$<br>D_{\text{KL}}(P || Q) &#x3D; \sum_{i} P(i) \log \frac{P(i)}{Q(i)}<br>$$</p>
-<h3 id="NMS-非极大值抑制"><a href="#NMS-非极大值抑制" class="headerlink" title="NMS-非极大值抑制"></a>NMS-非极大值抑制</h3><p><strong>NMS的算法流程</strong></p>
-<blockquote>
-<p><strong>排序</strong>：根据候选框的置信度分数进行降序排序。</p>
-<p><strong>选择最高分数的框</strong>：选取当前最高分数的边界框作为一个保留框，然后将其从候选框列表中删除。</p>
-<p><strong>计算重叠度</strong>：对于剩余的候选框，计算它们与当前保留框的交并比（IoU，Intersection over Union）。</p>
-<p><strong>移除高重叠框</strong>：将与当前保留框的IoU大于预设阈值的候选框删除。</p>
-<p><strong>重复步骤2-4</strong>：直到所有的候选框都处理完毕。</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">iou</span>(<span class="hljs-params">box1, box2</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;计算两个边界框的交并比（IoU）&quot;&quot;&quot;</span><br>    x1, y1, x2, y2 = box1<br>    x1_prime, y1_prime, x2_prime, y2_prime = box2<br><br>    <span class="hljs-comment"># 计算交集</span><br>    xi1 = <span class="hljs-built_in">max</span>(x1, x1_prime)<br>    yi1 = <span class="hljs-built_in">max</span>(y1, y1_prime)<br>    xi2 = <span class="hljs-built_in">min</span>(x2, x2_prime)<br>    yi2 = <span class="hljs-built_in">min</span>(y2, y2_prime)<br>    inter_area = <span class="hljs-built_in">max</span>(<span class="hljs-number">0</span>, xi2 - xi1 + <span class="hljs-number">1</span>) * <span class="hljs-built_in">max</span>(<span class="hljs-number">0</span>, yi2 - yi1 + <span class="hljs-number">1</span>)<br><br>    <span class="hljs-comment"># 计算并集</span><br>    box1_area = (x2 - x1 + <span class="hljs-number">1</span>) * (y2 - y1 + <span class="hljs-number">1</span>)<br>    box2_area = (x2_prime - x1_prime + <span class="hljs-number">1</span>) * (y2_prime - y1_prime + <span class="hljs-number">1</span>)<br>    union_area = box1_area + box2_area - inter_area<br><br>    <span class="hljs-comment"># 计算IoU</span><br>    iou = inter_area / union_area<br>    <span class="hljs-keyword">return</span> iou<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">non_max_suppression</span>(<span class="hljs-params">boxes, scores, iou_threshold</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;执行非极大值抑制（NMS）&quot;&quot;&quot;</span><br>    idxs = np.argsort(scores)[::-<span class="hljs-number">1</span>]  <span class="hljs-comment"># 置信度分数降序排序</span><br>    keep = []<br>    <span class="hljs-keyword">while</span> <span class="hljs-built_in">len</span>(idxs) &gt; <span class="hljs-number">0</span>:<br>        current = idxs[<span class="hljs-number">0</span>]<br>        keep.append(current)<br>        idxs = idxs[<span class="hljs-number">1</span>:]<br>        filtered_idx = []<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> idxs:<br>            <span class="hljs-keyword">if</span> iou(boxes[current], boxes[i]) &lt;= iou_threshold:<br>                filtered_idx.append(i)<br>        idxs = np.array(filtered_idx)<br>    <span class="hljs-keyword">return</span> keep<br></code></pre></td></tr></table></figure>
-
-
-
-<h3 id="SVM分类器"><a href="#SVM分类器" class="headerlink" title="SVM分类器"></a>SVM分类器</h3><h3 id="K-Means聚类"><a href="#K-Means聚类" class="headerlink" title="K-Means聚类"></a>K-Means聚类</h3><h3 id="量化、剪枝、蒸馏"><a href="#量化、剪枝、蒸馏" class="headerlink" title="量化、剪枝、蒸馏"></a>量化、剪枝、蒸馏</h3><p>模型的量化、剪枝和蒸馏是深度学习模型优化的三种常见技术，旨在减少模型的计算成本和存储需求，同时尽量保持其性能。下面详细解释这些概念及其实现方法。</p>
-<h4 id="1-模型量化（Quantization）"><a href="#1-模型量化（Quantization）" class="headerlink" title="1. 模型量化（Quantization）"></a>1. 模型量化（Quantization）</h4><p>模型量化是将模型权重和激活值从高精度表示（如32位浮点数）转换为低精度表示（如8位整数）的过程。这可以显著减少模型的存储空间和计算需求。</p>
+<h2 id="SVM分类器"><a href="#SVM分类器" class="headerlink" title="SVM分类器"></a>SVM分类器</h2><h2 id="K-Means聚类"><a href="#K-Means聚类" class="headerlink" title="K-Means聚类"></a>K-Means聚类</h2><h2 id="量化、剪枝、蒸馏"><a href="#量化、剪枝、蒸馏" class="headerlink" title="量化、剪枝、蒸馏"></a>量化、剪枝、蒸馏</h2><p>模型的量化、剪枝和蒸馏是深度学习模型优化的三种常见技术，旨在减少模型的计算成本和存储需求，同时尽量保持其性能。下面详细解释这些概念及其实现方法。</p>
+<h3 id="模型量化（Quantization）"><a href="#模型量化（Quantization）" class="headerlink" title="模型量化（Quantization）"></a>模型量化（Quantization）</h3><p>模型量化是将模型权重和激活值从高精度表示（如32位浮点数）转换为低精度表示（如8位整数）的过程。这可以显著减少模型的存储空间和计算需求。</p>
 <p><strong>类型</strong>：</p>
 <ul>
 <li><strong>权重量化（Weight Quantization）</strong>：仅量化模型的权重。</li>
@@ -441,7 +596,7 @@
 <li><strong>量化</strong>：将浮点数转换为整数。</li>
 </ol>
 <p><strong>公式</strong>：<br>假设 ( x ) 是浮点数， ( x_q ) 是量化后的整数，量化过程可以表示为：<br>$$<br>x_q &#x3D; \text{round}\left(\frac{x - x_{\min}}{x_{\max} - x_{\min}} \cdot (2^b - 1)\right)<br>$$<br>其中，$x_{\min}$ 和 $x_{\max} $ 分别是最小值和最大值，( b ) 是量化位数。</p>
-<h4 id="2-模型剪枝（Pruning）"><a href="#2-模型剪枝（Pruning）" class="headerlink" title="2.模型剪枝（Pruning）"></a>2.模型剪枝（Pruning）</h4><p>模型剪枝是通过移除不重要的权重或神经元来减少模型的参数数量和计算需求的过程。</p>
+<h3 id="模型剪枝（Pruning）"><a href="#模型剪枝（Pruning）" class="headerlink" title="模型剪枝（Pruning）"></a>模型剪枝（Pruning）</h3><p>模型剪枝是通过移除不重要的权重或神经元来减少模型的参数数量和计算需求的过程。</p>
 <p><strong>类型</strong>：</p>
 <ul>
 <li><strong>权重剪枝（Weight Pruning）</strong>：移除权重值接近于零的连接。</li>
@@ -461,22 +616,22 @@
 <li><strong>根据阈值移除不重要的权重</strong>。</li>
 <li><strong>微调模型</strong>以恢复性能。</li>
 </ol>
-<h4 id="3-模型蒸馏（Distillation）"><a href="#3-模型蒸馏（Distillation）" class="headerlink" title="3. 模型蒸馏（Distillation）"></a>3. 模型蒸馏（Distillation）</h4><p>模型蒸馏是通过训练一个较小的学生模型来模仿较大且更复杂的教师模型的行为，从而达到压缩模型的目的。</p>
+<h3 id="模型蒸馏（Distillation）"><a href="#模型蒸馏（Distillation）" class="headerlink" title="模型蒸馏（Distillation）"></a>模型蒸馏（Distillation）</h3><p>模型蒸馏是通过训练一个较小的学生模型来模仿较大且更复杂的教师模型的行为，从而达到压缩模型的目的。</p>
 <p><strong>步骤</strong>：</p>
 <ol>
 <li><strong>训练教师模型</strong>：首先训练一个高性能的教师模型。</li>
 <li><strong>生成软标签（Soft Targets）</strong>：教师模型在训练数据上的预测输出，通常是带有温度参数 ( $T$ ) 的 softmax 输出。</li>
 <li><strong>训练学生模型</strong>：使用软标签和原始标签联合训练学生模型。</li>
 </ol>
-<p><strong>损失函数</strong>：<br>学生模型的损失函数由软标签损失和硬标签损失的加权和组成：<br>$$<br>\mathcal{L} &#x3D; \alpha \mathcal{L}<em>{\text{hard}} + (1 - \alpha) \mathcal{L}</em>{\text{soft}}<br>$$</p>
-<p>其中，( $\alpha$ ) 是权重系数，( $\mathcal{L}<em>{\text{hard}}$ ) 是传统的交叉熵损失，( $\mathcal{L}</em>{\text{soft}} $) 是带温度参数的软标签损失。</p>
-<p><strong>软标签损失</strong>：<br>$$<br>\mathcal{L}_{\text{soft}} &#x3D; \text{CrossEntropy}\left(\frac{\exp(z_i &#x2F; T)}{\sum_j \exp(z_j &#x2F; T)}, \frac{\exp(z_i^T &#x2F; T)}{\sum_j \exp(z_j^T &#x2F; T)}\right)<br>$$<br>其中，( $z_i$ ) 是学生模型的logits，( $z_i^T$ ) 是教师模型的logits，( $T$ ) 是温度参数。</p>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结:"></a>总结:</h4><ul>
+<p><strong>损失函数</strong>：<br>学生模型的损失函数由软标签损失和硬标签损失的加权和组成：<br>$$<br>\mathcal L &#x3D; \alpha\mathcal L_{hard} + (1 - \alpha) \mathcal L_{soft}<br>$$</p>
+<p>其中，( $\alpha$ ) 是权重系数，( $\mathcal{L}<em>{hard}$ ) 是传统的交叉熵损失，( $\mathcal{L}</em>{soft} $) 是带温度参数的软标签损失。</p>
+<p><strong>软标签损失</strong>：<br>$$<br>\mathcal{L}_{soft} &#x3D; CrossEntropy\left(\frac{\exp(z_i &#x2F; T)}{\sum_j \exp(z_j &#x2F; T)}, \frac{\exp(z_i^T &#x2F; T)}{\sum_j \exp(z_j^T &#x2F; T)}\right)<br>$$<br>其中，( $z_i$ ) 是学生模型的logits，( $z_i^T$ ) 是教师模型的logits，( $T$ ) 是温度参数。</p>
+<p><strong>总结:</strong></p>
+<ul>
 <li><strong>量化</strong>：减少模型精度，降低存储和计算需求。</li>
 <li><strong>剪枝</strong>：移除不重要的权重或神经元，减少参数数量和计算需求。</li>
 <li><strong>蒸馏</strong>：使用高性能的教师模型指导训练较小的学生模型，从而压缩模型。</li>
 </ul>
-<p>这三种技术可以独立使用，也可以结合使用，以在不同的应用场景中达到最佳的模型压缩效果和推理效率。</p>
 
                 
               </div>
@@ -548,7 +703,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月23日</div>
+          <div>2024年8月3日</div>
         </div>
       
       

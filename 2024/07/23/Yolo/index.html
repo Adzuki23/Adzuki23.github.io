@@ -16,26 +16,26 @@
   <meta name="author" content="Hongyu Li">
   <meta name="keywords" content="DeepLearning,CV">
   
-    <meta name="description" content="学习目标检测中的YOLO系列，更深层次的了解原理，对网络模块、损失函数等进行深入理解。">
+    <meta name="description" content="学习目标检测中的YOLO，更深层次的了解原理，对网络模块、损失函数等进行深入理解。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="YOLO Series">
+<meta property="og:title" content="YOLO">
 <meta property="og:url" content="https://adzuki23.github.io/2024/07/23/Yolo/index.html">
 <meta property="og:site_name" content="Hongyu Li">
-<meta property="og:description" content="学习目标检测中的YOLO系列，更深层次的了解原理，对网络模块、损失函数等进行深入理解。">
+<meta property="og:description" content="学习目标检测中的YOLO，更深层次的了解原理，对网络模块、损失函数等进行深入理解。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://adzuki23.github.io/img/cover/Yolo.jpeg">
+<meta property="og:image" content="https://adzuki23.github.io/img/cover/yolo.jpg">
 <meta property="article:published_time" content="2024-07-22T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-23T03:54:08.620Z">
+<meta property="article:modified_time" content="2024-08-03T11:53:33.471Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="YOLO">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/Yolo.jpeg">
+<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/yolo.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>YOLO Series - Hongyu Li</title>
+  <title>YOLO - Hongyu Li</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -228,7 +228,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="YOLO Series"></span>
+            <span id="subtitle" data-typed-text="YOLO"></span>
           
         </div>
 
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6 字
+          940 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          1 分钟
+          8 分钟
         
       </span>
     
@@ -307,13 +307,47 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">YOLO Series</h1>
+            <h1 id="seo-header">YOLO</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="YOLO"><a href="#YOLO" class="headerlink" title="YOLO"></a>YOLO</h3><p>结构：Backbone+Neck+Head</p>
+                <p>[TOC]</p>
+<h2 id="YOLO"><a href="#YOLO" class="headerlink" title="YOLO"></a>YOLO</h2><h3 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h3><p>结构：Backbone+Neck+Head</p>
 <p><img src="/2024/07/23/Yolo/yolov8.png" srcset="/img/loading.gif" lazyload alt="yolov8结构图"></p>
+<h4 id="CSPLayer"><a href="#CSPLayer" class="headerlink" title="CSPLayer"></a>CSPLayer</h4><p><strong>CSPLayer「Cross Stage Partial Layer」</strong>是一种用于特征提取和特征融合的卷积层，通常应用于模型的backbone部分。通过分块与跨层连接的方式来改善特征表达能力，同时减少计算量。</p>
+<p>设计目标是通过分块处理特征图的方式，减少重复梯度信息的传播，缓解网络中的梯度消失和梯度爆炸问题，同时提高模型的推理速度和内存效率。</p>
+<p><strong>结构细节：</strong></p>
+<p>CSPLayer通常包括以下几个主要部分：</p>
+<ol>
+<li><p><strong>输入特征图分块</strong>：输入的特征图在通道维度上被分成两部分，其中一部分直接传递到最后的特征融合阶段，另一部分则通过一系列的卷积操作进行处理。</p>
+</li>
+<li><p><strong>部分卷积操作</strong>：对分块后的特征图的一部分，进行多个卷积层的操作，这些卷积层可能包括常规卷积、深度可分离卷积、或其他高效的卷积操作。这一过程旨在进一步提取和增强特征。</p>
+</li>
+<li><p><strong>跨阶段连接</strong>：未经过卷积处理的特征图直接跳跃到最终的特征融合阶段。这种设计称为跨阶段连接（cross-stage connection），目的是保留更多的原始特征信息，从而帮助网络更好地学习特征表达。</p>
+</li>
+<li><p><strong>特征融合</strong>：经过卷积处理的特征和跳跃连接的特征在最后进行融合。融合方式通常是通道维度上的拼接（concatenation）或加法（addition），具体取决于设计细节。</p>
+</li>
+<li><p><strong>输出</strong>：融合后的特征图经过进一步的卷积处理（如1x1卷积）后输出，作为CSPLayer的最终输出。</p>
+</li>
+</ol>
+<p><strong>优点：</strong></p>
+<ol>
+<li><strong>减少计算成本</strong>：通过分块处理和跨阶段连接，CSPLayer减少了特征图的卷积操作，降低了计算成本。</li>
+<li><strong>缓解梯度问题</strong>：跨阶段连接有助于缓解深层网络中的梯度消失和梯度爆炸问题，从而使得网络更容易训练。</li>
+<li><strong>增强特征表达</strong>：这种分块处理和融合的方式能够更好地保留和提取特征信息，提升模型的特征表达能力。</li>
+</ol>
+<h2 id="NMS-非极大值抑制"><a href="#NMS-非极大值抑制" class="headerlink" title="NMS-非极大值抑制"></a>NMS-非极大值抑制</h2><p>NMS是目标检测领域一项重要的后处理技术，旨在解决检测器生成的存在重叠的多个检测框的问题，主要包括两个关键超参数：<code>Conf</code>分数和<code>IoU</code>阈值</p>
+<p><strong>NMS的算法流程：</strong></p>
+<blockquote>
+<p><strong>排序</strong>：根据候选框的置信度分数进行降序排序，低于置信度阈值的直接删除。</p>
+<p><strong>选择最高分数的框</strong>：选取当前最高分数的边界框作为一个保留框，然后将其从候选框列表中删除。</p>
+<p><strong>计算重叠度</strong>：对于剩余的候选框，计算它们与当前保留框的交并比（IoU，Intersection over Union）。</p>
+<p><strong>移除高重叠框</strong>：将与当前保留框的IoU大于预设阈值的候选框删除。</p>
+<p><strong>重复步骤2-4</strong>：直到所有的候选框都处理完毕。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">iou</span>(<span class="hljs-params">box1, box2</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;计算两个边界框的交并比（IoU）&quot;&quot;&quot;</span><br>    x1, y1, x2, y2 = box1<br>    x1_prime, y1_prime, x2_prime, y2_prime = box2<br><br>    <span class="hljs-comment"># 计算交集</span><br>    xi1 = <span class="hljs-built_in">max</span>(x1, x1_prime)<br>    yi1 = <span class="hljs-built_in">max</span>(y1, y1_prime)<br>    xi2 = <span class="hljs-built_in">min</span>(x2, x2_prime)<br>    yi2 = <span class="hljs-built_in">min</span>(y2, y2_prime)<br>    inter_area = <span class="hljs-built_in">max</span>(<span class="hljs-number">0</span>, xi2 - xi1 + <span class="hljs-number">1</span>) * <span class="hljs-built_in">max</span>(<span class="hljs-number">0</span>, yi2 - yi1 + <span class="hljs-number">1</span>)<br><br>    <span class="hljs-comment"># 计算并集</span><br>    box1_area = (x2 - x1 + <span class="hljs-number">1</span>) * (y2 - y1 + <span class="hljs-number">1</span>)<br>    box2_area = (x2_prime - x1_prime + <span class="hljs-number">1</span>) * (y2_prime - y1_prime + <span class="hljs-number">1</span>)<br>    union_area = box1_area + box2_area - inter_area<br><br>    <span class="hljs-comment"># 计算IoU</span><br>    iou = inter_area / union_area<br>    <span class="hljs-keyword">return</span> iou<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">non_max_suppression</span>(<span class="hljs-params">boxes, scores, iou_threshold</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;执行非极大值抑制（NMS）&quot;&quot;&quot;</span><br>    idxs = np.argsort(scores)[::-<span class="hljs-number">1</span>]  <span class="hljs-comment"># 置信度分数降序排序</span><br>    keep = []<br>    <span class="hljs-keyword">while</span> <span class="hljs-built_in">len</span>(idxs) &gt; <span class="hljs-number">0</span>:<br>        current = idxs[<span class="hljs-number">0</span>]<br>        keep.append(current)<br>        idxs = idxs[<span class="hljs-number">1</span>:]<br>        filtered_idx = []<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> idxs:<br>            <span class="hljs-keyword">if</span> iou(boxes[current], boxes[i]) &lt;= iou_threshold:<br>                filtered_idx.append(i)<br>        idxs = np.array(filtered_idx)<br>    <span class="hljs-keyword">return</span> keep<br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
@@ -366,7 +400,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>YOLO Series</div>
+      <div>YOLO</div>
       <div>https://adzuki23.github.io/2024/07/23/Yolo/</div>
     </div>
     <div class="license-meta">
@@ -385,7 +419,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月23日</div>
+          <div>2024年8月3日</div>
         </div>
       
       
@@ -415,6 +449,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/07/30/LLM-Llama/" title="Llama">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Llama</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

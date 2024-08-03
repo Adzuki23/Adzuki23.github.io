@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/LLM.webp">
 <meta property="article:published_time" content="2024-07-03T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-20T09:11:19.955Z">
+<meta property="article:modified_time" content="2024-07-30T06:45:40.879Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Transformer">
 <meta name="twitter:card" content="summary_large_image">
@@ -389,7 +389,8 @@
 <h4 id="2-2-Attention计算过程图解"><a href="#2-2-Attention计算过程图解" class="headerlink" title="2.2 Attention计算过程图解"></a>2.2 Attention计算过程图解</h4><p><strong>query，key，value的产生：</strong></p>
 <p>假设batch_size&#x3D;1，输入序列X的形状为(seq_len &#x3D; 4, d_model &#x3D; 6)，则对于这串序列，我们产生三个参数矩阵：$W^Q、W^K、W^V$ 。通过上述的矩阵乘法，我们可以得到最终的结果Q，K，V。如下图所示：</p>
 <p><img src="/2024/07/04/LLM-Transformer/v2-ab15fd18a31f3a63ef100688e9a5747f_1440w.webp" srcset="/img/loading.gif" lazyload alt="query，key，value的产生"></p>
-<p>一般来说， $W^Q$和$W^K$都同样使用$k_{dim}$， $W^V$使用$v_{dim}$。$k_{dim}$和$v_{dim}$不一定要相等，但在transformer的原始论文中，采用的策略是：$K_{dim}&#x3D;V_{dim}&#x3D;d_{model}&#x2F;&#x2F;n_{heads}$，其中$n_{heads}$为self-attention的头数。</p>
+<p>一般来说， $W^Q$和$W^K$都同样使用$k_{dim}$， $W^V$使用$v_{dim}$。</p>
+<p>$k_{dim}$和$v_{dim}$不一定要相等，但在transformer的原始论文中，采用的策略是：$K_{dim}&#x3D;V_{dim}&#x3D;d_{model}&#x2F;&#x2F;n_{heads}$，其中$n_{heads}$为self-attention的头数。</p>
 <p><strong>query，key，value的意义：</strong> </p>
 <ul>
 <li><p>query向量类比于询问。某个token问：“其余的token都和我有多大程度的相关呀？” </p>
@@ -578,7 +579,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月20日</div>
+          <div>2024年7月30日</div>
         </div>
       
       

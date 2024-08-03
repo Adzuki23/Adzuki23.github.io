@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/algorithm.jpg">
 <meta property="article:published_time" content="2024-06-27T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-20T13:51:30.542Z">
+<meta property="article:modified_time" content="2024-07-30T05:46:47.671Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="LeetCode">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.7k 字
+          5.5k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          40 分钟
+          47 分钟
         
       </span>
     
@@ -557,6 +557,60 @@
 </ul>
 </li>
 </ol>
+<h4 id="12-76-最小覆盖子串"><a href="#12-76-最小覆盖子串" class="headerlink" title="12. 76: 最小覆盖子串"></a>12. 76: 最小覆盖子串</h4><p>#<code>哈希表</code> 	#<code>字符串</code> 	#<code>滑动窗口</code> </p>
+<blockquote>
+<p>给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 “” 。</p>
+</blockquote>
+<p><strong>解决：</strong></p>
+<ul>
+<li><p>滑动窗口+哈希表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> calendar <span class="hljs-keyword">import</span> c<br><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> Counter<br><span class="hljs-keyword">from</span> tkinter <span class="hljs-keyword">import</span> N<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">minWindow</span>(<span class="hljs-params">s, t</span>):<br>    <span class="hljs-comment"># 判断s和t是否为空，或者s的长度是否小于t的长度</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> s <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> t <span class="hljs-keyword">or</span> <span class="hljs-built_in">len</span>(s) &lt; <span class="hljs-built_in">len</span>(t):<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span><br>    <span class="hljs-comment"># 答案</span><br>    ans = <span class="hljs-built_in">float</span>(<span class="hljs-string">&#x27;inf&#x27;</span>), <span class="hljs-literal">None</span>, <span class="hljs-literal">None</span><br>    <br>    <span class="hljs-comment"># 左右指针</span><br>    left = <span class="hljs-number">0</span><br>    right = <span class="hljs-number">0</span><br>    <br>    <span class="hljs-comment"># t中每个字符出现的次数</span><br>    counter_t = Counter(t)<br>    <span class="hljs-comment"># s中每个字符出现的次数</span><br>    counter_s = Counter()<br>    <br>    <span class="hljs-comment"># 记录当前窗口中符合条件的字符个数</span><br>    required = <span class="hljs-number">0</span><br>    <br>    <span class="hljs-keyword">while</span> right &lt; <span class="hljs-built_in">len</span>(s):<br>        character = s[right]<br>        counter_s[character] += <span class="hljs-number">1</span><br>        <span class="hljs-comment"># 判断当前字符是否在t中且在当前窗口中出现的次数已满足（&gt;=）在t中出现的次数</span><br>        <span class="hljs-keyword">if</span> character <span class="hljs-keyword">in</span> counter_t <span class="hljs-keyword">and</span> counter_s[character] == counter_t[character]:<br>            required += <span class="hljs-number">1</span><br>        <span class="hljs-comment"># 当前窗口中的字符已经满足t中的所有字符</span><br>        <span class="hljs-keyword">while</span> left &lt;= right <span class="hljs-keyword">and</span> required == <span class="hljs-built_in">len</span>(counter_t):<br>            character = s[left]<br>            <span class="hljs-comment"># 更新最小窗口  </span><br>            <span class="hljs-keyword">if</span> right - left + <span class="hljs-number">1</span> &lt; ans[<span class="hljs-number">0</span>]:<br>                ans = (right - left + <span class="hljs-number">1</span>, left, right)<br>            <br>            <span class="hljs-comment"># 左指针右移前将当前字符在窗口中出现的次数减1</span><br>            counter_s[character] -= <span class="hljs-number">1</span><br>            <span class="hljs-comment"># 判断当前字符是否在t中且在当前窗口中出现的次数已不满足（&lt;）在t中出现的次数</span><br>            <span class="hljs-keyword">if</span> character <span class="hljs-keyword">in</span> counter_t <span class="hljs-keyword">and</span> counter_s[character] &lt; counter_t[character]:<br>                required -= <span class="hljs-number">1</span><br>            <br>            <span class="hljs-comment"># 左指针右移</span><br>            left += <span class="hljs-number">1</span><br>        right += <span class="hljs-number">1</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span> <span class="hljs-keyword">if</span> ans[<span class="hljs-number">0</span>] == <span class="hljs-built_in">float</span>(<span class="hljs-string">&quot;inf&quot;</span>) <span class="hljs-keyword">else</span> s[ans[<span class="hljs-number">1</span>]: ans[<span class="hljs-number">2</span>] + <span class="hljs-number">1</span>]<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>总结：</strong></p>
+<ul>
+<li><p>有两个思路被广泛使用：</p>
+<ol>
+<li>第一个是遇到字母异位词 &#x2F; 子串被包含等关系时候可以用Hash表来计数。</li>
+<li>滑动窗口的使用，一般right指针随着循环便利，我们需要关注的是left指针移动的条件。</li>
+</ol>
+</li>
+<li><p>还有Counter的使用，用来统计出现的次数</p>
+</li>
+</ul>
+<h3 id="普通数组"><a href="#普通数组" class="headerlink" title="普通数组"></a>普通数组</h3><h4 id="13-53-最大子数组和"><a href="#13-53-最大子数组和" class="headerlink" title="13. 53: 最大子数组和"></a>13. 53: 最大子数组和</h4><p>#<code>数组</code> 	#<code>最大前缀和</code> </p>
+<blockquote>
+<p>给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。  </p>
+<p>子数组是数组中的一个连续部分。</p>
+</blockquote>
+<p><strong>解决：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">maxSubArray</span>(<span class="hljs-params">nums</span>):<br>    maxSum = [<span class="hljs-number">0</span>] * (<span class="hljs-built_in">len</span>(nums))<br>    maxSum[<span class="hljs-number">0</span>] = nums[<span class="hljs-number">0</span>]<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-built_in">len</span>(nums)):<br>        maxSum[i] = nums[i] + <span class="hljs-built_in">max</span>(maxSum[i-<span class="hljs-number">1</span>],<span class="hljs-number">0</span>)<br>        <br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">max</span>(maxSum)<br></code></pre></td></tr></table></figure>
+
+<p><strong>总结：</strong></p>
+<ol>
+<li>和求解“和为 K 的子数组”这道题类似，用到了前缀和这个思想，但是这儿是最大前缀和，很巧妙。</li>
+</ol>
+<h4 id="14-56-合并区间"><a href="#14-56-合并区间" class="headerlink" title="14. 56: 合并区间"></a>14. 56: 合并区间</h4><p>#<code>数组</code>	#<code>排序</code> </p>
+<blockquote>
+<p>以数组 intervals 表示若干个区间的集合，其中单个区间为 intervals[i] &#x3D; [starti, endi]。请你合并所有重叠的区间，并返回一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间 。</p>
+</blockquote>
+<p><strong>解决：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">merge</span>(<span class="hljs-params">intervals: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">list</span>[<span class="hljs-built_in">int</span>]]</span>) -&gt; <span class="hljs-built_in">list</span>[<span class="hljs-built_in">list</span>[<span class="hljs-built_in">int</span>]]:<br>    intervals.sort(key = <span class="hljs-keyword">lambda</span> x:x[<span class="hljs-number">0</span>])<br>    merged = []<br>    <span class="hljs-keyword">for</span> interval <span class="hljs-keyword">in</span> intervals:<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> merged <span class="hljs-keyword">or</span> merged[-<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] &lt; interval[<span class="hljs-number">0</span>]:<br>            merged.append(interval)<br>        <span class="hljs-keyword">else</span>:<br>            merged[-<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] = <span class="hljs-built_in">max</span>(merged[-<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], interval[<span class="hljs-number">1</span>])<br>    <span class="hljs-keyword">return</span> merged<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="15-189-轮转数组"><a href="#15-189-轮转数组" class="headerlink" title="15. 189: 轮转数组"></a>15. 189: 轮转数组</h4><p>#<code>数组</code>	#<code>数学</code> 	#双指针 </p>
+<blockquote>
+<p>给定一个整数数组 <code>nums</code>，将数组中的元素向右轮转 <code>k</code> 个位置，其中 <code>k</code> 是非负数。</p>
+</blockquote>
+<p><strong>解决：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">rotate</span>(<span class="hljs-params">nums, k</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    :type nums: List[int]</span><br><span class="hljs-string">    :type k: int</span><br><span class="hljs-string">    :rtype: None Do not return anything, modify nums in-place instead.</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    ex_num = k % <span class="hljs-built_in">len</span>(nums)<br>    new_nums = [<span class="hljs-number">0</span>] * <span class="hljs-built_in">len</span>(nums)<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(nums)):<br>        new_pos = (i + ex_num) % <span class="hljs-built_in">len</span>(nums)<br>        new_nums[new_pos] = nums[i]<br>    nums[:] = new_nums<br></code></pre></td></tr></table></figure>
+
+<p><strong>总结：</strong></p>
+<ol>
+<li><code>nums[:] = new_nums</code> 和 <code>nums = new_nums</code></li>
+</ol>
 
                 
               </div>
@@ -628,7 +682,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月20日</div>
+          <div>2024年7月30日</div>
         </div>
       
       

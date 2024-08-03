@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/AIGC.jpeg">
 <meta property="article:published_time" content="2024-06-27T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-23T04:18:52.768Z">
+<meta property="article:modified_time" content="2024-08-01T08:57:35.583Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Stable Diffusion">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.9k 字
+          5.8k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          41 分钟
+          48 分钟
         
       </span>
     
@@ -428,7 +428,7 @@
 <p>下图中前向过程（$\varepsilon$为VAE的编码器）<strong>是我们生成数据以训练噪声预测器的方式</strong>。训练完成后，我们可以通过运行反向过程（$\mathbf{D}$为VAE的解码器）来生成图像。</p>
 <p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240629232700236.png" srcset="/img/loading.gif" lazyload alt="图2"></p>
 <p> Image Embeddings、Token Embeddings 等是如何在 UNet 网络中整合在一起的：</p>
-<p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240630110811534.png" srcset="/img/loading.gif" lazyload alt="Image Embeddings、Token Embeddings 如何在UNet网络中整合在一起"></p>
+<p><img src="/2024/06/28/AIGC-StableDiffusion/v2-c3d486fe63da4ec66169b1fb69dfc34b_r.jpg" srcset="/img/loading.gif" lazyload alt="Image Embeddings、Token Embeddings 如何在UNet网络中整合在一起"></p>
 <p>UNet网络具体结构如下：</p>
 <p><img src="/2024/06/28/AIGC-StableDiffusion/v2-1a60fadfd1b8cb1b41bad5f7deddf526_1440w.webp" srcset="/img/loading.gif" lazyload alt="UNet网络"></p>
 <p>ResBlock+SpatialTransformer具体结构示意图：</p>
@@ -483,6 +483,35 @@
 <p>“从一个带参数的分布中进行采样”转变到“从一个确定的分布中进行采样”，解决了梯度无法传递的问题。</p>
 </li>
 </ol>
+<p>DDPM、DDIM、和PLMS都是扩散模型（Diffusion Models）相关的概念，主要用于图像生成任务。它们都是通过逐步去噪（denoising）的过程来生成数据，但具体的去噪过程和方法有所不同。以下是对这三种方法的简要解释及其区别：</p>
+<h4 id="3-2-DDPM、DDIM、PLMS-有什么区别"><a href="#3-2-DDPM、DDIM、PLMS-有什么区别" class="headerlink" title="3.2 DDPM、DDIM、PLMS 有什么区别"></a>3.2 DDPM、DDIM、PLMS 有什么区别</h4><h5 id="1-DDPM（Denoising-Diffusion-Probabilistic-Models）"><a href="#1-DDPM（Denoising-Diffusion-Probabilistic-Models）" class="headerlink" title="1. DDPM（Denoising Diffusion Probabilistic Models）"></a>1. DDPM（Denoising Diffusion Probabilistic Models）</h5><p><strong>基本原理</strong>：</p>
+<p>DDPM是扩散模型的原始形式之一，通过一个逐步加噪（forward process）和去噪（reverse process）的过程来生成数据。</p>
+<p><strong>加噪过程（Forward Process）</strong>：从真实数据分布开始，逐步加入噪声，生成一系列中间状态直至完全噪声化。这个过程通常被定义为一个马尔可夫链。</p>
+<p><strong>去噪过程（Reverse Process）</strong>：从完全噪声的状态开始，逐步去噪恢复到原始数据分布。这个过程通过训练一个神经网络模型来近似实现，每一步预测并去除一小部分噪声。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li><p>DDPM的去噪过程通过多个小步骤进行，每一步都需要一个神经网络的前向传递。</p>
+</li>
+<li><p>通常需要非常多的时间步（上千步）来生成高质量图像，这导致生成过程较慢。</p>
+</li>
+</ul>
+<h5 id="2-DDIM（Denoising-Diffusion-Implicit-Models）"><a href="#2-DDIM（Denoising-Diffusion-Implicit-Models）" class="headerlink" title="2. DDIM（Denoising Diffusion Implicit Models）"></a>2. DDIM（Denoising Diffusion Implicit Models）</h5><p><strong>基本原理</strong>：</p>
+<p>DDIM是一种基于DDPM的改进，旨在加速生成过程。它提出了一种非马尔可夫链的去噪过程，并保持了与原始数据分布的相似性。</p>
+<p><strong>非马尔可夫去噪</strong>：与DDPM的马尔可夫链不同，DDIM使用一种非马尔可夫链去噪方法，允许跳过中间的多个时间步，从而加快生成速度。</p>
+<p><strong>特点</strong>：</p>
+<p>DDIM在减少生成步骤的同时，可以保持生成图像的质量。</p>
+<p>它提供了一种显式的去噪解，这意味着可以直接计算出从噪声到数据的映射，而不依赖于逐步迭代。</p>
+<p>通常比DDPM更快，因为需要的去噪步骤更少（几十步到几百步）。</p>
+<h5 id="3-PLMS（Pseudo-Linear-Multistep-Scheme）"><a href="#3-PLMS（Pseudo-Linear-Multistep-Scheme）" class="headerlink" title="3. PLMS（Pseudo Linear Multistep Scheme）"></a>3. PLMS（Pseudo Linear Multistep Scheme）</h5><p><strong>基本原理</strong>：</p>
+<p>PLMS是一种基于DDPM和DDIM的改进方法，进一步减少生成步骤。它使用一种伪线性多步方法来预测去噪过程中的多个步骤。</p>
+<p><strong>多步方法</strong>：PLMS使用一个多步预测方法，这种方法在每一步中利用之前几个时间步的预测结果来提高当前的预测精度。</p>
+<p><strong>特点</strong>：</p>
+<p>PLMS进一步加快了生成过程，比DDIM需要更少的去噪步骤。</p>
+<p>它通过使用多步历史信息来提高去噪过程的稳定性和精度。</p>
+<p>在实际应用中，PLMS通常能够在保持生成质量的前提下显著减少生成步骤数，达到类似于DDIM甚至更好的生成效果。</p>
+<h5 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h5><p><strong>DDPM</strong> 是最原始的去噪扩散模型，需要逐步还原图像，步骤多且慢。</p>
+<p><strong>DDIM</strong> 提供了一种非马尔可夫的去噪方法，可以跳过一些步骤，加速生成过程。</p>
+<p><strong>PLMS</strong> 在DDIM的基础上，通过多步预测进一步减少生成步骤，并提高生成效率。</p>
 <h3 id="4-补充知识"><a href="#4-补充知识" class="headerlink" title="4. 补充知识"></a>4. 补充知识</h3><hr>
 <h4 id="4-1-VQ-VAE（Vector-Quantized-Variational-Autoencoder）"><a href="#4-1-VQ-VAE（Vector-Quantized-Variational-Autoencoder）" class="headerlink" title="4.1 VQ-VAE（Vector Quantized Variational Autoencoder）"></a>4.1 VQ-VAE（Vector Quantized Variational Autoencoder）</h4><p>关于 VQ-VAE「Vector Quantized Variational Autoencoder，VQ-VAE」，是一种将离散表示学习引入自编码器框架的模型。它结合了传统变分自编码器（VAE）和向量量化技术，使模型能够在离散的潜在空间中进行编码和解码。这张图描述了向量量化变分自编码器的工作原理:</p>
 <p><img src="/2024/06/28/AIGC-StableDiffusion/image-20240701164621499.png" srcset="/img/loading.gif" lazyload alt="VQ-VAE"></p>
@@ -524,7 +553,7 @@
 <p><strong>损失函数（Loss Function）:</strong></p>
 <p>VQ-VAE 的损失函数由三部分组成：</p>
 <ol>
-<li><p>重构损失（Reconstruction Loss）：衡量原始输入  x  和重建输出  \hat{x}  之间的差异，通常使用均方误差（MSE）。<br>$$<br>\mathcal{L}_{\text{recon}} &#x3D; | x - \hat{x} |^2<br>$$</p>
+<li><p>重构损失（Reconstruction Loss）：衡量原始输入  x  和重建输出 $ \hat{x}$  之间的差异，通常使用均方误差（MSE）。<br>$$<br>\mathcal{L}_{\text{recon}} &#x3D; | x - \hat{x} |^2<br>$$</p>
 </li>
 <li><p>向量量化损失（Vector Quantization Loss）：鼓励码本向量  $e_i $ 接近连续潜在表示  $z_e $<br>$$<br>\mathcal{L}_{\text{vq}} &#x3D; | \text{sg}[z_e] - e_i |^2<br>$$<br>其中，$\text{sg}$ 表示停止梯度（stop gradient），即在反向传播时不计算其梯度。</p>
 </li>
@@ -569,6 +598,15 @@
 <blockquote>
 <p>条件信息，如文本嵌入，通常通过空间变换器（Spatial Transformer），也就是交叉注意力机制，加入到模型中。<font color="red">Spatial Transformer允许模型在图像特征和条件信息之间建立复杂的对应关系。通过使用交叉注意力，模型可以根据图像的每个部分和条件信息之间的关系来动态调整图像特征</font>。这种方式特别适合处理与空间位置相关的信息，因为它可以让模型关注条件信息中与当前正在生成的图像区域最相关的部分。</p>
 </blockquote>
+<p>二段式检测算法和一段式的区别</p>
+<p>NMS的流程</p>
+<p>OCR</p>
+<p>Clip 文本和图像LOSS</p>
+<p>BERT masked Masked作用在哪 还有在transformer中的masked</p>
+<p>stablediffusion  ldm</p>
+<p>embedings以交叉注意力的方式注入是什么意思？ -&gt; QKV</p>
+<p>botsort 卡尔曼滤波升级在哪 和sort deepsort升级在哪</p>
+<p>算法：最长不重复子序列的长度 -&gt; 滑动窗口+哈希表</p>
 
                 
               </div>
@@ -640,7 +678,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月23日</div>
+          <div>2024年8月1日</div>
         </div>
       
       

@@ -16,26 +16,26 @@
   <meta name="author" content="Hongyu Li">
   <meta name="keywords" content="DeepLearning,CV">
   
-    <meta name="description" content="学习Docker的基本原理、作用、和虚拟机的区别，以及基本操作等。">
+    <meta name="description" content="学习目标检测中的RT-DETR，更深层次的了解原理，对网络模块、损失函数等进行深入理解。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker">
-<meta property="og:url" content="https://adzuki23.github.io/2024/05/15/Docker/index.html">
+<meta property="og:title" content="RT-DETR">
+<meta property="og:url" content="https://adzuki23.github.io/2024/08/03/RTDETR/index.html">
 <meta property="og:site_name" content="Hongyu Li">
-<meta property="og:description" content="学习Docker的基本原理、作用、和虚拟机的区别，以及基本操作等。">
+<meta property="og:description" content="学习目标检测中的RT-DETR，更深层次的了解原理，对网络模块、损失函数等进行深入理解。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://adzuki23.github.io/img/cover/docker.png">
-<meta property="article:published_time" content="2024-05-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-30T14:47:37.312Z">
+<meta property="og:image" content="https://adzuki23.github.io/img/cover/rtdetr.png">
+<meta property="article:published_time" content="2024-08-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-08-03T11:36:49.544Z">
 <meta property="article:author" content="Hongyu Li">
-<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="RT-DETR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/docker.png">
+<meta name="twitter:image" content="https://adzuki23.github.io/img/cover/rtdetr.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Docker - Hongyu Li</title>
+  <title>RT-DETR - Hongyu Li</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -228,7 +228,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Docker"></span>
+            <span id="subtitle" data-typed-text="RT-DETR"></span>
           
         </div>
 
@@ -239,8 +239,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-05-15 00:00" pubdate>
-          2024年5月15日 凌晨
+        <time datetime="2024-08-03 00:00" pubdate>
+          2024年8月3日 凌晨
         </time>
       </span>
     
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          3.4k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          9 分钟
+          29 分钟
         
       </span>
     
@@ -307,95 +307,129 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Docker</h1>
+            <h1 id="seo-header">RT-DETR</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><hr>
-<p>Docker是一个用于<strong>构建(build)</strong>,<strong>运行(run)</strong>,<strong>传送(share)</strong> 应用程序的平台</p>
-<ol>
-<li><strong>将应用程序打包为一个个的集装箱</strong>，小鲸鱼(Docker)就会帮我们将它们运送到任何需要的地方</li>
-</ol>
-<p><img src="/2024/05/15/Docker/docker.png" srcset="/img/loading.gif" lazyload alt="集装箱"></p>
-<ol start="2">
-<li><strong>每个集装箱将下列文件打包在一起</strong>（应用程序和它运行时所需要的各种依赖包、第三方软件库、配置文件等），以便在任何环境中都可以正确的运行</li>
-</ol>
-<p><img src="/2024/05/15/Docker/image-20240515112551349.png" srcset="/img/loading.gif" lazyload alt="集装箱内文件"></p>
-<h3 id="为什么要使用Docker"><a href="#为什么要使用Docker" class="headerlink" title="为什么要使用Docker"></a>为什么要使用Docker</h3><hr>
-<p>比如我们写了一个网站：</p>
-<ol>
-<li><p>前端使用Vue搭建界面</p>
-</li>
-<li><p>后端使用SpringBoot微服务框架来提供各种服务和接口</p>
-</li>
-<li><p>使用MySQL数据库来存储数据</p>
-</li>
-</ol>
+                <p>[TOC]</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs pf">通用视觉目标检测可以分为基于CNN架构的和基于Transformer架构的两大类:<br><span class="hljs-number">1</span>.前者是“密集检测范式”，即布置大量空间<span class="hljs-built_in">anchor</span>作为采样点，因此寻找每个<span class="hljs-built_in">anchor</span>所携带的感受野范围内的物体，如RetinaNet、YOLO和SSD；<br><span class="hljs-number">2</span>.后者是“稀疏检测范式”，即设置固定数量（远小于前者的<span class="hljs-built_in">anchor</span>数量）的object query去存储不同物体的高级语义特征，通过交叉注意力机制去查询图像中的感兴趣的目标，实现对图像中的目标的检测。<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="RT-DETR"><a href="#RT-DETR" class="headerlink" title="RT-DETR"></a>RT-DETR</h2><p>本篇是对以下文章的学习记录：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43694096/article/details/133183315">https://blog.csdn.net/weixin_43694096/article/details/133183315</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/626659049">https://zhuanlan.zhihu.com/p/626659049</a></p>
+<h3 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h3><p>结构：Backbone+Neck+Head</p>
+<p><img src="/2024/08/03/RTDETR/image-20240803103955370.png" srcset="/img/loading.gif" lazyload alt="RT-DETR结构图"></p>
+<h4 id="Backbone"><a href="#Backbone" class="headerlink" title="Backbone"></a>Backbone</h4><p>对于Backbone部分，采用了经典的 Resnet和可缩放的 HgnetV2两种，两种 backbone各训练了两个版本。</p>
+<blockquote>
+<p>以HgnetV2为Backbone的RT-DETR包括L和X版本，Hgnetv2是由百度自家研发的主干结构。</p>
+<p>以ResNet为Backbone的RT-DETR则包括RT-DETR-R50和RT-DETR-R101</p>
+</blockquote>
+<p>与YOLO相似的地方在于，RT-DETR最终会输出三种不同尺寸的特征图，它们相对于输入图像的分辨率下采样倍数分别是8倍、16倍和32倍。这与主流的YOLO算法相似。除此之外,在主干结构的其他方面，RT-DETR并没有特别的地方。</p>
+<h4 id="Neck–Efficient-Hybrid-Encoder"><a href="#Neck–Efficient-Hybrid-Encoder" class="headerlink" title="Neck–Efficient Hybrid Encoder"></a>Neck–Efficient Hybrid Encoder</h4><p>对于Neck部分，RT-DETR采用了<strong>高效混合编码器</strong>。</p>
+<p>通过<strong>基于注意力的尺度内特征交互AIFI</strong>和<strong>跨尺度特征融合模块CCFF</strong>，将多尺度特征图转为图像特征序列。</p>
 <ul>
-<li><strong>如果没有使用Docker</strong>，我们在生产环境和测试环境中都需要进行各种配置：</li>
-</ul>
-<p><img src="/2024/05/15/Docker/image-20240515113511454.png" srcset="/img/loading.gif" lazyload alt="开发环境和测试环境"></p>
-<ul>
-<li><strong>如果有了Docker</strong>，我们可以将这些（前端、后端、数据库等）打包成一个个的集装箱，只要在开发环境中运行成功了，在其他环境中也一定可以成功。</li>
-</ul>
-<p><img src="/2024/05/15/Docker/image-20240515113744151.png" srcset="/img/loading.gif" lazyload alt="开发环境和测试环境"></p>
-<h3 id="Docker和虚拟机的区别"><a href="#Docker和虚拟机的区别" class="headerlink" title="Docker和虚拟机的区别"></a>Docker和虚拟机的区别</h3><hr>
+<li><p>AIFI「Attention-based Intra-scale Feature Interaction」</p>
+<p>其实他就是一个很普通的Transformer的Encoder层，包含标准的MSAH（多头自注意力机制或者Deformable Attention）和FFN前馈网络。</p>
+<p>RT-DETR只将Encoder作用在 S5 特征上，文章解释是出于两点考虑：</p>
+<blockquote>
 <ol>
-<li>架构差异：虚拟机是基于<strong>虚拟化技术</strong>（<strong>hypervisor</strong>）实现的，创建一个完整的虚拟硬件环境，模拟一台计算机，包括处理器、内存、硬盘等设备。而Docker则是基于<strong>容器化技术</strong>（<strong>Containerization</strong>），使用Docker引擎访问宿主机操作系统，将应用程序打包到容器中。因此，Docker的架构更加轻量级，启动速度也更快。</li>
-<li>隔离原理：虚拟机通常隔离整个操作系统，进程无法直接访问宿主机资源和数据，需要通过网络或共享文件夹等方式交互。Docker使用Linux内核的namespace和cgroups功能，实现对不同容器中进程的隔离，允许它们共享宿主机资源同时独立运行。</li>
+<li>以往的DETR，如Deformable DETR是将多尺度的特征都拉平成拼接在其中，构成一个序列很长的向量，尽管这可以使得多尺度之间的特征进行充分的交互，但也会造成极大的计算量和计算耗时。RT-DETR认为这是当前的DETR计算速度慢的主要原因之一；</li>
+<li>RT-DETR认为相较于较浅的S3特征和S4特征，S5特征拥有更深、更高级、更丰富的语义特征，这些语义特征是Transformer更加感兴趣的和需要的，对于区分不同物体的特征是更加有用的，而浅层特征因缺少较好的语义特征而起不到什么作用。</li>
 </ol>
-<h3 id="基本原理和概念"><a href="#基本原理和概念" class="headerlink" title="基本原理和概念"></a>基本原理和概念</h3><hr>
-<p><strong>Docker中的镜像、容器和仓库</strong></p>
-<ul>
-<li><p>镜像和容器的关系就像Java中的类和实例的关系一样：</p>
-<ol>
-<li><strong>镜像是一个只读的模版</strong>，它可以用来创建容器</li>
-<li><strong>容器是Docker的运行实例</strong>，它提供了一个独立的可移植的环境，可以在这个环境中运行应用程序</li>
-</ol>
+</blockquote>
 </li>
-<li><p>Docker仓库是用来存储Docker镜像的地方，最流行和最常用的仓库就是Dockerhub，实现镜像的共享和复用</p>
+<li><p>CCFF「CNN-based Cross-scale Feature-fusion」</p>
+<p>CCFF模块，以YOLO的角度看这个结构的话，这个CCFF模块就是一个PA-FPN结构。</p>
+<p>关于CCFF模块中的 Fusion，是由2个1×1卷积和N个 Repblock构成的，这里之所以写成N，我觉得是因为RTDETR可以进行缩放处理，通过调整CCFM中 Repblock的数量和 Encoder的编码维度分别控制 Hybrid Encoder的深度和宽度，同时对 backbone进行相应的调整即可实现检测器的缩放。</p>
+<p><img src="/2024/08/03/RTDETR/image-20240803160853318.png" srcset="/img/loading.gif" lazyload></p>
 </li>
 </ul>
-<h3 id="Docker的安装"><a href="#Docker的安装" class="headerlink" title="Docker的安装"></a>Docker的安装</h3><hr>
-<p><img src="/2024/05/15/Docker/image-20240515122544372.png" srcset="/img/loading.gif" lazyload alt="Docker Daemon"></p>
+<h4 id="IoU-aware-Query-Section"><a href="#IoU-aware-Query-Section" class="headerlink" title="IoU-aware Query Section"></a>IoU-aware Query Section</h4><p>使用”**IoU感知查询选择”**从Encoder输出的特征序列中选择固定数量的特征作为<code>object queries</code>。其经过Decoder后由预测头映射为置信度和边界框。</p>
+<p><strong>问题：</strong></p>
 <ol>
-<li><p>Docker采用Client-Server架构模式</p>
-<ul>
-<li>Docker Client和Docker Daemon之间通过Socket或者RESTful API进行通信</li>
-<li>Docker Daemon就是服务端的守护进程，他负责管理Docker的各种资源</li>
-<li>Docker Client负责向Docker Daemon发送请求，Docker Daemon接收到请求后进行处理，然后将结果返回给Client。因此我们在终端中输入的各种命令，都是Client发送给Docker Daemon的</li>
-</ul>
+<li>现有的DETR变体都是利用这些特征的分类分数直接选择Top-K特征。然而，由于分类分数和IoU分数的分布存在不一致，分类得分高的预测框并不一定是和GT最接近的框，这导致高分类分数+低IoU分数的框会被选中，而低分类分数+高IoU分数的框会被丢弃，这将会损害检测器的性能。</li>
+<li>换一种说法，在传统的目标检测训练中，每个目标的类别标签通常是通过one-hot编码来表示的，即对于一个特定的类别，对应的标签向量中只有一个元素是1，其余元素都是0。这种方式的一个潜在问题是，它可能允许分类任务过早地收敛，即使目标的定位（即边界框的位置和大小）还不够准确。</li>
+</ol>
+<p><strong>解决：</strong></p>
+<p>“IoU-aware”的概念被引入到目标检测的训练中。具体来说，模型的分类损失会考虑到预测边界框与真实边界框之间的IoU。</p>
+<blockquote>
+<p>在”IoU-aware”的训练策略中，只有当预测边界框与真实边界框的IoU超过某个阈值时，模型才会将该目标的类别标签视为正确的分类。<br>它迫使模型在进行分类预测之前，必须先准确地定位目标。因为如果边界框定位不准确，即使类别预测正确，由于IoU较低，模型仍然会收到较高的分类损失，从而鼓励模型同时优化分类和定位任务。这样可以提高模型的整体性能，尤其是在需要精确边界框定位的任务中。</p>
+</blockquote>
+<p><strong>简而言之，通过在训练期间约束检测器对高IoU的特征产生高分类分数，对低IoU的特征产生低分类分数。从而使得模型根据分类分数选择的Top-K个特征对应的预测框同时具有高分类分数和高IoU分数。</strong></p>
+<p><img src="/2024/08/03/RTDETR/75bcabc46a7e110ab81af94d5fc78366.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>其中，$\hat{y}$ 和 $y$ 分别表示预测和真实值，$\hat{y}&#x3D;({\hat{c},\hat{b}})$和$y &#x3D; ({c, b})$，$c$ 和 $b$分别表示类别和边界框。我们将IoU分数引入到分类分支的损失函数中，以实现对正样本的分类和定位的一致性约束。</p>
+<p><strong>效果：</strong></p>
+<p>文中通过可视化这些编码器特征的置信度分数以及和GT之间的IoU分数之后发现，<strong>IoU-aware Query Section</strong>明显提高了被选中的特征的质量。</p>
+<h4 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h4><p><strong>Q（Queries）、K（Keys）、V（Values）</strong></p>
+<p><code>Q</code>是由经过IoU-Aware Query Selection模块筛选后的Object Queries生成的。这些查询向量代表了检测器将要预测的目标位置和类别的“槽位”。这些Object Queries作为解码器的输入，经过一系列线性变换得到Q矩阵。</p>
+<p><code>K</code> 和<code>V</code>通常是从编码器输出的图像特征中生成的。在RT-DETR中，编码器部分处理输入图像，生成特征图。这些特征图通过线性变换分别生成K和V。</p>
+<p>在DETR（Detection Transformers）模型的原始设计中，Decoder部分使用的是<strong>cross attention</strong>，也称为交叉注意力机制。</p>
+<p>在一些DETR的后续改进版本中（如DINO、Deformable DETR等），引入了<strong>deformable attention</strong>机制。</p>
+<blockquote>
+<p><strong>deformable attention</strong>是一种变体注意力机制，旨在解决标准cross attention计算复杂度高的问题。它的工作原理是：</p>
+<ol>
+<li><strong>局部感知</strong>：不像标准的cross attention在全局特征图上操作，deformable attention只在特定的采样位置上操作。这些采样位置是通过学习得到的，可以针对每个查询自适应地确定。</li>
+<li><strong>稀疏计算</strong>：由于只在少量位置上计算注意力，deformable attention大大降低了计算复杂度，尤其在处理高分辨率特征图时。</li>
+</ol>
+</blockquote>
+<h3 id="LOSS"><a href="#LOSS" class="headerlink" title="LOSS"></a>LOSS</h3><p>在训练的loss上，回归损失还是GIoU损失和L1损失，而类别损失上引入“<strong>IoU软标签</strong>”</p>
+<h2 id="Deformable-attention"><a href="#Deformable-attention" class="headerlink" title="Deformable attention"></a>Deformable attention</h2><h2 id="RepVGG"><a href="#RepVGG" class="headerlink" title="RepVGG"></a>RepVGG</h2><p><strong>RepVGG</strong> 是一种通过重参数化（Re-parameterization）技术实现的卷积神经网络架构。它在训练和推理阶段使用不同的网络结构，以同时获得训练时的高表达能力和推理时的高效率。RepVGG的设计灵感来自于经典的VGG网络，强调简单的架构设计，但通过重参数化技术实现了更高的推理速度。</p>
+<p><img src="/2024/08/03/RTDETR/image-20240803165133514.png" srcset="/img/loading.gif" lazyload alt="Sketch of RepVGG Architecture"></p>
+<p><strong>核心思想：</strong></p>
+<p>在训练阶段，使用一个复杂的网络结构，通过多分支卷积层捕获丰富的特征；</p>
+<p>在推理阶段，将这些分支融合成一个单独的卷积层，从而简化计算并加速推理。</p>
+<p><strong>重参数化具体过程：</strong></p>
+<p><strong>RepVGG</strong> 中的重参数化技术是指将训练阶段的多分支卷积结构在推理阶段重新参数化为一个单一的等效卷积层。</p>
+<ol>
+<li><p>训练阶段</p>
+<blockquote>
+<p><strong>主分支</strong>：通常是一个标准的3x3卷积，用于捕捉局部特征。</p>
+<p><strong>辅助分支</strong>：可能包括1x1卷积、3x3卷积，甚至是恒等映射（identity mapping）。这些分支有助于学习不同的特征表示，并增加模型的表达能力。</p>
+</blockquote>
+<p>在训练阶段，这些分支的输出会被合并（例如通过逐元素相加），以形成最终的特征输出。这种多分支结构使得网络可以学习到更丰富的特征，从而提升模型性能。</p>
 </li>
-<li><p>容器化和Dockerfile</p>
-<p><strong>容器化</strong>：顾名思义就是将应用程序打包为容器，在容器中运行应用程序的过程</p>
-<p><strong>Dockerfile</strong>：是一个文本文件，里面包含了一条条的指令，用来告诉Docker如何来构建镜像，这个镜像中包含了我们应用程序执行的所有命令，也就是上边提到的依赖、第三方软件包、配置文件等</p>
-<p>这个过程简单来说可以分成三个步骤:</p>
-<ul>
-<li>首先需要创建一个Dockerfile，来告诉Docker构建应用程序镜像所需要的步骤和配置</li>
-<li>使用Dockerfile来构建镜像</li>
-<li>使用镜像创建和运行容器</li>
-</ul>
+<li><p>推理阶段</p>
+<p>在推理阶段，执行多分支操作会增加计算开销和延迟。因此，在推理阶段，RepVGG将这些分支通过重参数化技术合并为一个等效的单一卷积层，从而大大简化了计算。具体来说，这一过程涉及以下步骤：</p>
+<blockquote>
+<p><strong>权重合并</strong>：对于所有的卷积分支，它们的权重矩阵可以被合并成一个新的卷积核。例如，假设有一个3x3卷积和一个1x1卷积，可以通过将1x1卷积的权重嵌入到一个等效的3x3卷积核中，来实现等效的计算。</p>
+<p><strong>偏置合并</strong>：每个分支的偏置项也会被合并为一个单一的偏置值。</p>
+<p><strong>恒等映射的处理</strong>：对于恒等映射分支（如Residual连接），它们可以通过添加到卷积的偏置中来处理。</p>
+</blockquote>
 </li>
 </ol>
-<h3 id="实践环节"><a href="#实践环节" class="headerlink" title="实践环节"></a>实践环节</h3><hr>
-<p>dockerfile：</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-comment"># 使用官方Python运行时作为父镜像</span><br><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.8</span>-slim<br> <br><span class="hljs-comment"># 设置工作目录</span><br><span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app</span><br> <br><span class="hljs-comment"># 安装虚拟环境包</span><br><span class="hljs-keyword">RUN</span><span class="language-bash"> python -m pip install --upgrade pip &amp;&amp; \</span><br><span class="language-bash">    pip install virtualenv</span><br> <br><span class="hljs-comment"># 创建虚拟环境</span><br><span class="hljs-keyword">RUN</span><span class="language-bash"> virtualenv venv</span><br> <br><span class="hljs-comment"># 每次进入容器时激活虚拟环境</span><br><span class="hljs-keyword">ENV</span> VIRTUAL_ENV=/app/venv<br><span class="hljs-keyword">ENV</span> PATH=/app/venv/bin:$PATH<br><br><span class="hljs-keyword">CMD</span><span class="language-bash"> [<span class="hljs-string">&quot;bash&quot;</span>]</span><br></code></pre></td></tr></table></figure>
-
-
-
-<p>创建镜像：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># -t表示镜像标签 比如python-venv:1.0/python-venv:lastest等</span><br><span class="hljs-comment"># .表示dockerfile所在的目录</span><br>docker build -t python-venv . <br></code></pre></td></tr></table></figure>
-
-
-
-<p>创建容器：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 当 -i 和 -t 一起使用时，Docker 将为你提供一个交互式 shell，类似于在本地终端中使用命令行。这意味着你可以在容器中执行命令、输入数据、查看输出等。这种方式特别适用于调试、运行交互式程序或者简单的命令行操作。</span><br><span class="hljs-comment"># --rm 会在容器停止后自动删除容器</span><br>docker run -it --<span class="hljs-built_in">rm</span> --name my-python-container python-venv<br></code></pre></td></tr></table></figure>
-
-
-
-
-
+<p><strong>例子：</strong></p>
+<p>要将1x1卷积的效果嵌入到3x3卷积中，我们可以将1x1卷积的权重扩展到3x3的空间维度。具体步骤如下：</p>
+<p>对于1x1卷积的每个通道，我们在3x3卷积核的中心位置设置对应的权重值，其余位置设置为零。这样可以确保原来1x1卷积的作用在合并后的3x3卷积中仍然存在。这可以表示为：<br>$$<br>W{\prime}{3x3}[c{out}, c_{in}, i, j] &#x3D;<br>\begin{cases}<br>W_{1x1}[c_{out}, c_{in}, 0, 0] &amp; \text{if } i &#x3D; j &#x3D; 1 \<br>0 &amp; \text{otherwise}<br>\end{cases}<br>$$</p>
+<p>其中  $i$, $j$  是3x3卷积核的空间坐标， $c_{out}$  和  $c_{in}$  分别是输出和输入通道的索引。</p>
+<p>偏置项的合并相对简单。合并后的等效卷积层的偏置项  $b{\prime}$  直接等于原来各个分支的偏置项之和：<br>$$<br>b{\prime} &#x3D; b_{3x3} + b_{1x1}<br>$$<br>最终的等效3x3卷积的权重 $W_{3x3}^{\text{final}}$ 是主分支的3x3卷积权重  $W_{3x3}$  和从1x1卷积嵌入的权重 $W^{\prime}_{3x3}$的叠加：</p>
+<p>$$<br>W_{3x3}^{\text{final}} &#x3D; W_{3x3} + W{\prime}_{3x3}<br>$$<br><strong>优势：</strong></p>
+<ul>
+<li><strong>高效推理</strong>：通过重参数化，RepVGG 在推理时只需执行标准的卷积操作，而不需要额外的分支计算，因此推理速度更快。</li>
+<li><strong>高表达能力</strong>：在训练阶段，通过多个分支捕捉不同的特征模式，提高了模型的表达能力。</li>
+<li><strong>简单结构</strong>：最终的推理模型结构非常简单，没有复杂的分支或跳跃连接，易于实现和优化。</li>
+</ul>
+<h2 id="缩放"><a href="#缩放" class="headerlink" title="缩放"></a>缩放</h2><p>在深度学习中，<strong>缩放（scaling）</strong> 通常指的是对神经网络的架构进行调整，以适应不同的计算资源和应用需求。这种调整可以涉及网络的<strong>深度（depth）</strong>、<strong>宽度（width）</strong>、以及<strong>输入分辨率</strong>。在RT-DETR中的CCFM模块和Hybrid Encoder中，通过调整RepBlock的数量和编码维度来控制网络的深度和宽度，这种操作就属于模型的缩放。</p>
+<ul>
+<li><p>控制深度：<strong>深度</strong>通常指网络中的层数。</p>
+<p>在RT-DETR中，CCFM模块中RepBlock的数量决定了该模块的深度。增加RepBlock的数量，相当于增加了网络的深度，使得模型能够捕捉到更复杂的特征和更深层次的信息。然而，增加深度也会带来更多的计算和存储开销。因此，通过调整RepBlock的数量，可以在计算资源和模型性能之间进行平衡。</p>
+</li>
+<li><p>控制宽度：<strong>宽度</strong>通常指每一层中的通道数，即每一层的特征图的深度。</p>
+<p>在RT-DETR中的Hybrid Encoder中，编码维度决定了模型的宽度。增加编码维度可以增加每一层特征图的通道数，使得模型能够容纳更多的特征表示。宽度的增加通常会带来更丰富的特征表达能力，但也会增加计算和存储开销。</p>
+</li>
+<li><p>模型缩放的意义</p>
+<ol>
+<li><p><strong>灵活适应计算资源</strong>：通过调整模型的深度和宽度，可以在不同的硬件环境下灵活适应。例如，在资源充足的服务器上，可以使用更深、更宽的模型来提高精度；在计算资源有限的移动设备上，可以使用较浅、较窄的模型来保证实时性。</p>
+</li>
+<li><p><strong>平衡性能与效率</strong>：模型缩放可以帮助在模型性能和推理速度之间找到最佳平衡点。例如，在实时目标检测任务中，可能需要在一定的精度损失下，优先确保推理速度。</p>
+</li>
+<li><p><strong>网络结构的可扩展性</strong>：通过缩放机制，可以方便地创建多个版本的模型，以适应不同的任务需求。例如，一个任务可能需要更高的检测精度，而另一个任务可能对速度要求更高。</p>
+</li>
+</ol>
+</li>
+</ul>
 
                 
               </div>
@@ -414,12 +448,12 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Develop/" class="category-chain-item">Develop</a>
+  <a href="/categories/Deep-Learning/" class="category-chain-item">Deep Learning</a>
   
   
     <span>></span>
     
-  <a href="/categories/Develop/Docker/" class="category-chain-item">Docker</a>
+  <a href="/categories/Deep-Learning/Object-Detection/" class="category-chain-item">Object Detection</a>
   
   
 
@@ -436,7 +470,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Docker/" class="print-no-link">#Docker</a>
+        <a href="/tags/RT-DETR/" class="print-no-link">#RT-DETR</a>
       
     </div>
   
@@ -448,8 +482,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Docker</div>
-      <div>https://adzuki23.github.io/2024/05/15/Docker/</div>
+      <div>RT-DETR</div>
+      <div>https://adzuki23.github.io/2024/08/03/RTDETR/</div>
     </div>
     <div class="license-meta">
       
@@ -461,13 +495,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年5月15日</div>
+          <div>2024年8月3日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月30日</div>
+          <div>2024年8月3日</div>
         </div>
       
       
@@ -498,15 +532,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/05/15/RCNN/" title="R-CNN Series">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">R-CNN Series</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2024/07/30/LLM-Llama/" title="Llama">
+                        <span class="hidden-mobile">Llama</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
