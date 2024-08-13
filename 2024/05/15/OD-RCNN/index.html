@@ -19,13 +19,13 @@
     <meta name="description" content="学习目标检测中的R-CNN系列，更深层次的了解原理，对网络模块、损失函数等就像深入理解。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="R-CNN Series">
-<meta property="og:url" content="https://adzuki23.github.io/2024/05/15/RCNN/index.html">
+<meta property="og:url" content="https://adzuki23.github.io/2024/05/15/OD-RCNN/index.html">
 <meta property="og:site_name" content="Hongyu Li">
 <meta property="og:description" content="学习目标检测中的R-CNN系列，更深层次的了解原理，对网络模块、损失函数等就像深入理解。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/faster-rcnn.png">
 <meta property="article:published_time" content="2024-05-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-22T07:47:40.581Z">
+<meta property="article:modified_time" content="2024-08-04T06:05:33.171Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="RCNN">
 <meta name="twitter:card" content="summary_large_image">
@@ -315,7 +315,7 @@
                 <h3 id="RCNN"><a href="#RCNN" class="headerlink" title="RCNN"></a>RCNN</h3><figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs arcade">R-CNN源于<span class="hljs-number">2014</span>年伯克利大学的这篇论文<br>《Rich <span class="hljs-built_in">feature</span> hierarchies <span class="hljs-keyword">for</span> accurate object detection and semantic segmentation》<br>其架构和模型训练参数等借鉴了AlexNet，也和同时期的Overfeat也有很多共同之处。成为目标检测领域尤其是two stage模式的开山鼻祖。<br></code></pre></td></tr></table></figure>
 
 <hr>
-<p><img src="/2024/05/15/RCNN/R-CNN.png" srcset="/img/loading.gif" lazyload alt="R-CNN网络结构"></p>
+<p><img src="/2024/05/15/OD-RCNN/R-CNN.png" srcset="/img/loading.gif" lazyload alt="R-CNN网络结构"></p>
 <ul>
 <li><h4 id="R-CNN-算法流程分四个步骤："><a href="#R-CNN-算法流程分四个步骤：" class="headerlink" title="R-CNN 算法流程分四个步骤："></a>R-CNN 算法流程分四个步骤：</h4><ol>
 <li><p>一张图像生成1k～2k个候选区域（使用 <strong><u>Selective Search</u></strong> 方法)	[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/485727819]">https://zhuanlan.zhihu.com/p/485727819]</a></p>
@@ -325,7 +325,7 @@
 <li>首先，对输入图像进行<strong>分割算法</strong>产生许多小的子区域。</li>
 <li>其次，根据这些子区域之间相似性(相似性标准主要有颜色、纹理、大小等等)进行<strong>区域合并</strong>，不断的进行区域迭代合并。每次迭代过程中对这些合并的子区域做bounding boxes(外切矩形)，这些子区域外切矩形就是通常所说的候选框。</li>
 </ol>
-<p><img src="/2024/05/15/RCNN/SS%E7%AE%97%E6%B3%95.png" srcset="/img/loading.gif" lazyload alt="SS算法"></p>
+<p><img src="/2024/05/15/OD-RCNN/SS%E7%AE%97%E6%B3%95.png" srcset="/img/loading.gif" lazyload alt="SS算法"></p>
 </blockquote>
 </li>
 <li><p>对每个候选区域，使用深度网络（图片分类网络）提取特征</p>
@@ -340,7 +340,7 @@
 <blockquote>
 <ol>
 <li><p>将<code>2000×4096</code>维特征与<code>20</code>个<strong>SVM</strong>组成的权值矩阵<code>4096×20</code>相乘，获得<code>2000×20</code>维矩阵表示每个建议框是某个目标类别的得分</p>
-<p><img src="/2024/05/15/RCNN/SVM.png" srcset="/img/loading.gif" lazyload alt="SVM分类器计算矩阵"></p>
+<p><img src="/2024/05/15/OD-RCNN/SVM.png" srcset="/img/loading.gif" lazyload alt="SVM分类器计算矩阵"></p>
 </li>
 <li><p>分别对上述<code>2000×20</code>维矩阵中每一列即每一类进行**NSM(非极大值抑制)**剔除重叠建议框，得到该列即该类中得分最高的一些建议框。</p>
 </li>
@@ -372,14 +372,14 @@
 <h3 id="SPPNet"><a href="#SPPNet" class="headerlink" title="SPPNet"></a>SPPNet</h3><figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mathematica">由提出<span class="hljs-variable">ResNet</span>的何凯明在论文《<span class="hljs-variable">Spatial</span> <span class="hljs-built_in">Pyramid</span> <span class="hljs-variable">Pooling</span> <span class="hljs-variable">in</span> <span class="hljs-variable">Deep</span> <span class="hljs-variable">Convolutional</span> <span class="hljs-variable">Networks</span> <span class="hljs-variable">for</span> <span class="hljs-variable">Visual</span> <span class="hljs-variable">Recognition</span>》中提出<br>主要就是可以解决<span class="hljs-variable">CNN</span>输入需要固定尺寸的问题，而且在分类和目标检测中都可以得到比较好的效果<br></code></pre></td></tr></table></figure>
 
 <hr>
-<p><img src="/2024/05/15/RCNN/SPPNet.png" srcset="/img/loading.gif" lazyload alt="SPPNet网络结构"></p>
+<p><img src="/2024/05/15/OD-RCNN/SPPNet.png" srcset="/img/loading.gif" lazyload alt="SPPNet网络结构"></p>
 <ul>
 <li><h4 id="针对R-CNN的缺点："><a href="#针对R-CNN的缺点：" class="headerlink" title="针对R-CNN的缺点："></a>针对R-CNN的缺点：</h4><p>1).对每个候选区域提取特征。2).输入CNN的候选区域大小固定，要经过Resize。SPPNet做出了以下改进，<strong>具体内容看表格</strong>：</p>
 <ol>
 <li><p>SPPNet让SS算法得到<strong>候选区域与feature map直接映射</strong>，得到候选区域的映射特征向量（这是映射来的，不需要每个候选区域都再经过CNN的计算，极大的减少了计算量）。</p>
 </li>
 <li><p>SPPNet引入一种<u><strong>空间金字塔池化( spatial pyramid pooling，SPP)层</strong></u>以移除网络对固定尺寸的限制（不需要候选区域经过crop&#x2F;wrap等操作变换成固定大小的图像）。</p>
-<p><img src="/2024/05/15/RCNN/feature_map_regions.png" srcset="/img/loading.gif" lazyload alt="image regions vs feature map regions"></p>
+<p><img src="/2024/05/15/OD-RCNN/feature_map_regions.png" srcset="/img/loading.gif" lazyload alt="image regions vs feature map regions"></p>
 <table>
 <thead>
 <tr>
@@ -404,7 +404,7 @@
 <ul>
 <li><p><input checked disabled type="checkbox"> 
 <strong>SPPNet怎么就能把候选区域从全图的feature map 直接得到特征向量？</strong></p>
-<p><img src="/2024/05/15/RCNN/Feature_map.png" srcset="/img/loading.gif" lazyload alt="feature map">整个映射过程有具体的公式：$(x,y)&#x3D;(S<em>x’,S</em>y’)$ 	$(x’,y’)&#x3D;([x&#x2F;S]+1,[y&#x2F;S]+1)$（左上角+，右下角-)</p>
+<p><img src="/2024/05/15/OD-RCNN/Feature_map.png" srcset="/img/loading.gif" lazyload alt="feature map">整个映射过程有具体的公式：$(x,y)&#x3D;(S<em>x’,S</em>y’)$ 	$(x’,y’)&#x3D;([x&#x2F;S]+1,[y&#x2F;S]+1)$（左上角+，右下角-)</p>
 <p>其中 S 就是CNN中<strong>所有的strides的乘积</strong>，包含了池化、卷积的stride。论文中使用S的计算出来为2x2x2x2&#x3D;16,在ZF-5结构中。</p>
 </li>
 </ul>
@@ -417,7 +417,7 @@
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yymn/articles/13629478.html">ROI Pooling</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/670a3e42107d">RoI Pooling及其改进</a></p>
 <hr>
-<p><img src="/2024/05/15/RCNN/Fast_R-CNN.png" srcset="/img/loading.gif" lazyload alt="Fast R-CNN网络结构"></p>
+<p><img src="/2024/05/15/OD-RCNN/Fast_R-CNN.png" srcset="/img/loading.gif" lazyload alt="Fast R-CNN网络结构"></p>
 <ul>
 <li><h4 id="Fast-R-CNN-算法流程分四个步骤："><a href="#Fast-R-CNN-算法流程分四个步骤：" class="headerlink" title="Fast R-CNN 算法流程分四个步骤："></a>Fast R-CNN 算法流程分四个步骤：</h4><ol>
 <li><p>一张图像生成1k～2k个候选区域（使用 Selective Search 方法）</p>
@@ -436,8 +436,8 @@
 <blockquote>
 <p>最后并联了两个全连接层分别对分类和bbox进行预测。</p>
 <p>分类结点数为 N+1，因为需要增加上背景。bbox预测的全连接层则是$4*(N+1)$个结点，对每一类都要预测出来边界框回归参数。</p>
-<p><img src="/2024/05/15/RCNN/%E8%BE%B9%E7%95%8C%E6%A1%86%E5%9B%9E%E5%BD%92%E5%99%A8.png" srcset="/img/loading.gif" lazyload alt="边界框回归器"></p>
-<p><img src="/2024/05/15/RCNN/image-20240519120214206.png" srcset="/img/loading.gif" lazyload alt="边界框回归器"></p>
+<p><img src="/2024/05/15/OD-RCNN/%E8%BE%B9%E7%95%8C%E6%A1%86%E5%9B%9E%E5%BD%92%E5%99%A8.png" srcset="/img/loading.gif" lazyload alt="边界框回归器"></p>
+<p><img src="/2024/05/15/OD-RCNN/image-20240519120214206.png" srcset="/img/loading.gif" lazyload alt="边界框回归器"></p>
 </blockquote>
 </li>
 </ol>
@@ -470,7 +470,7 @@
 
 <p><a target="_blank" rel="noopener" href="https://www.zhihu.com/tardis/bd/art/31426458">这篇文章</a>介绍Faster R-CNN写的非常非常详细！</p>
 <hr>
-<p><img src="/2024/05/15/RCNN/ff2cd606a307b927701694ec05d0f599.png" srcset="/img/loading.gif" lazyload alt="Faster R-CNN网络结构"></p>
+<p><img src="/2024/05/15/OD-RCNN/ff2cd606a307b927701694ec05d0f599.png" srcset="/img/loading.gif" lazyload alt="Faster R-CNN网络结构"></p>
 <ul>
 <li><h4 id="Faster-R-CNN-算法流程分三个步骤："><a href="#Faster-R-CNN-算法流程分三个步骤：" class="headerlink" title="Faster R-CNN 算法流程分三个步骤："></a>Faster R-CNN 算法流程分三个步骤：</h4><ol>
 <li>将图像输入网络得到相应的特征图-feature map</li>
@@ -481,7 +481,7 @@
 <li><h4 id="RPN-网络结构"><a href="#RPN-网络结构" class="headerlink" title="RPN 网络结构"></a><font color="red">RPN 网络结构</font></h4><blockquote>
 <p><strong>滑动窗口生成anchors -&gt; softmax分类器提取positvie anchors -&gt; bbox reg回归positive anchors -&gt; Proposal Layer生成proposals</strong></p>
 </blockquote>
-<p><img src="/2024/05/15/RCNN/RPN.png" srcset="/img/loading.gif" lazyload alt="Faster R-CNN细节"></p>
+<p><img src="/2024/05/15/OD-RCNN/RPN.png" srcset="/img/loading.gif" lazyload alt="Faster R-CNN细节"></p>
 <p>流程细节：</p>
 <ol>
 <li><p>在经过backbone之后生成Feature Map大小为：<strong>H*W*N</strong></p>
@@ -502,7 +502,7 @@
 <p>2k 中的 k 指的是 k 个 anchor boxes，<strong>2是指为背景的概率和为前景的概率</strong>。</p>
 <p>4k 中的 k 指的是 k 个 anchor boxes，<strong>4是指每个 anchor 有 4 个<font color="red">边界框回归参数</font>。</strong></p>
 </blockquote>
-<p><img src="/2024/05/15/RCNN/u=1361402012,3659437005&fm=253&fmt=auto&app=138&f=JPEG-20240520150557582.jpeg" srcset="/img/loading.gif" lazyload alt="RPN"></p>
+<p><img src="/2024/05/15/OD-RCNN/u=1361402012,3659437005&fm=253&fmt=auto&app=138&f=JPEG-20240520150557582.jpeg" srcset="/img/loading.gif" lazyload alt="RPN"></p>
 </li>
 <li><p><font color="red">Proposal层</font></p>
 <p>Proposal层共有三个输入：分类器结果【1，2*9，H，W】、边界框回归参数【1，4*9，H，W】、img_info</p>
@@ -540,7 +540,7 @@
 <li><p>实际上生成的那么多 anchors 并不是每个都用来训练 RPN 网络。对于每张图片我们从上万个 anchor 当中采样 256 个 anchor，这些 anchor 由正样本和负样本 1:1 组成的。如果正样本不足 128，就用负样本进行填充。两种定义正样本的方式：（1）anchor 与 ground-truth 的 iou 超过 0.7，（2）某个 anchor 与 ground-truth 拥有最大的 iou。负样本是与所有的 ground-truth 的 iou 都小于 0.3 的。</p>
 </li>
 <li><p>感受野</p>
-<p><img src="/2024/05/15/RCNN/v2-6193e85eb99c691c051ef55840154f9e_r.jpg" srcset="/img/loading.gif" lazyload alt="感受野"></p>
+<p><img src="/2024/05/15/OD-RCNN/v2-6193e85eb99c691c051ef55840154f9e_r.jpg" srcset="/img/loading.gif" lazyload alt="感受野"></p>
 </li>
 </ol>
 </li>
@@ -599,7 +599,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>R-CNN Series</div>
-      <div>https://adzuki23.github.io/2024/05/15/RCNN/</div>
+      <div>https://adzuki23.github.io/2024/05/15/OD-RCNN/</div>
     </div>
     <div class="license-meta">
       
@@ -617,7 +617,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月22日</div>
+          <div>2024年8月4日</div>
         </div>
       
       
@@ -648,21 +648,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/05/19/PaddlePaddle_CPPD/" title="PaddlePaddle-CPPD">
+                      <a href="/2024/05/15/Docker/" title="Docker">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">PaddlePaddle-CPPD</span>
+                        <span class="hidden-mobile">Docker</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/2024/05/15/Docker/" title="Docker">
-                        <span class="hidden-mobile">Docker</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>

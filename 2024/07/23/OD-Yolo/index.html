@@ -19,13 +19,13 @@
     <meta name="description" content="学习目标检测中的YOLO，更深层次的了解原理，对网络模块、损失函数等进行深入理解。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="YOLO">
-<meta property="og:url" content="https://adzuki23.github.io/2024/07/23/Yolo/index.html">
+<meta property="og:url" content="https://adzuki23.github.io/2024/07/23/OD-Yolo/index.html">
 <meta property="og:site_name" content="Hongyu Li">
 <meta property="og:description" content="学习目标检测中的YOLO，更深层次的了解原理，对网络模块、损失函数等进行深入理解。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/yolo.jpg">
 <meta property="article:published_time" content="2024-07-22T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-08-03T11:53:33.471Z">
+<meta property="article:modified_time" content="2024-08-07T14:52:33.773Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="YOLO">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          940 字
+          3.1k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          8 分钟
+          26 分钟
         
       </span>
     
@@ -314,7 +314,7 @@
                 
                 <p>[TOC]</p>
 <h2 id="YOLO"><a href="#YOLO" class="headerlink" title="YOLO"></a>YOLO</h2><h3 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h3><p>结构：Backbone+Neck+Head</p>
-<p><img src="/2024/07/23/Yolo/yolov8.png" srcset="/img/loading.gif" lazyload alt="yolov8结构图"></p>
+<p><img src="/2024/07/23/OD-Yolo/yolov8.png" srcset="/img/loading.gif" lazyload alt="yolov8结构图"></p>
 <h4 id="CSPLayer"><a href="#CSPLayer" class="headerlink" title="CSPLayer"></a>CSPLayer</h4><p><strong>CSPLayer「Cross Stage Partial Layer」</strong>是一种用于特征提取和特征融合的卷积层，通常应用于模型的backbone部分。通过分块与跨层连接的方式来改善特征表达能力，同时减少计算量。</p>
 <p>设计目标是通过分块处理特征图的方式，减少重复梯度信息的传播，缓解网络中的梯度消失和梯度爆炸问题，同时提高模型的推理速度和内存效率。</p>
 <p><strong>结构细节：</strong></p>
@@ -337,6 +337,49 @@
 <li><strong>缓解梯度问题</strong>：跨阶段连接有助于缓解深层网络中的梯度消失和梯度爆炸问题，从而使得网络更容易训练。</li>
 <li><strong>增强特征表达</strong>：这种分块处理和融合的方式能够更好地保留和提取特征信息，提升模型的特征表达能力。</li>
 </ol>
+<h3 id="LOSS"><a href="#LOSS" class="headerlink" title="LOSS"></a>LOSS</h3><p>YOLOv8 中使用的分类损失和回归损失分别是 VFL Loss 和 CIOU Loss+DFL。以下是对这些损失函数的详细解释：</p>
+<h4 id="分类损失（VFL-Loss）"><a href="#分类损失（VFL-Loss）" class="headerlink" title="分类损失（VFL Loss）"></a>分类损失（VFL Loss）</h4><p>VFL（Varifocal Loss）是一种改进的分类损失函数，用于处理目标检测中的分类任务。VFL Loss 旨在解决类别不平衡的问题，通过赋予正样本和负样本不同的权重来提高检测效果。</p>
+<p>VFL Loss 的公式为：<br>$$<br>\mathcal L_{VFL} &#x3D; - \sum_{i&#x3D;1}^{N} \alpha_i [y_i \log(p_i) + (1 - y_i) \log(1 - p_i)]<br>$$<br>其中：</p>
+<ul>
+<li>( $y_i$ ) 是真实标签（0 或 1），表示是否存在目标。</li>
+<li>( $p_i$ ) 是预测的概率。</li>
+<li>( $\alpha_i$ ) 是一个可变的焦点因子，用于调整不同样本的权重。</li>
+</ul>
+<p>VFL Loss 的关键在于权重因子 $\alpha_i$ 的计算。权重因子 $\alpha_i$ 动态调整正负样本的权重，使得模型在训练过程中更关注那些置信度较低的样本。具体的权重计算方法如下：</p>
+<blockquote>
+<p>对于正样本 ( $y_i &#x3D; 1$ )：$\alpha_i &#x3D; p_i$</p>
+<p>对于负样本 ( $y_i &#x3D; 0$ )：$\alpha_i &#x3D; 1 - p_i$</p>
+</blockquote>
+<p>通过这种权重调整机制，VFL Loss 实现了以下效果：</p>
+<blockquote>
+<p>「这里的置信度是被分类为正样本的置信度」</p>
+<p>对正样本的关注：当模型对正样本的置信度  $p_i$  较低时，权重因子 $\alpha_i$ 也较低，损失较大。这样，模型会更关注这些置信度较低的正样本。<br>对负样本的关注：当模型对负样本的置信度  $p_i$  较高时，权重因子 $\alpha_i$ 也较低，损失较大。这样，模型会更关注这些置信度较高的负样本。</p>
+</blockquote>
+<h4 id="回归损失（CIOU-Loss-DFL）"><a href="#回归损失（CIOU-Loss-DFL）" class="headerlink" title="回归损失（CIOU Loss + DFL）"></a>回归损失（CIOU Loss + DFL）</h4><p><strong>CIOU Loss</strong></p>
+<p>CIOU（Complete Intersection over Union）损失是一种改进的边界框回归损失，综合考虑了边界框的重叠区域、中心点距离和宽高比差异。CIOU Loss 在优化目标检测框位置时具有更好的性能。</p>
+<p>CIOU Loss 的公式为：<br>$$<br>\mathcal{L}_{CIOU} &#x3D; 1 - \text{IoU} + \frac{\rho^2(\mathbf{b}, \mathbf{b}^{gt})}{c^2} + \alpha v<br>$$<br>其中：</p>
+<ul>
+<li>($\text{IoU}$) 是预测框和真实框的交并比。</li>
+<li>($\rho(\mathbf{b}, \mathbf{b}^gt)$) 是预测框和真实框中心点之间的欧氏距离。</li>
+<li>($c$) 是包含预测框和真实框的最小闭包区域的对角线长度。</li>
+<li>($\alpha$) 和 ($v$) 是用于衡量宽高比差异的参数。</li>
+</ul>
+<p><strong>DFL（Distribution Focal Loss）</strong></p>
+<p>DFL（Distribution Focal Loss）是一种用于回归任务的损失函数，旨在提高预测的精度。它通过对预测值进行分布化处理，使得模型能够更好地学习目标的精确位置。</p>
+<p>DFL 的核心思想是将回归值转换为一系列的离散概率分布，然后通过计算分布之间的KL散度（Kullback-Leibler Divergence）来衡量预测值与真实值之间的差异。</p>
+<p>DFL 的公式为：<br>$$<br>\mathcal L_{DFL} &#x3D; \sum_{i&#x3D;1}^N \text{KL}(P_i, Q_i)<br>$$<br>其中：</p>
+<ul>
+<li>($P_i$) 和 ($Q_i$) 分别是预测值和真实值的概率分布。</li>
+<li>($\text{KL}(P_i, Q_i)$) 是两个分布之间的KL散度。</li>
+</ul>
+<h4 id="组合损失函数"><a href="#组合损失函数" class="headerlink" title="组合损失函数"></a>组合损失函数</h4><p>在 YOLOv8 中，回归损失通常是 CIOU Loss 和 DFL 的加权组合，用于更好地优化边界框的定位精度。</p>
+<p>组合损失的公式为：<br>$$<br>\mathcal L_{reg} &#x3D; \lambda_{CIOU} \mathcal L_{CIOU} + \lambda_{DFL} \mathcal L_{DFL}<br>$$<br>其中，($\lambda_{CIOU}$) 和 ($\lambda_{DFL}$) 是用于平衡两种损失的权重参数。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong>VFL Loss</strong> 用于分类损失，通过动态调整样本权重来增强模型对难样本的学习能力。</li>
+<li><strong>CIOU Loss</strong> 用于边界框回归，通过综合考虑重叠区域、中心点距离和宽高比差异来优化边界框位置。</li>
+<li><strong>DFL（Distribution Focal Loss）</strong> 用于提高预测的精度，通过对预测值进行分布化处理来学习目标的精确位置。</li>
+</ul>
+<p>这些损失函数的组合使得 YOLOv8 在目标检测任务中具有更高的精度和鲁棒性。</p>
 <h2 id="NMS-非极大值抑制"><a href="#NMS-非极大值抑制" class="headerlink" title="NMS-非极大值抑制"></a>NMS-非极大值抑制</h2><p>NMS是目标检测领域一项重要的后处理技术，旨在解决检测器生成的存在重叠的多个检测框的问题，主要包括两个关键超参数：<code>Conf</code>分数和<code>IoU</code>阈值</p>
 <p><strong>NMS的算法流程：</strong></p>
 <blockquote>
@@ -348,6 +391,38 @@
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">iou</span>(<span class="hljs-params">box1, box2</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;计算两个边界框的交并比（IoU）&quot;&quot;&quot;</span><br>    x1, y1, x2, y2 = box1<br>    x1_prime, y1_prime, x2_prime, y2_prime = box2<br><br>    <span class="hljs-comment"># 计算交集</span><br>    xi1 = <span class="hljs-built_in">max</span>(x1, x1_prime)<br>    yi1 = <span class="hljs-built_in">max</span>(y1, y1_prime)<br>    xi2 = <span class="hljs-built_in">min</span>(x2, x2_prime)<br>    yi2 = <span class="hljs-built_in">min</span>(y2, y2_prime)<br>    inter_area = <span class="hljs-built_in">max</span>(<span class="hljs-number">0</span>, xi2 - xi1 + <span class="hljs-number">1</span>) * <span class="hljs-built_in">max</span>(<span class="hljs-number">0</span>, yi2 - yi1 + <span class="hljs-number">1</span>)<br><br>    <span class="hljs-comment"># 计算并集</span><br>    box1_area = (x2 - x1 + <span class="hljs-number">1</span>) * (y2 - y1 + <span class="hljs-number">1</span>)<br>    box2_area = (x2_prime - x1_prime + <span class="hljs-number">1</span>) * (y2_prime - y1_prime + <span class="hljs-number">1</span>)<br>    union_area = box1_area + box2_area - inter_area<br><br>    <span class="hljs-comment"># 计算IoU</span><br>    iou = inter_area / union_area<br>    <span class="hljs-keyword">return</span> iou<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">non_max_suppression</span>(<span class="hljs-params">boxes, scores, iou_threshold</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;执行非极大值抑制（NMS）&quot;&quot;&quot;</span><br>    idxs = np.argsort(scores)[::-<span class="hljs-number">1</span>]  <span class="hljs-comment"># 置信度分数降序排序</span><br>    keep = []<br>    <span class="hljs-keyword">while</span> <span class="hljs-built_in">len</span>(idxs) &gt; <span class="hljs-number">0</span>:<br>        current = idxs[<span class="hljs-number">0</span>]<br>        keep.append(current)<br>        idxs = idxs[<span class="hljs-number">1</span>:]<br>        filtered_idx = []<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> idxs:<br>            <span class="hljs-keyword">if</span> iou(boxes[current], boxes[i]) &lt;= iou_threshold:<br>                filtered_idx.append(i)<br>        idxs = np.array(filtered_idx)<br>    <span class="hljs-keyword">return</span> keep<br></code></pre></td></tr></table></figure>
 
+
+
+<h2 id="为什么YOLO需要NMS，RT-DETR不需要？"><a href="#为什么YOLO需要NMS，RT-DETR不需要？" class="headerlink" title="为什么YOLO需要NMS，RT-DETR不需要？"></a>为什么YOLO需要NMS，RT-DETR不需要？</h2><p>首先通用视觉目标检测可以分为基于CNN架构的和基于Transformer架构的两大类:</p>
+<ol>
+<li><p>前者是“密集检测范式”，即布置大量空间anchor作为采样点，因此寻找每个anchor所携带的感受野范围内的物体，如RetinaNet、YOLO和SSD。</p>
+</li>
+<li><p>后者是“稀疏检测范式”，即设置固定数量（远小于前者的anchor数量）的object query去存储不同物体的高级语义特征，通过交叉注意力机制去查询图像中的感兴趣的目标，实现对图像中的目标的检测。</p>
+</li>
+</ol>
+<p><strong>YOLO中的NMS</strong></p>
+<p>在YOLO模型中，整个图像被分割成网格，并在每个网格中预测边界框和类别概率。由于网格的重叠或预测中的不确定性，可能会为同一个物体产生多个相似的检测框。NMS的作用是消除这些多余的检测框，只保留置信度最高的那个。避免对同一个物体的多次检测。</p>
+<p><strong>RT-DETR中的NMS</strong></p>
+<p>RT-DETR使用一种称为查询的机制来直接预测目标的位置和类别。与传统的检测方法不同，RT-DETR的设计理念是通过一个称为“DETR”的结构来对图像中的每一个对象产生一个唯一的查询。因此，每个查询应对应于一个唯一的对象，而不应该有重复。</p>
+<p>由于RT-DETR模型的设计和训练方式，它能够有效地学习到如何为每个对象生成唯一的检测。理论上，它生成的预测框之间不应有显著的重叠，这样就不需要NMS来去除冗余的检测。因此，RT-DETR可以避免使用NMS，并直接输出最终的检测结果。</p>
+<h2 id="Bot-SORT"><a href="#Bot-SORT" class="headerlink" title="Bot-SORT"></a>Bot-SORT</h2><p>BotSort是一种用于目标跟踪的算法，主要用于多目标跟踪（Multi-Object Tracking, MOT）任务。BotSort的主要目标是通过跟踪对象的外观和运动特征来解决多个物体在视频序列中出现和消失的问题。以下是BotSort的基本原理和关键组成部分：</p>
+<p><strong>1. 检测器</strong></p>
+<p>BotSort的第一步是使用目标检测器识别每一帧中的目标物体。常用的目标检测器包括YOLO、SSD、Faster R-CNN等。这些检测器在图像中产生边界框和类别预测。</p>
+<p><strong>2. 特征提取</strong></p>
+<p>一旦目标检测器识别出物体，BotSort会提取这些物体的外观特征和运动特征。外观特征通常使用深度卷积神经网络（CNN）来提取，例如使用预训练的ResNet或MobileNet等。运动特征则可以通过Kalman滤波器等传统方法来估计物体的运动状态，包括位置和速度。</p>
+<p><strong>3. 数据关联</strong></p>
+<p>在多目标跟踪中，数据关联是一个关键问题，即如何在相邻帧之间将检测结果正确地链接到同一个对象上。BotSort通常使用卡尔曼滤波器预测每个目标的下一位置，然后使用匈牙利算法等优化方法将检测结果与跟踪对象匹配。</p>
+<p>为实现匹配，BotSort会结合检测结果的外观特征和位置预测，计算检测与跟踪目标之间的相似度，通常使用的距离度量包括欧氏距离、马氏距离等。最小化这些距离以实现最佳匹配。</p>
+<p><strong>4. 轨迹管理</strong></p>
+<p>轨迹管理是多目标跟踪中的重要环节，包括初始化、维护和删除轨迹。BotSort使用一定的规则来管理轨迹，例如如果一个新检测结果没有与任何现有轨迹匹配，它会初始化一个新的轨迹；如果某个轨迹在一定时间内没有新的检测结果匹配，它会被认为已消失并删除。</p>
+<p><strong>5. 特征融合与更新</strong></p>
+<p>在每一帧中，BotSort不仅仅是简单地匹配检测结果和轨迹，还会更新每个轨迹的特征。更新过程包括结合当前帧的外观特征和运动特征来更新轨迹的状态。这一更新使得跟踪器能够适应目标的外观和运动变化，提高跟踪的稳定性和准确性。</p>
+<p><strong>关键技术</strong></p>
+<blockquote>
+<p><strong>卡尔曼滤波器</strong>：用于预测目标的运动状态。</p>
+<p><strong>匈牙利算法</strong>：用于解决最优匹配问题。</p>
+<p><strong>深度学习特征提取</strong>：用于提取目标的外观特征，提高关联准确性。</p>
+</blockquote>
 
                 
               </div>
@@ -401,7 +476,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>YOLO</div>
-      <div>https://adzuki23.github.io/2024/07/23/Yolo/</div>
+      <div>https://adzuki23.github.io/2024/07/23/OD-Yolo/</div>
     </div>
     <div class="license-meta">
       
@@ -419,7 +494,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年8月3日</div>
+          <div>2024年8月7日</div>
         </div>
       
       

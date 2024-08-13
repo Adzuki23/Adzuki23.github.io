@@ -19,13 +19,13 @@
     <meta name="description" content="学习目标检测中的RT-DETR，更深层次的了解原理，对网络模块、损失函数等进行深入理解。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RT-DETR">
-<meta property="og:url" content="https://adzuki23.github.io/2024/08/03/RTDETR/index.html">
+<meta property="og:url" content="https://adzuki23.github.io/2024/08/03/OD-RTDETR/index.html">
 <meta property="og:site_name" content="Hongyu Li">
 <meta property="og:description" content="学习目标检测中的RT-DETR，更深层次的了解原理，对网络模块、损失函数等进行深入理解。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/rtdetr.png">
 <meta property="article:published_time" content="2024-08-02T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-08-03T11:36:49.544Z">
+<meta property="article:modified_time" content="2024-08-08T01:27:56.393Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="RT-DETR">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          3.9k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          29 分钟
+          33 分钟
         
       </span>
     
@@ -313,22 +313,20 @@
               <div class="markdown-body">
                 
                 <p>[TOC]</p>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs pf">通用视觉目标检测可以分为基于CNN架构的和基于Transformer架构的两大类:<br><span class="hljs-number">1</span>.前者是“密集检测范式”，即布置大量空间<span class="hljs-built_in">anchor</span>作为采样点，因此寻找每个<span class="hljs-built_in">anchor</span>所携带的感受野范围内的物体，如RetinaNet、YOLO和SSD；<br><span class="hljs-number">2</span>.后者是“稀疏检测范式”，即设置固定数量（远小于前者的<span class="hljs-built_in">anchor</span>数量）的object query去存储不同物体的高级语义特征，通过交叉注意力机制去查询图像中的感兴趣的目标，实现对图像中的目标的检测。<br></code></pre></td></tr></table></figure>
-
-
-
 <h2 id="RT-DETR"><a href="#RT-DETR" class="headerlink" title="RT-DETR"></a>RT-DETR</h2><p>本篇是对以下文章的学习记录：</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43694096/article/details/133183315">https://blog.csdn.net/weixin_43694096/article/details/133183315</a></p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/626659049">https://zhuanlan.zhihu.com/p/626659049</a></p>
 <h3 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h3><p>结构：Backbone+Neck+Head</p>
-<p><img src="/2024/08/03/RTDETR/image-20240803103955370.png" srcset="/img/loading.gif" lazyload alt="RT-DETR结构图"></p>
-<h4 id="Backbone"><a href="#Backbone" class="headerlink" title="Backbone"></a>Backbone</h4><p>对于Backbone部分，采用了经典的 Resnet和可缩放的 HgnetV2两种，两种 backbone各训练了两个版本。</p>
+<p><img src="/2024/08/03/OD-RTDETR/image-20240803103955370.png" srcset="/img/loading.gif" lazyload alt="RT-DETR结构图"></p>
+<h4 id="Backbone"><a href="#Backbone" class="headerlink" title="Backbone"></a>Backbone</h4><hr>
+<p>对于Backbone部分，采用了经典的 Resnet和可缩放的 HgnetV2两种，两种 backbone各训练了两个版本。</p>
 <blockquote>
 <p>以HgnetV2为Backbone的RT-DETR包括L和X版本，Hgnetv2是由百度自家研发的主干结构。</p>
 <p>以ResNet为Backbone的RT-DETR则包括RT-DETR-R50和RT-DETR-R101</p>
 </blockquote>
 <p>与YOLO相似的地方在于，RT-DETR最终会输出三种不同尺寸的特征图，它们相对于输入图像的分辨率下采样倍数分别是8倍、16倍和32倍。这与主流的YOLO算法相似。除此之外,在主干结构的其他方面，RT-DETR并没有特别的地方。</p>
-<h4 id="Neck–Efficient-Hybrid-Encoder"><a href="#Neck–Efficient-Hybrid-Encoder" class="headerlink" title="Neck–Efficient Hybrid Encoder"></a>Neck–Efficient Hybrid Encoder</h4><p>对于Neck部分，RT-DETR采用了<strong>高效混合编码器</strong>。</p>
+<h4 id="Neck–Efficient-Hybrid-Encoder"><a href="#Neck–Efficient-Hybrid-Encoder" class="headerlink" title="Neck–Efficient Hybrid Encoder"></a>Neck–Efficient Hybrid Encoder</h4><hr>
+<p>对于Neck部分，RT-DETR采用了<strong>高效混合编码器</strong>。</p>
 <p>通过<strong>基于注意力的尺度内特征交互AIFI</strong>和<strong>跨尺度特征融合模块CCFF</strong>，将多尺度特征图转为图像特征序列。</p>
 <ul>
 <li><p>AIFI「Attention-based Intra-scale Feature Interaction」</p>
@@ -344,10 +342,11 @@
 <li><p>CCFF「CNN-based Cross-scale Feature-fusion」</p>
 <p>CCFF模块，以YOLO的角度看这个结构的话，这个CCFF模块就是一个PA-FPN结构。</p>
 <p>关于CCFF模块中的 Fusion，是由2个1×1卷积和N个 Repblock构成的，这里之所以写成N，我觉得是因为RTDETR可以进行缩放处理，通过调整CCFM中 Repblock的数量和 Encoder的编码维度分别控制 Hybrid Encoder的深度和宽度，同时对 backbone进行相应的调整即可实现检测器的缩放。</p>
-<p><img src="/2024/08/03/RTDETR/image-20240803160853318.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2024/08/03/OD-RTDETR/image-20240803160853318.png" srcset="/img/loading.gif" lazyload alt="CCFF"></p>
 </li>
 </ul>
-<h4 id="IoU-aware-Query-Section"><a href="#IoU-aware-Query-Section" class="headerlink" title="IoU-aware Query Section"></a>IoU-aware Query Section</h4><p>使用”**IoU感知查询选择”**从Encoder输出的特征序列中选择固定数量的特征作为<code>object queries</code>。其经过Decoder后由预测头映射为置信度和边界框。</p>
+<h4 id="IoU-aware-Query-Section"><a href="#IoU-aware-Query-Section" class="headerlink" title="IoU-aware Query Section"></a>IoU-aware Query Section</h4><hr>
+<p>使用”**IoU感知查询选择”**从Encoder输出的特征序列中选择固定数量的特征作为<code>object queries</code>。其经过Decoder后由预测头映射为置信度和边界框。</p>
 <p><strong>问题：</strong></p>
 <ol>
 <li>现有的DETR变体都是利用这些特征的分类分数直接选择Top-K特征。然而，由于分类分数和IoU分数的分布存在不一致，分类得分高的预测框并不一定是和GT最接近的框，这导致高分类分数+低IoU分数的框会被选中，而低分类分数+高IoU分数的框会被丢弃，这将会损害检测器的性能。</li>
@@ -359,11 +358,12 @@
 <p>在”IoU-aware”的训练策略中，只有当预测边界框与真实边界框的IoU超过某个阈值时，模型才会将该目标的类别标签视为正确的分类。<br>它迫使模型在进行分类预测之前，必须先准确地定位目标。因为如果边界框定位不准确，即使类别预测正确，由于IoU较低，模型仍然会收到较高的分类损失，从而鼓励模型同时优化分类和定位任务。这样可以提高模型的整体性能，尤其是在需要精确边界框定位的任务中。</p>
 </blockquote>
 <p><strong>简而言之，通过在训练期间约束检测器对高IoU的特征产生高分类分数，对低IoU的特征产生低分类分数。从而使得模型根据分类分数选择的Top-K个特征对应的预测框同时具有高分类分数和高IoU分数。</strong></p>
-<p><img src="/2024/08/03/RTDETR/75bcabc46a7e110ab81af94d5fc78366.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="/2024/08/03/OD-RTDETR/75bcabc46a7e110ab81af94d5fc78366.png" srcset="/img/loading.gif" lazyload alt="LOSS"></p>
 <p>其中，$\hat{y}$ 和 $y$ 分别表示预测和真实值，$\hat{y}&#x3D;({\hat{c},\hat{b}})$和$y &#x3D; ({c, b})$，$c$ 和 $b$分别表示类别和边界框。我们将IoU分数引入到分类分支的损失函数中，以实现对正样本的分类和定位的一致性约束。</p>
 <p><strong>效果：</strong></p>
 <p>文中通过可视化这些编码器特征的置信度分数以及和GT之间的IoU分数之后发现，<strong>IoU-aware Query Section</strong>明显提高了被选中的特征的质量。</p>
-<h4 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h4><p><strong>Q（Queries）、K（Keys）、V（Values）</strong></p>
+<h4 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h4><hr>
+<p><strong>Q（Queries）、K（Keys）、V（Values）</strong></p>
 <p><code>Q</code>是由经过IoU-Aware Query Selection模块筛选后的Object Queries生成的。这些查询向量代表了检测器将要预测的目标位置和类别的“槽位”。这些Object Queries作为解码器的输入，经过一系列线性变换得到Q矩阵。</p>
 <p><code>K</code> 和<code>V</code>通常是从编码器输出的图像特征中生成的。在RT-DETR中，编码器部分处理输入图像，生成特征图。这些特征图通过线性变换分别生成K和V。</p>
 <p>在DETR（Detection Transformers）模型的原始设计中，Decoder部分使用的是<strong>cross attention</strong>，也称为交叉注意力机制。</p>
@@ -376,8 +376,32 @@
 </ol>
 </blockquote>
 <h3 id="LOSS"><a href="#LOSS" class="headerlink" title="LOSS"></a>LOSS</h3><p>在训练的loss上，回归损失还是GIoU损失和L1损失，而类别损失上引入“<strong>IoU软标签</strong>”</p>
+<h4 id="分类损失：IoU-软标签"><a href="#分类损失：IoU-软标签" class="headerlink" title="分类损失：IoU 软标签"></a>分类损失：IoU 软标签</h4><p>在 RT-DETR 中，类别损失引入了“<strong>IoU 软标签</strong>”，这种设计的目的是更好地反映预测框和真实框之间的重叠程度，从而在训练过程中提供更准确的梯度信息。</p>
+<p>什么是 IoU 软标签？</p>
+<blockquote>
+<p> IoU 软标签是一种将 IoU 值作为目标类别的软标签（soft label）的策略。具体来说，对于每个预测框，其类别标签不再是一个二元变量（0 或 1），而是一个反映预测框与真实框 IoU 的值。</p>
+</blockquote>
+<p>IoU 软标签的计算</p>
+<p>假设有 ($C$) 个类别，对于每个预测框 ($i$) 和类别 ($c$)，其 IoU 软标签定义为：<br>$$<br>t_i^c &#x3D; \text{IoU}(\text{pred}_i, \text{gt}_i^c)<br>$$</p>
+<p>其中 ($\text{pred}_i$) 是第 ($i$) 个预测框，($\text{gt}_i^c$) 是第 ($i$) 个真实框，$t_i^c$在类别 ($c$) 下的 IoU。</p>
+<p>IoU 软标签的损失计算</p>
+<p>类别损失通常使用交叉熵损失，但在 RT-DETR 中，使用了 IoU 软标签的变体：<br>$$<br>\mathcal{L}_{\text{cls}} &#x3D; -\sum_i \sum_c t_i^c \log(p_i^c)<br>$$<br>其中 ( $p_i^c$ ) 是预测框 ($i$) 属于类别 ($c$) 的概率。</p>
+<h4 id="回归损失：GIoU-和-L1-损失"><a href="#回归损失：GIoU-和-L1-损失" class="headerlink" title="回归损失：GIoU 和 L1 损失"></a>回归损失：GIoU 和 L1 损失</h4><p><strong>Generalized IoU (GIoU) 损失</strong></p>
+<p>GIoU 是一种改进的 IoU 损失，解决了 IoU 损失在没有重叠的情况下梯度为零的问题。GIoU 损失的公式如下：<br>$$<br>\text{GIoU} &#x3D; \text{IoU} - \frac{|\text{C} - \text{U}|}{|\text{C}|}其中：<br>$$</p>
+<ul>
+<li>($\text{IoU}$) 是交并比（Intersection over Union）。</li>
+<li>($\text{C}$) 是包围预测框和真实框的最小闭包区域的面积。</li>
+<li>($\text{U}$) 是预测框和真实框的并集面积。</li>
+</ul>
+<p>GIoU 损失则定义为：<br>$$<br>\text{GIoU Loss} &#x3D; 1 - \text{GIoU}<br>$$<br><strong>L1 损失</strong></p>
+<p>L1 损失（也称为绝对误差损失）用于衡量预测框和真实框的坐标之间的绝对差异：<br>$$<br>\text{L1 Loss} &#x3D; \sum_{i \in {x, y, w, h}} |p_i - t_i|<br>$$</p>
+<p>其中 ( $p_i$ ) 是预测框的坐标， ( $t_i$ ) 是真实框的坐标。</p>
+<p>在 RT-DETR 中，回归损失是 GIoU 损失和 L1 损失的加权和：<br>$$<br>\mathcal{L}_{\text{reg}} &#x3D; \lambda_1 \cdot \text{GIoU Loss} + \lambda_2 \cdot \text{L1 Loss}<br>$$</p>
+<p>其中 ($\lambda_1$) 和 ($\lambda_2$) 是权重系数。</p>
+<h4 id="综合损失"><a href="#综合损失" class="headerlink" title="综合损失"></a>综合损失</h4><p>RT-DETR 的综合损失函数是回归损失和类别损失的加权和：<br>$$<br>\mathcal{L} &#x3D; \mathcal L_{reg} + \mathcal L_{cls}<br>$$</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>RT-DETR 在训练过程中通过结合 GIoU 损失和 L1 损失来优化边界框回归，同时引入 IoU 软标签用于类别损失。这种设计使得模型能够更精确地处理边界框位置和类别分类，从而提高检测性能。</p>
 <h2 id="Deformable-attention"><a href="#Deformable-attention" class="headerlink" title="Deformable attention"></a>Deformable attention</h2><h2 id="RepVGG"><a href="#RepVGG" class="headerlink" title="RepVGG"></a>RepVGG</h2><p><strong>RepVGG</strong> 是一种通过重参数化（Re-parameterization）技术实现的卷积神经网络架构。它在训练和推理阶段使用不同的网络结构，以同时获得训练时的高表达能力和推理时的高效率。RepVGG的设计灵感来自于经典的VGG网络，强调简单的架构设计，但通过重参数化技术实现了更高的推理速度。</p>
-<p><img src="/2024/08/03/RTDETR/image-20240803165133514.png" srcset="/img/loading.gif" lazyload alt="Sketch of RepVGG Architecture"></p>
+<p><img src="/2024/08/03/OD-RTDETR/image-20240803165133514.png" srcset="/img/loading.gif" lazyload alt="Sketch of RepVGG Architecture"></p>
 <p><strong>核心思想：</strong></p>
 <p>在训练阶段，使用一个复杂的网络结构，通过多分支卷积层捕获丰富的特征；</p>
 <p>在推理阶段，将这些分支融合成一个单独的卷积层，从而简化计算并加速推理。</p>
@@ -483,7 +507,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>RT-DETR</div>
-      <div>https://adzuki23.github.io/2024/08/03/RTDETR/</div>
+      <div>https://adzuki23.github.io/2024/08/03/OD-RTDETR/</div>
     </div>
     <div class="license-meta">
       
@@ -501,7 +525,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年8月3日</div>
+          <div>2024年8月8日</div>
         </div>
       
       

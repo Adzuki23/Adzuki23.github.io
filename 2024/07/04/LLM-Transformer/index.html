@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/LLM.webp">
 <meta property="article:published_time" content="2024-07-03T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-30T06:45:40.879Z">
+<meta property="article:modified_time" content="2024-08-04T04:09:05.131Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Transformer">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.9k 字
+          6.2k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          49 分钟
+          52 分钟
         
       </span>
     
@@ -352,7 +352,7 @@
 </blockquote>
 <p>那现在我们对位置向量再提出一个要求：<strong>不同的位置向量是可以通过线性转换得到的</strong>。这样，我们不仅能表示一个token的绝对位置，还可以表示一个token的相对位置，即我们想要：<br>$$<br>PE_{t+\triangle{t}}&#x3D;T_{\triangle{t}}*PE_t<br>$$<br>这里，$T$ 表示一个线性变换矩阵。观察这个目标式子，联想到在向量空间中一种常用的线形变换—旋转。在这里，我们将t想象为一个角度，那么$\triangle{t}$就是其旋转的角度，则上面的式子可以进一步写成：</p>
 <p><img src="/2024/07/04/LLM-Transformer/image-20240704221004298.png" srcset="/img/loading.gif" lazyload alt="向量空间-旋转"></p>
-<p>有了这个构想，我们就可以把原来元素全都是sin函数的 做一个替换，我们让位置两两一组，分别用sin和cos的函数对来表示它们，则现在我们有：<br>$$<br>PE_t &#x3D; \sin(w_0t),\cos(w_0t),\sin(w_1t),\cos(w_1t)\cdots,\sin(w_{i-1}t),\cos(w_{i-1}t),\cdots,\sin(w_{d_{model}-1}t)\cos(w_{d_{model}-1}t)<br>$$<br>在这样的表示下，我们可以很容易用一个线性变换，把$PE_t$转变为$PE_{t+\Delta t}$ ，具体公式<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454482273">参考文章</a>。</p>
+<p>有了这个构想，我们就可以把原来元素全都是sin函数的 做一个替换，我们让位置两两一组，分别用sin和cos的函数对来表示它们，则现在我们有：<br>$$<br>PE_t &#x3D; \sin(w_0t),\cos(w_0t),\sin(w_1t),\cos(w_1t)\cdots,\sin(w_{i-1}t),\cos(w_{i-1}t),\cdots,\sin(w_{d_{model}-1}t),\cos(w_{d_{model}-1}t)<br>$$<br>在这样的表示下，我们可以很容易用一个线性变换，把$PE_t$转变为$PE_{t+\Delta t}$ ，具体公式<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454482273">参考文章</a>。</p>
 <h4 id="1-3-Transformer中位置编码方法：Sinusoidal-functions"><a href="#1-3-Transformer中位置编码方法：Sinusoidal-functions" class="headerlink" title="1.3 Transformer中位置编码方法：Sinusoidal functions"></a>1.3 Transformer中位置编码方法：Sinusoidal functions</h4><p>定义： </p>
 <ul>
 <li><code>t</code> 是这个token在序列中的实际位置（例如第一个token为1，第二个token为2…） </li>
@@ -478,8 +478,14 @@
 <p><img src="/2024/07/04/LLM-Transformer/v2-b71299f375bd3e5ec3dd86051b3d2cb8_1440w.webp" srcset="/img/loading.gif" lazyload alt="Post-LN和Pre-LN"></p>
 <p>Post-LN 是原始 Transformer 论文中的默认设置。在这种情况下，学习率 warm-up 策略显得尤为重要，因为 Post-LN 的训练可能会不稳定，尤其是深层模型中。Warm-up 可以帮助缓解这种不稳定性，具体原因如下：</p>
 <blockquote>
+<p><strong>Warm-up</strong>：是一种在训练初期使用较低学习率的策略，然后逐步增加到目标学习率的技术。其目的是稳定训练过程，并防止梯度消失或爆炸问题。</p>
 <p><strong>训练初期稳定性</strong>：在模型训练初期，参数初始化较为随机，直接使用较大的学习率可能导致梯度过大，参数更新幅度过大。Warm-up 可以平缓地增加学习率，使模型逐步适应训练数据，减少训练初期的震荡。</p>
 <p><strong>梯度问题</strong>：Post-LN 中，归一化层在残差连接之后，可能导致梯度传播过程中逐层缩小。Warm-up 阶段的低学习率可以在一定程度上防止梯度消失或爆炸问题。</p>
+</blockquote>
+<p><strong>Pre-LN为什么比Post-LN更好：</strong></p>
+<blockquote>
+<p>在Post-LN结构中，Layer Normalization在残差连接之后进行。这意味着经过一个子层的输出在与输入相加之后，再经过归一化处理。这种设置的潜在问题是：虽然残差连接有助于梯度的流动，但归一化操作可能会在反向传播中影响梯度的大小，尤其是在深层网络中，这可能导致梯度逐层减小。这种现象类似于梯度消失的表现，但它不是因为归一化本身，而是因为归一化操作的位置和对梯度的调节作用。</p>
+<p>Pre-LN的一个主要优势是，它在Layer Normalization之后再进行残差连接，这样可以使得Layer Normalization不会直接作用于反向传播中的梯度。这种设置可以使梯度在反向传播时更加稳定，减小梯度逐层缩小的问题。</p>
 </blockquote>
 <h3 id="4-ResNet（残差网络）"><a href="#4-ResNet（残差网络）" class="headerlink" title="4. ResNet（残差网络）"></a>4. ResNet（残差网络）</h3><p>弄清楚一个问题：<strong>为什么「嵌入&#x2F;每一层输出」需要再次输入到 Add &amp; Norm 层？</strong></p>
 <blockquote>
@@ -579,7 +585,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月30日</div>
+          <div>2024年8月4日</div>
         </div>
       
       

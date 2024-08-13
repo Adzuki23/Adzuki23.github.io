@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/RL.jpg">
 <meta property="article:published_time" content="2024-07-17T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-08-03T12:04:05.762Z">
+<meta property="article:modified_time" content="2024-08-04T06:16:28.489Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Reinforcement Learning">
 <meta name="twitter:card" content="summary_large_image">
@@ -419,9 +419,9 @@
 <p>Bellman最优方程定义为：<br>$$<br>V^*(s) &#x3D; \max_{a \in \mathcal{A}} \left[ R(s, a) + \gamma \sum_{s’} P(s’ | s, a) V^*(s’) \right]<br>$$</p>
 <p>值迭代法的步骤如下：</p>
 <ol>
-<li><p><strong>初始化值函数：</strong><br>初始化每个状态 ( s ) 的值 ( V(s) )，可以全部设为零或其他初始值。</p>
+<li><p><strong>初始化值函数：</strong><br>初始化每个状态 ( $s$ ) 的值 ( $V(s)$ )，可以全部设为零或其他初始值。</p>
 </li>
-<li><p><strong>更新值函数：</strong><br>对每个状态 ( s ) ，根据当前的值函数 ( V(s) ) ，使用Bellman方程更新：<br>$$<br>V(s) \leftarrow \max_{a \in \mathcal{A}} \left[ R(s, a) + \gamma \sum_{s’} P(s’ | s, a) V(s’) \right]<br>$$</p>
+<li><p><strong>更新值函数：</strong><br>对每个状态 ( $s$ ) ，根据当前的值函数 ( $V(s)$ ) ，使用Bellman方程更新：<br>$$<br>V(s) \leftarrow \max_{a \in \mathcal{A}} \left[ R(s, a) + \gamma \sum_{s’} P(s’ | s, a) V(s’) \right]<br>$$</p>
 </li>
 <li><p><strong>检查收敛性：</strong><br>重复步骤2，直到值函数的变化小于一个预设的阈值，即：<br>$$<br>\max_{s} |V_{new}(s) - V_{old}(s)| &lt; \epsilon<br>$$</p>
 </li>
@@ -430,9 +430,12 @@
 </ol>
 <h5 id="策略迭代法"><a href="#策略迭代法" class="headerlink" title="策略迭代法"></a>策略迭代法</h5><p>策略迭代法通过反复执行策略评估和策略改进两个步骤来找到最优策略。</p>
 <ol>
-<li><strong>策略评估：</strong><br>给定一个策略 ( \pi ) ，计算其对应的值函数 ( V^\pi(s) ) ，直到收敛。使用Bellman期望方程进行更新：<br>[ V^\pi(s) &#x3D; R(s, \pi(s)) + \gamma \sum_{s’} P(s’ | s, \pi(s)) V^\pi(s’) ]</li>
-<li><strong>策略改进：</strong><br>给定当前的值函数 ( V^\pi ) ，更新策略，使得每个状态下选择的动作最大化值函数：<br>[ \pi_{new}(s) &#x3D; \arg\max_{a \in \mathcal{A}} \left[ R(s, a) + \gamma \sum_{s’} P(s’ | s, a) V^\pi(s’) \right] ]</li>
-<li><strong>重复上述步骤：</strong><br>反复执行策略评估和策略改进，直到策略不再改变，即达到最优策略。</li>
+<li><p><strong>策略评估：</strong><br>给定一个策略 ( $\pi$ ) ，计算其对应的值函数 ( $V^\pi(s)$ ) ，直到收敛。使用Bellman期望方程进行更新：<br>$$<br>V^\pi(s) &#x3D; R(s, \pi(s)) + \gamma \sum_{s’} P(s’ | s, \pi(s)) V^\pi(s’)<br>$$</p>
+</li>
+<li><p><strong>策略改进：</strong><br>给定当前的值函数 ( $V^\pi$ ) ，更新策略，使得每个状态下选择的动作最大化值函数：<br>$$<br>\pi_{new}(s) &#x3D; \arg\max_{a \in \mathcal{A}} \left[ R(s, a) + \gamma \sum_{s’} P(s’ | s, a) V^\pi(s’) \right]<br>$$</p>
+</li>
+<li><p><strong>重复上述步骤：</strong><br>反复执行策略评估和策略改进，直到策略不再改变，即达到最优策略。</p>
+</li>
 </ol>
 <p><strong>总结：</strong></p>
 <p>迭代法（无论是值迭代还是策略迭代）通过逐步更新状态值或策略，最终收敛到最优解。这种方法避免了直接求解逆矩阵带来的巨大计算量，特别适用于状态空间较大的情况。</p>
@@ -533,7 +536,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年8月3日</div>
+          <div>2024年8月4日</div>
         </div>
       
       

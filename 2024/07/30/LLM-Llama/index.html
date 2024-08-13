@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/llama.webp">
 <meta property="article:published_time" content="2024-07-29T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-08-03T11:47:30.956Z">
+<meta property="article:modified_time" content="2024-08-04T06:01:39.134Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Llama">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.3k 字
+          3.3k 字
         
       </span>
     
@@ -262,7 +262,7 @@
         
         
         
-          20 分钟
+          28 分钟
         
       </span>
     
@@ -328,6 +328,7 @@
 <li><p>缩放和偏移：通常会引入可学习的参数 $ \gamma $ 和 $ \beta $ 来进一步调整归一化后的输出：$\text{RMSNorm}(x) &#x3D; \gamma y + \beta$。</p>
 </li>
 </ol>
+<p><strong>位置：</strong>位置的设置应该来源于Pre-LN这个架构，具体在<a href="https://adzuki23.github.io/2024/07/04/LLM-Transformer/">TransFormer</a>那篇文章中有解释。</p>
 <h3 id="3-SwiGLU"><a href="#3-SwiGLU" class="headerlink" title="3. SwiGLU"></a>3. SwiGLU</h3><p><strong>SwiGLU（Switch GLU）</strong> 是一种激活函数，用于神经网络中特别是 Transformer 模型的前馈神经网络（FFN）部分。它是一种改进的激活函数，通过结合线性变换和非线性激活来提高模型的表达能力和性能。SwiGLU 是 GLU（Gated Linear Unit）激活函数的变种。</p>
 <p><strong>SwiGLU</strong> 公式为：<br>$$<br>\text{SwiGLU}(x) &#x3D; (xW_1) \odot \text{SiLU}(xW_2)<br>$$</p>
 <blockquote>
@@ -347,31 +348,71 @@
 </li>
 </ol>
 <h3 id="4-RoPE"><a href="#4-RoPE" class="headerlink" title="4. RoPE"></a>4. RoPE</h3><p><strong>RoPE（Rotary Position Embedding）</strong> 是一种位置编码方法，用于在 Transformer 模型中表示序列数据的位置信息。与传统的绝对位置编码（例如，正弦-余弦位置编码）不同，RoPE 提供了一种相对位置编码的方式，使模型能够更好地捕捉序列数据中相对位置的重要性。</p>
+<p>$$<br>\text{RoPE}(x_i) &#x3D; x_i \cos(\Theta_i) + \text{Rotate}(x_i, \sin(\Theta_i))<br>$$</p>
 <ul>
-<li><p>传统位置编码的局限性：</p>
-<p>传统的绝对位置编码（如正弦-余弦位置编码）将每个位置编码为一个固定的向量，这些向量与输入的词嵌入相加输入到模型中。这种方法的局限性在于，它只能编码绝对位置，而不能直接表示相对位置之间的关系。</p>
-</li>
-<li><p>RoPE 的核心思想：</p>
+<li><p>RoPE 的核心思想</p>
 <p>RoPE 的核心思想是通过旋转输入的词嵌入来引入位置信息。具体来说，RoPE 将输入向量根据其位置应用一个旋转矩阵，这个旋转矩阵的旋转角度依赖于该位置。</p>
 </li>
-<li><p>数学描述：</p>
-<p>假设输入向量的维度为  d ，我们将其分为两两一组，每组有 2 个维度。对于位置 ( p ) 的输入向量 ( x )，RoPE 定义的旋转变换可以表示为：<br>$$<br>RoPE(x, p) &#x3D; Concat[RoPE_{even}(x, p), RoPE_{odd}(x, p)]<br>$$<br>其中，$RoPE_{even}(x, p)、RoPE_{odd}(x, p)$分别作用在输入向量的偶数和奇数维度上。</p>
-<p>具体的旋转操作可以描述为：</p>
-<p>$$<br>RoPE_{even}(x, p) &#x3D; x_{even}\cos(p\theta) - x_{odd}\sin(p\theta)<br>$$<br>$$<br>RoPE_{odd}(x, p) &#x3D; x_{even}\sin(p\theta) + x_{odd}\cos(p\theta)<br>$$</p>
-<p>这里的 $p$ 表示位置， $\theta$ 是一个基于输入维度和位置信息的旋转角度参数。</p>
-</li>
-<li><p>优点</p>
+<li><p>公式解析</p>
 <ol>
-<li><p><strong>相对位置编码</strong>: RoPE 提供了一种自然的方式来捕捉序列中元素的相对位置信息。这对于序列建模任务，如自然语言处理中的文本理解和生成，尤其有用。</p>
-</li>
-<li><p><strong>位置不变性</strong>: 由于 RoPE 的旋转性质，模型能够更好地学习到与位置无关的模式，这对于捕捉序列中的长期依赖性有帮助。</p>
-</li>
-<li><p><strong>可扩展性</strong>: RoPE 可以很容易地扩展到不同长度的序列，不像一些绝对位置编码方法那样依赖于固定长度。</p>
+<li>输入向量  $x_i$</li>
+</ol>
+<p>  $x_i$  是第  $i$ 个位置的输入向量，通常是从词嵌入或某一层神经网络的输出中得到的。这是一个长度为  $d$  的向量，其中 $ d$  是模型的嵌入维度。</p>
+<ol start="2">
+<li>旋转角度  $\Theta_i $</li>
+</ol>
+<p>  $ \Theta_i$  是与位置 $ i$  相关的旋转角度。这个角度由位置编码生成，与正弦&#x2F;余弦位置编码类似，RoPE也会根据位置生成一组旋转角度。</p>
+<ol start="3">
+<li>旋转操作的两个部分</li>
+</ol>
+<p>  第一个部分：$x_i \cos(\Theta_i) $</p>
+<blockquote>
+<p>这是对向量  $x_i$  的每个分量与对应的旋转角度的余弦值相乘。这个操作类似于在旋转变换中保持部分原有的向量信息。</p>
+</blockquote>
+<p>  第二个部分： $\text{Rotate}(x_i, \sin(\Theta_i)) $</p>
+<blockquote>
+<p>这是对向量  $x_i $ 进行旋转。具体来说，这是将向量  $x_i$  的各分量与相应的旋转角度的正弦值相乘，然后进行旋转。这部分通常涉及在向量的每对相邻分量之间进行变换，如在二维空间中，点  (x, y)  的旋转可以表示为  (-y, x) 。在高维空间中，这个操作是对每一对分量进行类似的旋转变换。</p>
+</blockquote>
+<ol start="4">
+<li><p>计算过程</p>
+<p>为了更清楚地理解计算过程，我们以一个二维向量  $x_i &#x3D; (x, y) $ 为例，旋转角度为  $\Theta_i $。实际操作中，我们需要为每对相邻分量执行以下计算：</p>
+<p>计算余弦部分：对应的旋转余弦部分是：$(x \cos(\Theta_i), y \cos(\Theta_i))$</p>
+<p>计算正弦旋转部分：对应的旋转正弦部分是：$(-y \sin(\Theta_i), x \sin(\Theta_i))$</p>
+<p>组合结果：最终结果是将上述两部分相加：$(x \cos(\Theta_i) - y \sin(\Theta_i), y \cos(\Theta_i) + x \sin(\Theta_i))$</p>
+<p>在更高维度中，这个过程类似，但会应用到每一对相邻的向量分量。通过这种方式，每个位置向量 $ x_i $ 都被旋转了一个位置相关的角度，这种旋转操作使得位置编码不再是静态的（即固定不变），而是能够自然地包含序列中元素的相对位置信息。</p>
 </li>
 </ol>
 </li>
+<li><p><strong>我的困惑–然后GPT给出的回答</strong></p>
+<blockquote>
+<p>问题：</p>
+<p>比如现在有token_1和token_2</p>
+<p>正弦&#x2F;余弦位置编码的点积表示了一种相对位置信息，这个信息不就是向量之间的距离吗？我认为这和RoPE的点积很相似啊，RoPE的点积结果不是代表了角度吗？而正弦&#x2F;余弦位置编码的点积代表了位置的距离，这有什么需要模型学习解码的？</p>
+</blockquote>
+<blockquote>
+<p>回答：</p>
+<p>正弦&#x2F;余弦位置编码和RoPE两者的点积的确都反映了位置之间的一种关系，但它们提供的位置信息形式和模型利用这些信息的方式有所不同。</p>
+</blockquote>
+<h5 id="正弦-余弦位置编码中的点积"><a href="#正弦-余弦位置编码中的点积" class="headerlink" title="正弦&#x2F;余弦位置编码中的点积"></a>正弦&#x2F;余弦位置编码中的点积</h5><hr>
+<blockquote>
+<p>在正弦&#x2F;余弦位置编码中，每个位置 (i) 的编码是一个固定的向量，这个向量的各个分量是正弦和余弦函数的值，基于位置 (i) 的绝对值和编码维度进行计算。</p>
+<p><strong>点积结果解释</strong>：  </p>
+<p>点积结果的大小不仅仅是向量之间的“距离”，而是两向量之间的夹角的余弦值，这个夹角与位置编码向量在高维空间中的关系有关。这种关系在某种程度上反映了相对位置信息，但模型需要通过训练过程学习如何将这种点积结果与序列中元素的实际关系联系起来。换句话说，模型必须“学习解码”这种高维向量空间中的角度信息，以便在特征表达中有效地捕捉位置之间的相对关系。</p>
+</blockquote>
+<h5 id="RoPE中的点积"><a href="#RoPE中的点积" class="headerlink" title="RoPE中的点积"></a>RoPE中的点积</h5><hr>
+<blockquote>
+<p>RoPE通过旋转操作为每个位置引入了一个与位置相关的角度，旋转后的向量编码了相对位置信息。对于两个位置 (i) 和 (j)，经过RoPE处理后的向量的点积会直接反映这两个位置之间的<strong>相对角度</strong>差异。由于旋转角度与位置差异直接相关，因此点积结果自然包含了这种相对位置信息。</p>
+<p><strong>点积结果解释</strong>：  </p>
+<p>在RoPE中，这个点积结果更明确地表示了位置之间的角度差，而不是正弦&#x2F;余弦位置编码中那种隐含的相似性。由于RoPE通过旋转方式使得相对位置信息显式存在，这种信息的解码变得更直接，不需要模型去学习如何从复杂的高维空间向量关系中提取相对位置。</p>
+</blockquote>
+<p><strong>总结和比较</strong></p>
+<hr>
+<blockquote>
+<p><strong>正弦&#x2F;余弦位置编码</strong>：点积结果隐含了位置之间的相对距离信息，但这种信息是以复杂的高维空间关系的形式存在的。模型需要在训练过程中学习如何解码这种关系，将点积结果与实际的相对位置信息关联起来。</p>
+<p><strong>RoPE</strong>：点积结果直接反映了位置之间的相对角度差异，信息更明确且容易解码。模型能够更直观地利用这些信息来理解序列中元素之间的相对位置关系。</p>
+</blockquote>
+</li>
 </ul>
-<p>？？？？</p>
 <h3 id="5-GQA"><a href="#5-GQA" class="headerlink" title="5. GQA"></a>5. GQA</h3><p>在理解什么是GQA之前，我们还需要知道两个概念：MHA和MQA，下图展示了MHA，MQA，GQA的区别：</p>
 <p><img src="/2024/07/30/LLM-Llama/c2cf23e34c46b9cb29503cedda9e8ae8.jpeg" srcset="/img/loading.gif" lazyload alt="MHA，MQA，GQA"></p>
 <p><strong>MHA：</strong></p>
@@ -486,7 +527,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年8月3日</div>
+          <div>2024年8月4日</div>
         </div>
       
       
@@ -517,7 +558,7 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/08/03/RTDETR/" title="RT-DETR">
+                      <a href="/2024/08/03/OD-RTDETR/" title="RT-DETR">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">RT-DETR</span>
                         <span class="visible-mobile">上一篇</span>
@@ -527,7 +568,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/07/23/Yolo/" title="YOLO">
+                      <a href="/2024/07/23/OD-Yolo/" title="YOLO">
                         <span class="hidden-mobile">YOLO</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>

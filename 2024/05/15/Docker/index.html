@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://adzuki23.github.io/img/cover/docker.png">
 <meta property="article:published_time" content="2024-05-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-30T14:47:37.312Z">
+<meta property="article:modified_time" content="2024-08-04T15:29:34.000Z">
 <meta property="article:author" content="Hongyu Li">
 <meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary_large_image">
@@ -262,7 +262,7 @@
         
         
         
-          9 分钟
+          10 分钟
         
       </span>
     
@@ -392,6 +392,9 @@
 <p>创建容器：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 当 -i 和 -t 一起使用时，Docker 将为你提供一个交互式 shell，类似于在本地终端中使用命令行。这意味着你可以在容器中执行命令、输入数据、查看输出等。这种方式特别适用于调试、运行交互式程序或者简单的命令行操作。</span><br><span class="hljs-comment"># --rm 会在容器停止后自动删除容器</span><br>docker run -it --<span class="hljs-built_in">rm</span> --name my-python-container python-venv<br></code></pre></td></tr></table></figure>
 
+<p>假设主机上的文件夹路径是 &#x2F;path&#x2F;to&#x2F;your&#x2F;project，你想在容器中将这个文件夹挂载到 &#x2F;app 目录下，可以使用以下命令启动容器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -it --<span class="hljs-built_in">rm</span> -v /path/to/your/project:/app my-python-container<br></code></pre></td></tr></table></figure>
+
 
 
 
@@ -467,7 +470,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年7月30日</div>
+          <div>2024年8月4日</div>
         </div>
       
       
@@ -498,15 +501,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/05/15/RCNN/" title="R-CNN Series">
+                      <a href="/2024/05/19/PaddlePaddle_CPPD/" title="PaddlePaddle-CPPD">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">R-CNN Series</span>
+                        <span class="hidden-mobile">PaddlePaddle-CPPD</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2024/05/15/OD-RCNN/" title="R-CNN Series">
+                        <span class="hidden-mobile">R-CNN Series</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
